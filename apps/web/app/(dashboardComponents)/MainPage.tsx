@@ -7,7 +7,7 @@ import axios from 'axios';
 export default function Dashboard() {
   const { data: session } = useSession()
   const [repos, setRepos] = useState([])
-  console.log(session);
+  console.log("from session", session);
 
   useEffect(() => {
     if (!session?.accessToken) return
@@ -29,11 +29,11 @@ export default function Dashboard() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold">Welcome, {session.user.name}</h1>
+      <h1 className="text-2xl font-bold">Welcome, {session?.user?.name}</h1>
       <h2 className="text-xl mt-4">Your Public Repositories:</h2>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-6">
         {repos.map((repo) => (
-          <Link href={`/dashboard/repo/${repo.name}`} className="w-[18vw] rounded-md h-[20vh] shadow-sm flex items-center justify-center" key={repo.id}>
+          <Link href={`/dashboard/repo/${repo.name}`} className="w-[18vw] dark:border-gray-300 border shadow-xl rounded-md h-[20vh] shadow-sm flex items-center justify-center" key={repo.id}>
             <span className="text-blue-500">
               {repo.name}
             </span>

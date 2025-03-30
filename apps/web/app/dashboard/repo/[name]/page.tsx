@@ -10,7 +10,7 @@ export default function RepoDetails() {
   const { data: session } = useSession()
   const params = useParams();
 //   const {repo} = params;
-console.log("params", params);
+// console.log("params", params);
   const [issues, setIssues] = useState([])
   const [pullRequests, setPullRequests] = useState([])
 
@@ -24,7 +24,7 @@ console.log("params", params);
 
       const issuesRes = await axios.get(`https://api.github.com/repos/${session.user.name}-Dezloper/${params.name}/issues`, { headers })
       const prRes = await axios.get(`https://api.github.com/repos/${session.user.name}-Dezloper/${params.name}/pulls`, { headers })
-      console.log("iss", issuesRes);
+      // console.log("iss", issuesRes);
       const issuesData = await issuesRes
       const prData = await prRes
     //   console.log("issues data", issuesData);
@@ -32,7 +32,7 @@ console.log("params", params);
       setIssues(issuesData.data)
       setPullRequests(prData.data)
     }
-    console.log(session)
+    // console.log(session)
     fetchIssuesAndPRs()
   }, [session, params.name])
 
