@@ -6,3 +6,6 @@
           </div>
           <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
         </div>
+
+steps
+https://chatgpt.com/c/67e3d4a6-293c-800c-b4e0-dd2cbdfb25d4
