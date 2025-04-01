@@ -68,7 +68,7 @@ export function NavMain({
                     <span>{item.title}</span>
                     {item.title === "Dashboard" ? <></> : (
                       <ChevronRight 
-                        className="ml-auto transition-transform duration-300 ease-in-out group-data-[state=open]/collapsible:rotate-90" 
+                        className="ml-auto transition-transform duration-200 ease-in-out group-data-[state=open]/collapsible:rotate-90" 
                       />
                     )}
                   </SidebarMenuButton>
@@ -76,9 +76,9 @@ export function NavMain({
                 <CollapsibleContent 
                   className="overflow-hidden data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-top-1 data-[state=open]:slide-in-from-top-1"
                   style={{
-                    transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-                    animationDuration: '300ms',
-                    animationTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)'
+                    transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+                    animationDuration: '200ms',
+                    animationTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
                   }}
                 >
                   <SidebarMenuSub>

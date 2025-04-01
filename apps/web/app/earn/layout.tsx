@@ -1,6 +1,5 @@
 'use client'
 import { AppSidebar } from "@/components/app-sidebar";
-import { ModeToggle } from "@/components/Toggle";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { SessionProvider } from "next-auth/react";
 import { ReactNode } from "react";
@@ -15,7 +14,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <SessionProvider>
      <SidebarProvider>
     <AppSidebar />
-    <div className="flex flex-col w-full overflow-x-hidden">
+    <div className="flex flex-col w-full overflow-x-hidden px-12">
     <Topbar />
     {children}
     </div>

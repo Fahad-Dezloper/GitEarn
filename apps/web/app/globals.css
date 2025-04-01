@@ -131,3 +131,11 @@
 .bggrad{
   background-image: radial-gradient( circle 382px at 50% 50.2%,  rgba(73,76,212,1) 0.1%, rgba(3,1,50,1) 100.2% );
 }
+
+.scrolll{
+  overflow-y: scroll;
+}
+
+.scrolll::-webkit-scrollbar{
+  display: none;
+}

@@ -207,34 +207,18 @@ function Sidebar({
     openMobile, 
     setOpenMobile, 
     setOpen, 
-    manuallyOpened,
     isLocked 
   } = useSidebar()
 
   // Hover state handler
   const [isHovering, setIsHovering] = React.useState(false)
 
-  // Auto-open/close on hover when sidebar is collapsed and not locked
+  // Handle hover to expand sidebar
   React.useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    
-    // Only handle hover if not manually opened, not mobile, and not locked
-    if (!isMobile && !manuallyOpened && !isLocked) {
-      if (isHovering) {
-        timeoutId = setTimeout(() => {
-          setOpen(true)
-        }, 200)
-      } else {
-        timeoutId = setTimeout(() => {
-          setOpen(false)
-        }, 200)
-      }
+    if (!isMobile && !isLocked && isHovering) {
+      setOpen(true)
     }
-
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId)
-    }
-  }, [isHovering, isMobile, manuallyOpened, isLocked, setOpen])
+  }, [isHovering, isMobile, isLocked, setOpen])
 
   if (collapsible === "none") {
     return (
@@ -451,7 +435,7 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="sidebar-content"
       data-sidebar="content"
       className={cn(
-        "flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
+        "flex min-h-0 flex-1 flex-col gap-2 scrolll group-data-[collapsible=icon]:overflow-hidden",
         className
       )}
       {...props}

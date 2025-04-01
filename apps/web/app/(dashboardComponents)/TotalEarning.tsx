@@ -4,13 +4,12 @@ import { VscIssues } from "react-icons/vsc";
 
 const TotalEarning = () => {
   return (
-    <div className='w-full h-fit'>
-        <div className='w-full h-full flex flex-col gap-4'>
-            <div className='w-full h-full flex flex-col gap-4 p-6 rounded-xl 
+    <div className='w-full h-fit flex items-center justify-center'>
+            <div className='w-fit  h-full flex flex-col gap-4 p-6 rounded-xl 
                 bg-gradient-to-br from-blue-50/50 to-blue-100/30 dark:from-[#1A1F2E]/50 dark:to-[#2A2F3E]/50
                 border border-blue-100/50 dark:border-blue-900/20
                 transition-all duration-300'>
-                <div className='flex gap-6'>
+                <div className='flex gap-6 '>
                     <div className='flex gap-3 items-start justify-center'>
                         <div className='p-2 rounded-lg bg-[#007AFF]/10 dark:bg-[#00D1FF]/10'>
                             <BiSolidDollarCircle size={24} className="text-[#007AFF] dark:text-[#00D1FF]" />
@@ -22,8 +21,8 @@ const TotalEarning = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='h-full w-[1px] bg-gradient-to-b from-transparent via-gray-200 dark:via-gray-700 to-transparent' />
-                    <div className="flex gap-3">
+                    <div className='w-[3px] bg-gray-600 rounded-full dark:bg-gray-400' />
+                    <div className="flex gap-3 items-start justify-center">
                         <div className='p-2 rounded-lg bg-[#007AFF]/10 dark:bg-[#00D1FF]/10'>
                             <VscIssues size={24} className="text-[#007AFF] dark:text-[#00D1FF]" />
                         </div>
@@ -34,7 +33,6 @@ const TotalEarning = () => {
                     </div>
                 </div>
             </div>
-        </div>
     </div>
   )
 }

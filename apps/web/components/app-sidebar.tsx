@@ -183,14 +183,8 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Frame className="size-5" />
-          {/* <span className="font-semibold">GitEarn</span> */}
-        </div>
-        <div className="flex items-center gap-1">
-          <SidebarLockButton />
-        </div>
+      <SidebarHeader>
+        <NavUser user={data.user} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />

@@ -11,3 +11,20 @@ steps
 https://chatgpt.com/c/67e3d4a6-293c-800c-b4e0-dd2cbdfb25d4
 
 {/* <MainPage /> */}
+
+
+owner can select which github users can assign the bounties to the issue
+or
+still allow all the people to put the bounty money in contract
+
+request a feature and add a bounty when devloper adds the feature he/she gets the bounty in there project
+
+check out this platforms
+
+important - https://github.com/orgs/community/discussions/4517
+
+https://app.opire.dev/
+https://github.com/fossjobs/fossjobs/wiki/resources#bounties
+https://oss.issuehunt.io/r/new?welcome=true
+
+based on multiple grants website let ai decide which grants suits you the best

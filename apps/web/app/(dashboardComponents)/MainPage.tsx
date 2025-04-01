@@ -1,33 +1,43 @@
 import React from 'react'
 import SuggestedBounties from './SuggestedBounties';
 import TotalEarning from './TotalEarning';
+import HowitWorks from './HowitWorks';
+import BountyEarners from './BountyEarners';
 
 const MainPage = () => {
-   
     return (
-        <div className='w-full h-full flex gap-3'>
+        <div className='w-full h-full flex gap-4 py-6'>
             {/* left sidebar */}
-            <div className="w-[140vw] flex flex-col gap-4 h-screen p-4">
-                {/* Welcome Section */}
-                <div className='flex flex-col gap-2 w-full bggrad p-6 rounded-xl'>
-                    <div className="text-white text-3xl font-black">Welcome back, Fahad</div>
-                    <div className="flex text-gray-300 leading-none flex-col gap-1">
-                        <p>We&apos;re so glad to have you on GitEarn</p>
-                        <p>let&apos;s make some $bucks shall we</p>
+            <div className="w-[140vw] flex flex-col gap-4">
+                <div className='w-full bggrad px-5 py-4 rounded-xl relative overflow-hidden bg-gradient-to-r from-[#2A2F3E] to-[#1A1F2E]'>
+                    <div className="absolute -top-[40%] -left-[10%] w-[60%] h-[100%] bg-blue-500/20 blur-[100px] rounded-full" />
+                    <div className="absolute -bottom-[40%] -right-[10%] w-[60%] h-[100%] bg-purple-500/20 blur-[100px] rounded-full" />
+                    
+                    <div className='relative flex items-center gap-3 mb-1'>
+                        <div className="w-1 h-6 rounded-full bg-gradient-to-b from-blue-400 to-purple-500" />
+                        <h1 className="text-white text-xl font-black font-sora">Welcome back, Fahad</h1>
                     </div>
+                    <p className="relative text-sm text-gray-300/90 pl-4">
+                        We&apos;re so glad to have you on GitEarn 
+                        <span className="animate-bounce ml-1">💰</span>
+                    </p>
                 </div>
 
-                {/* Suggested for You Section */}
+                {/* Suggested Part */}
                 <SuggestedBounties />
             </div>
 
             {/* right sidebar */}
-            <div className="w-full h-screen p-6">
-                {/* Total Earnings Section */}
+            <div className="w-full flex flex-col gap-3">
                 <TotalEarning />
+                <HowitWorks />
+                <BountyEarners />
             </div>
         </div>
     )
 }
 
 export default MainPage
+
+// , let&apos;s make some 
+//                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 font-bold ml-1">$bucks</span>
