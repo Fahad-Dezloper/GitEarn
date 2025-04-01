@@ -4,11 +4,17 @@ import * as React from "react"
 import {
   BookOpen,
   Bot,
+  CheckCircle,
+  Code,
   Frame,
+  Home,
   Map,
   PieChart,
+  Scroll,
   Settings2,
   SquareTerminal,
+  Trophy,
+  User,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -19,6 +25,7 @@ import {
   SidebarContent,
   SidebarHeader,
   SidebarRail,
+  SidebarLockButton,
 } from "@/components/ui/sidebar"
 
 // This is sample data.
@@ -30,91 +37,130 @@ const data = {
   },
   navMain: [
     {
-      title: "My Bounties",
-      url: "#",
-      icon: SquareTerminal,
+      title: "Dashboard",
+      url: "/earn",
+      icon: Home, 
       isActive: true,
+    },
+    {
+      title: "Bounties",
+      url: "/earn/bounties",
+      icon: SquareTerminal,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "My Bounties",
+          url: "/earn/bounties/my",
         },
         {
-          title: "Starred",
-          url: "#",
+          title: "Explore Bounties",
+          url: "/earn/bounties/explore",
         },
         {
-          title: "Settings",
-          url: "#",
+          title: "Create Bounty",
+          url: "/earn/bounties/create",
         },
       ],
     },
     {
-      title: "Transaction",
-      url: "#",
-      icon: Bot,
+      title: "Transactions",
+      url: "/earn/transactions",
+      icon: Scroll, 
       items: [
         {
-          title: "Genesis",
-          url: "#",
+          title: "Payment History",
+          url: "/earn/transactions/history",
         },
         {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
+          title: "Deposits & Withdrawals",
+          url: "/earn/transactions/wallet",
         },
       ],
     },
     {
       title: "Leaderboard",
-      url: "#",
-      icon: BookOpen,
+      url: "/earn/leaderboard",
+      icon: Trophy,
       items: [
         {
-          title: "Introduction",
-          url: "#",
+          title: "Top Earners",
+          url: "/earn/leaderboard/top",
         },
         {
-          title: "Get Started",
-          url: "#",
+          title: "Weekly Rankings",
+          url: "/earn/leaderboard/weekly",
+        },
+      ],
+    },
+    {
+      title: "Profile",
+      url: "/earn/profile",
+      icon: User,
+      items: [
+        {
+          title: "User Info",
+          url: "/profile/info",
         },
         {
-          title: "Tutorials",
-          url: "#",
+          title: "Past Contributions",
+          url: "/earn/profile/contributions",
         },
         {
-          title: "Changelog",
-          url: "#",
+          title: "Wallet & Security",
+          url: "/earn/profile/wallet",
+        },
+      ],
+    },
+    {
+      title: "GitHub Integration",
+      url: "/earn/github",
+      icon: Code,
+      items: [
+        {
+          title: "Install Extension",
+          url: "/earn/github/extension",
+        },
+        {
+          title: "Manage Repos",
+          url: "/earn/github/repos",
+        },
+      ],
+    },
+    {
+      title: "Review Board",
+      url: "/earn/reviews",
+      icon: CheckCircle,
+      items: [
+        {
+          title: "Pending Reviews",
+          url: "/earn/reviews/pending",
+        },
+        {
+          title: "Approved Solutions",
+          url: "/earn/reviews/approved",
         },
       ],
     },
     {
       title: "Settings",
-      url: "#",
+      url: "/earn/settings",
       icon: Settings2,
       items: [
         {
           title: "General",
-          url: "#",
+          url: "/earn/settings/general",
         },
         {
-          title: "Team",
-          url: "#",
+          title: "Notifications",
+          url: "/earn/settings/notifications",
         },
         {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
+          title: "Wallet & Payments",
+          url: "/earn/settings/wallet",
         },
       ],
     },
-  ],
+],
+
   projects: [
     {
       name: "Git Analyzer",
@@ -137,8 +183,14 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <NavUser user={data.user} />
+      <SidebarHeader className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Frame className="size-5" />
+          {/* <span className="font-semibold">GitEarn</span> */}
+        </div>
+        <div className="flex items-center gap-1">
+          <SidebarLockButton />
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />

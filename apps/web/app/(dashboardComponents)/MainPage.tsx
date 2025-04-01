@@ -1,45 +1,33 @@
-"use client"
-import { useEffect, useState } from "react"
-import { useSession } from "next-auth/react"
-import Link from "next/link"
-import axios from 'axios';
+import React from 'react'
+import SuggestedBounties from './SuggestedBounties';
+import TotalEarning from './TotalEarning';
 
-export default function Dashboard() {
-  const { data: session } = useSession()
-  const [repos, setRepos] = useState([])
-  console.log("from session", session);
+const MainPage = () => {
+   
+    return (
+        <div className='w-full h-full flex gap-3'>
+            {/* left sidebar */}
+            <div className="w-[140vw] flex flex-col gap-4 h-screen p-4">
+                {/* Welcome Section */}
+                <div className='flex flex-col gap-2 w-full bggrad p-6 rounded-xl'>
+                    <div className="text-white text-3xl font-black">Welcome back, Fahad</div>
+                    <div className="flex text-gray-300 leading-none flex-col gap-1">
+                        <p>We&apos;re so glad to have you on GitEarn</p>
+                        <p>let&apos;s make some $bucks shall we</p>
+                    </div>
+                </div>
 
-  useEffect(() => {
-    if (!session?.accessToken) return
+                {/* Suggested for You Section */}
+                <SuggestedBounties />
+            </div>
 
-    const fetchRepos = async () => {
-      const res = await axios.get("https://api.github.com/user/repos?visibility=public", {
-        headers: {
-          Authorization: `Bearer ${session.accessToken}`,
-        },
-      })
-      const data = await res
-      setRepos(data.data)
-    }
-
-    fetchRepos()
-  }, [session])
-
-  if (!session) return <p>Loading...</p>
-
-  return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold">Welcome, {session?.user?.name}</h1>
-      <h2 className="text-xl mt-4">Your Public Repositories:</h2>
-      <div className="flex flex-wrap gap-6">
-        {repos.map((repo) => (
-          <Link href={`/dashboard/repo/${repo.name}`} className="w-[18vw] dark:border-gray-300 border shadow-xl rounded-md h-[20vh] shadow-sm flex items-center justify-center" key={repo.id}>
-            <span className="text-blue-500">
-              {repo.name}
-            </span>
-          </Link>
-        ))}
-      </div>
-    </div>
-  )
+            {/* right sidebar */}
+            <div className="w-full h-screen p-6">
+                {/* Total Earnings Section */}
+                <TotalEarning />
+            </div>
+        </div>
+    )
 }
+
+export default MainPage

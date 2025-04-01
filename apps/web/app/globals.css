@@ -1,7 +1,14 @@
+
 @import "tailwindcss";
 @import "tw-animate-css";
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Sora:wght@100..800&display=swap');
 
 @custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sora: 'Sora', sans-serif;
+  --font-roboto: 'Roboto', sans-serif;
+}
 
 @theme inline {
   --color-background: var(--background);
@@ -119,4 +126,8 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.bggrad{
+  background-image: radial-gradient( circle 382px at 50% 50.2%,  rgba(73,76,212,1) 0.1%, rgba(3,1,50,1) 100.2% );
 }

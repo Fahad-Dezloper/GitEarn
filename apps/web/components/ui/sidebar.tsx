@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
-import { PanelLeftIcon } from "lucide-react"
+import { Lock, LockOpen, PanelLeftIcon } from "lucide-react"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
@@ -42,6 +42,8 @@ type SidebarContextProps = {
   toggleSidebar: () => void
   manuallyOpened: boolean
   setManuallyOpened: (opened: boolean) => void
+  isLocked: boolean
+  toggleLock: () => void
 }
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
@@ -70,12 +72,13 @@ function SidebarProvider({
 }) {
   const isMobile = useIsMobile()
   const [openMobile, setOpenMobile] = React.useState(false)
+  const [isLocked, setIsLocked] = React.useState(false)
 
   // Track whether sidebar was manually opened
   const [manuallyOpened, setManuallyOpened] = React.useState(false)
 
   // This is the internal state of the sidebar.
-  const [_open, _setOpen] = React.useState(defaultOpen)
+  const [_open, _setOpen] = React.useState(false)
   const open = openProp ?? _open
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
@@ -98,11 +101,21 @@ function SidebarProvider({
     [setOpenProp, open]
   )
 
+  const toggleLock = React.useCallback(() => {
+    setIsLocked(prev => !prev)
+    // When locking, ensure sidebar is expanded
+    if (!isLocked) {
+      setOpen(true)
+    } else {
+      setOpen(false)
+    }
+  }, [isLocked, setOpen])
+
   // Helper to toggle the sidebar.
   const toggleSidebar = React.useCallback(() => {
     if (isMobile) {
-      setOpenMobile((prevOpen) => !prevOpen)
-      return prevOpen ? false : true
+      setOpenMobile(prev => !prev)
+      return !openMobile
     } else {
       const newState = !open
       setOpen(newState)
@@ -112,7 +125,7 @@ function SidebarProvider({
       }
       return newState
     }
-  }, [isMobile, setOpen, open])
+  }, [isMobile, setOpen, open, openMobile])
 
   // Adds a keyboard shortcut to toggle the sidebar.
   React.useEffect(() => {
@@ -145,8 +158,10 @@ function SidebarProvider({
       toggleSidebar,
       manuallyOpened,
       setManuallyOpened,
+      isLocked,
+      toggleLock,
     }),
-    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar, manuallyOpened, setManuallyOpened]
+    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar, manuallyOpened, setManuallyOpened, isLocked, toggleLock]
   )
 
   return (
@@ -176,7 +191,7 @@ function SidebarProvider({
 
 function Sidebar({
   side = "left",
-  variant = "floating", // Changed default to 'floating'
+  variant = "floating",
   collapsible = "offcanvas",
   className,
   children,
@@ -191,24 +206,24 @@ function Sidebar({
     state, 
     openMobile, 
     setOpenMobile, 
-    open, 
     setOpen, 
-    manuallyOpened 
+    manuallyOpened,
+    isLocked 
   } = useSidebar()
 
   // Hover state handler
   const [isHovering, setIsHovering] = React.useState(false)
 
-  // Auto-open/close on hover when sidebar is collapsed
+  // Auto-open/close on hover when sidebar is collapsed and not locked
   React.useEffect(() => {
     let timeoutId: NodeJS.Timeout;
     
-    // Only handle hover if not manually opened and not mobile
-    if (!isMobile && !manuallyOpened && state === "collapsed") {
+    // Only handle hover if not manually opened, not mobile, and not locked
+    if (!isMobile && !manuallyOpened && !isLocked) {
       if (isHovering) {
         timeoutId = setTimeout(() => {
           setOpen(true)
-        }, 200) // Short delay to prevent accidental triggers
+        }, 200)
       } else {
         timeoutId = setTimeout(() => {
           setOpen(false)
@@ -219,7 +234,7 @@ function Sidebar({
     return () => {
       if (timeoutId) clearTimeout(timeoutId)
     }
-  }, [isHovering, state, isMobile, manuallyOpened, setOpen])
+  }, [isHovering, isMobile, manuallyOpened, isLocked, setOpen])
 
   if (collapsible === "none") {
     return (
@@ -269,8 +284,8 @@ function Sidebar({
       data-variant={variant}
       data-side={side}
       data-slot="sidebar"
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
+      onMouseEnter={() => !isLocked && setIsHovering(true)}
+      onMouseLeave={() => !isLocked && setIsHovering(false)}
     >
       {/* Sidebar gap handling */}
       <div
@@ -760,6 +775,32 @@ function SidebarMenuSubButton({
   )
 }
 
+function SidebarLockButton({
+  className,
+  ...props
+}: React.ComponentProps<typeof Button>) {
+  const { isLocked, toggleLock } = useSidebar()
+
+  return (
+    <Button
+      data-sidebar="lock"
+      data-slot="sidebar-lock"
+      variant="ghost"
+      size="icon"
+      className={cn("size-7", className)}
+      onClick={toggleLock}
+      {...props}
+    >
+      {isLocked ? (
+        <Lock />
+      ) : (
+        <LockOpen />
+      )}
+      <span className="sr-only">Toggle Sidebar Lock</span>
+    </Button>
+  )
+}
+
 export {
   Sidebar,
   SidebarContent,
@@ -771,6 +812,7 @@ export {
   SidebarHeader,
   SidebarInput,
   SidebarInset,
+  SidebarLockButton,
   SidebarMenu,
   SidebarMenuAction,
   SidebarMenuBadge,
