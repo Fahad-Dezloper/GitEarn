@@ -163,14 +163,14 @@ const BountyEarners = () => {
                                 </div>
                             </div>
                             <div className="flex items-center gap-1">
-                                <div className="w-5 h-5">
+                                {/* <div className="w-5 h-5">
                                     <Image
                                         src="/usdc.svg"
                                         alt="USDC"
                                         width={20}
                                         height={20}
                                     />
-                                </div>
+                                </div> */}
                                 <span className="text-sm font-medium text-gray-800 dark:text-gray-100">
                                     {earner.amount} <span className="text-gray-500 dark:text-gray-400">USDC</span>
                                 </span>

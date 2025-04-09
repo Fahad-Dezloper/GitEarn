@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import SignIn from "@/components/sign-in";
@@ -14,14 +15,14 @@ const Topbar = () => {
   const pathSegments = pathname.split("/").filter(Boolean); // Remove empty strings
 
   // Function to format path names (e.g., "data-fetching" -> "Data Fetching")
-  const formatSegment = (segment) => {
+  const formatSegment = (segment: any) => {
     return segment
       .replace(/-/g, " ") // Replace dashes with spaces
-      .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize first letter
+      .replace(/\b\w/g, (char: any) => char.toUpperCase()); // Capitalize first letter
   };
 
   return (
-    <header className="flex h-16 justify-between shrink-0 mt-6 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+    <header className="flex justify-between mt-4 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
       <div className="flex items-center gap-2">
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
@@ -56,7 +57,7 @@ const Topbar = () => {
         </Breadcrumb>
       </div>
       <div className="flex items-center gap-2">
-      <SignIn />
+      {/* <SignIn /> */}
       <ModeToggle />
       <WalletMultiButton style={{}} />
       </div>

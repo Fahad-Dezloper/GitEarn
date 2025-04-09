@@ -2,10 +2,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const ExploreButton = () => {
+const ExploreButton = ({text, link}: {text: string, link: string}) => {
   return (
     <StyledWrapper>
-      <a href="#" className="btn-shine">Explore all bounties</a>
+      <a href={link} className="btn-shine">{text}</a>
     </StyledWrapper>
   );
 }

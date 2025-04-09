@@ -1,14 +1,31 @@
+"use client"
 import React from 'react'
 import SuggestedBounties from './SuggestedBounties';
 import TotalEarning from './TotalEarning';
 import HowitWorks from './HowitWorks';
 import BountyEarners from './BountyEarners';
+import AddBounty from './AddBounty';
+import { useSession } from 'next-auth/react';
 
 const MainPage = () => {
+    const { data: session } = useSession()
+    // console.log("its session", session);
+    // console.log("its session2", session.accessToken);
+
+    if(!session){
+        return <div>Wait here</div>
+    }
+    // console.log(session.accessToken);
+
+    const token = session.accessToken
+    if(!token){
+        return <div>Wait here</div>
+    }
+
     return (
-        <div className='w-full h-full flex gap-4 py-6'>
+        <div className='w-full h-full flex gap-8 py-6'>
             {/* left sidebar */}
-            <div className="w-[140vw] flex flex-col gap-4">
+            <div className="w-[140vw] flex flex-col gap-8">
                 <div className='w-full bggrad px-5 py-4 rounded-xl relative overflow-hidden bg-gradient-to-r from-[#2A2F3E] to-[#1A1F2E]'>
                     <div className="absolute -top-[40%] -left-[10%] w-[60%] h-[100%] bg-blue-500/20 blur-[100px] rounded-full" />
                     <div className="absolute -bottom-[40%] -right-[10%] w-[60%] h-[100%] bg-purple-500/20 blur-[100px] rounded-full" />
@@ -25,6 +42,7 @@ const MainPage = () => {
 
                 {/* Suggested Part */}
                 <SuggestedBounties />
+                <AddBounty token={token} />
             </div>
 
             {/* right sidebar */}

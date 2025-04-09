@@ -194,7 +194,7 @@ const SuggestedBounties = () => {
                             <h2 className='text-xl font-semibold text-gray-800 dark:text-gray-100'>Suggested for You</h2>
                         </div>
                         <div className='flex items-center gap-2'>
-                            <ExploreButton />
+                            <ExploreButton text='Explore all bounties' link='/bounty' />
                             <ArrowRight className='w-4 h-4 text-gray-500 dark:text-gray-400' />
                         </div>
                     </div>

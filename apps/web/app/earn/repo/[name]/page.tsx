@@ -27,7 +27,7 @@ export default function RepoDetails() {
       // console.log("iss", issuesRes);
       const issuesData = await issuesRes
       const prData = await prRes
-    //   console.log("issues data", issuesData);
+      console.log("issues data", issuesData);
 
       setIssues(issuesData.data)
       setPullRequests(prData.data)
