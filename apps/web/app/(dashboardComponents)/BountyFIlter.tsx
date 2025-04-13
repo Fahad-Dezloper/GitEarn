@@ -1,159 +1,97 @@
-
-"use client"
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { CheckIcon, FilterIcon } from "lucide-react";
-import { useState } from "react";
-import { 
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
+// import { Slider } from "@/components/ui/slider";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  FilterIcon, 
+  CheckIcon, 
+  XIcon,
+  DollarSignIcon 
+} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Toggle } from "@/components/ui/toggle";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
+// Available technologies for filtering
 const TECH_OPTIONS = [
   "JavaScript",
-  "TypeScript", 
-  "React", 
-  "Python", 
-  "Rust", 
-  "Go", 
-  "Node.js", 
-  "Vue", 
-  "Ruby", 
-  "PHP", 
+  "TypeScript",
+  "React",
+  "Python",
+  "Rust",
+  "Go",
+  "Node.js",
+  "Vue",
+  "Ruby",
+  "PHP",
   "Java",
   "C#",
   "C++",
-  "C"
+  "C",
 ];
 
-type FilterProps = {
+type FiltersProps = {
   onFilterChange: (filters: {
     minAmount: number;
     maxAmount: number;
     selectedTechs: string[];
+    onlyWithBounty: boolean;
   }) => void;
 };
 
-const BountyFilter = ({ onFilterChange }: FilterProps) => {
-  const [bountyRange, setBountyRange] = useState([0, 10000]);
+const BountyFilters = ({ onFilterChange }: FiltersProps) => {
+  const [bountyRange, setBountyRange] = useState<[number, number]>([0, 10000]);
   const [selectedTechs, setSelectedTechs] = useState<string[]>([]);
+  const [onlyWithBounty, setOnlyWithBounty] = useState(true);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   
-  const handleBountyRangeChange = (value: number[]) => {
-    setBountyRange(value);
-    onFilterChange({
-      minAmount: value[0],
-      maxAmount: value[1],
-      selectedTechs,
-    });
-  };
-
-  const handleTechChange = (tech: string) => {
-    const newSelectedTechs = selectedTechs.includes(tech)
-      ? selectedTechs.filter(t => t !== tech)
-      : [...selectedTechs, tech];
-    
-    setSelectedTechs(newSelectedTechs);
+  // Apply filters when they change
+  useEffect(() => {
     onFilterChange({
       minAmount: bountyRange[0],
       maxAmount: bountyRange[1],
-      selectedTechs: newSelectedTechs,
+      selectedTechs,
+      onlyWithBounty,
     });
+  }, [bountyRange, selectedTechs, onlyWithBounty, onFilterChange]);
+
+  const handleBountyRangeChange = (value: number[]) => {
+    setBountyRange([value[0], value[1]]);
   };
 
-  const handleReset = () => {
+  const handleTechChange = (tech: string) => {
+    setSelectedTechs((prev) =>
+      prev.includes(tech)
+        ? prev.filter((t) => t !== tech)
+        : [...prev, tech]
+    );
+  };
+
+  const handleBountyToggle = (checked: boolean) => {
+    setOnlyWithBounty(checked);
+  };
+
+  const resetFilters = () => {
     setBountyRange([0, 10000]);
     setSelectedTechs([]);
-    onFilterChange({
-      minAmount: 0,
-      maxAmount: 10000,
-      selectedTechs: [],
-    });
+    setOnlyWithBounty(true);
+  };
+
+  const removeTech = (tech: string) => {
+    setSelectedTechs((prev) => prev.filter((t) => t !== tech));
   };
 
   return (
-    <div className="space-y-6 p-4 border rounded-lg bg-card">
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="font-medium">Bounty Amount</h3>
-          <span className="text-sm text-muted-foreground">
-            ${bountyRange[0]} - ${bountyRange[1] === 10000 ? '10,000+' : bountyRange[1]}
-          </span>
-        </div>
-        <Slider
-          defaultValue={bountyRange}
-          min={0}
-          max={10000}
-          step={100}
-          value={bountyRange}
-          onValueChange={handleBountyRangeChange}
-          className="my-4"
-        />
-      </div>
+    <div className="w-full">
       
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="font-medium">Tech Stack</h3>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                <FilterIcon className="h-4 w-4 mr-2" />
-                {selectedTechs.length > 0 ? `${selectedTechs.length} selected` : 'Select technologies'}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>Technologies</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {TECH_OPTIONS.map((tech) => (
-                <DropdownMenuCheckboxItem
-                  key={tech}
-                  checked={selectedTechs.includes(tech)}
-                  onCheckedChange={() => handleTechChange(tech)}
-                >
-                  {tech}
-                  {selectedTechs.includes(tech) && (
-                    <CheckIcon className="h-4 w-4 ml-auto" />
-                  )}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-        <div className="flex flex-wrap gap-1 mt-2">
-          {selectedTechs.length > 0 ? (
-            selectedTechs.map((tech) => (
-              <div 
-                key={tech} 
-                className="flex items-center bg-secondary text-secondary-foreground px-2 py-1 text-xs rounded-md"
-              >
-                {tech}
-                <button
-                  className="ml-1 hover:text-destructive"
-                  onClick={() => handleTechChange(tech)}
-                >
-                  ×
-                </button>
-              </div>
-            ))
-          ) : (
-            <span className="text-sm text-muted-foreground">No technologies selected</span>
-          )}
-        </div>
-      </div>
-      
-      <Button 
-        variant="outline" 
-        size="sm" 
-        className="w-full" 
-        onClick={handleReset}
-      >
-        Reset Filters
-      </Button>
     </div>
   );
 };
 
-export default BountyFilter;
+export default BountyFilters;
