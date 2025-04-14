@@ -1,8 +1,21 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
+// vite.config.ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
-})
+  plugins: [react()],
+  build: {
+      rollupOptions: {
+          input: resolve(dirname(fileURLToPath(import.meta.url)), 'src/content.tsx'),
+          output: {
+            entryFileNames: 'content.js',
+          },
+      },
+      outDir: 'dist',
+      emptyOutDir: true,
+      sourcemap: true,
+      target: 'esnext',
+  },
+  });
