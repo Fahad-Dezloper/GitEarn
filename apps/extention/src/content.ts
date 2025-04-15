@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import './index.css'
+import '@solana/wallet-adapter-react-ui/styles.css';
 // This script runs in the context of the GitHub page
 
 // Function to inject our React app container

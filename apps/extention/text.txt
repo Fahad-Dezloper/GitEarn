@@ -1,0 +1,9 @@
+--> show issue details on popup.
+
+--> add [+] button  on this page also on issues
+https://github.com/Fahad-Dezloper/Crowdify/issues
+
+
+problem why do i have to refresh for button to appear on website issue
+
+--> make the button work for label and hide for the issues which are already assigned or have bounty on it

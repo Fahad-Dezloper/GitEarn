@@ -9,7 +9,7 @@
       {
         "matches": ["https://github.com/*/*/issues/*"],
         "js": ["src/content.js"],
-        "css": ["assets/index.css"]
+        "css": ["assets/styles-wm1KTgpq.css"]
       }
     ],
     "web_accessible_resources": [
