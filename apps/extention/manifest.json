@@ -9,7 +9,7 @@
       {
         "matches": ["https://github.com/*/*/issues/*"],
         "js": ["src/content.js"],
-        "css": ["assets/injectApp-CDPaBQVA.css"]
+        "css": ["assets/index.css"]
       }
     ],
     "web_accessible_resources": [

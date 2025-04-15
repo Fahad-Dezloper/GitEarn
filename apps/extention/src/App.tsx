@@ -1,35 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BountyProvider } from '../context/BountyContext';
-import BountyButton from '../components/BountyButton'
-import BountyPopup from '../components/BountyPopup'
-// import './App.css';
-
-// function BountyButton({ onClick }: { onClick: () => void }) {
-//   return (
-//     <BountyPopup />
-//   );
-// }
-
-// function BountyPopup({ isVisible }: { isVisible: boolean }) {
-//   return isVisible ? (
-//     <BountyPopup />
-//   ) : null;
-// }
+import AddBountyButton from './components/BountyButton';
+import { ThemeProvider } from './components/theme-provider';
 
 function App() {
-  const [popupVisible, setPopupVisible] = useState(false);
+  // const [popupVisible, setPopupVisible] = useState(false);
 
-  const handleBountyClick = () => {
-    alert('Bounty button clicked!');
-    setPopupVisible(true);
-  };
+  // const handleBountyClick = () => {
+  //   // alert('Bounty button clicked!');
+  //   setPopupVisible(!popupVisible);
+  // };
 
   return (
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
     <BountyProvider>
-      <BountyButton onClick={handleBountyClick} />
-      <BountyPopup isVisible={popupVisible} />
+      <AddBountyButton />
     </BountyProvider>
+    </ThemeProvider>
   );
 }
 
