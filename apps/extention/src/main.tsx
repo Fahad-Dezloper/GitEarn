@@ -1,23 +1,17 @@
-// src/main.tsx
-import ReactDOM from "react-dom/client";
-import BountyModal from "./components/BountyModal";
-import "./index.css";
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App';
 
-const mountGitEarnModal = () => {
-  if (document.getElementById("git-earn-modal-root")) return;
+const container = document.getElementById('root'); // Or your main app container ID
 
-  const div = document.createElement("div");
-  div.id = "git-earn-modal-root";
-  document.body.appendChild(div);
-
-  const root = ReactDOM.createRoot(div);
-  root.render(<BountyModal
-    onClose={() => {
-      div.remove();
-    }}
-    walletAddress="FAHAD123abc...xyz"
-    balance="3.25"
-  />);
-};
-
-export default mountGitEarnModal;
+if (container) {
+  const root = createRoot(container);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+} else {
+  console.error('Failed to find the root element for React app mounting.');
+}

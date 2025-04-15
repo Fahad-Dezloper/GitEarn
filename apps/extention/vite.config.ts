@@ -1,21 +1,22 @@
-// vite.config.ts
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import { resolve, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import { resolve } from 'path'
 
+// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   build: {
-      rollupOptions: {
-          input: resolve(dirname(fileURLToPath(import.meta.url)), 'src/content.tsx'),
-          output: {
-            entryFileNames: 'content.js',
-          },
+    outDir: 'dist',
+    rollupOptions: {
+      input: {
+        content: resolve(__dirname, 'src/content.ts'),
+        injectApp: resolve(__dirname, 'src/injectApp.ts')
       },
-      outDir: 'dist',
-      emptyOutDir: true,
-      sourcemap: true,
-      target: 'esnext',
-  },
-  });
+      output: {
+        entryFileNames: 'src/[name].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
+      }
+    }
+  }
+})

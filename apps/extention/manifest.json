@@ -1,25 +1,20 @@
 {
     "manifest_version": 3,
-    "name": "Git Earn",
-    "version": "1.0",
-    "description": "Add bounties to GitHub issues.",
-    "permissions": ["scripting", "storage"],
+    "name": "GitHub Bounty Extension",
+    "description": "Adds a Bounty button to GitHub issues",
+    "version": "1.0.0",
+    "permissions": ["activeTab"],
     "host_permissions": ["https://github.com/*"],
     "content_scripts": [
       {
-        "matches": ["https://github.com/*"],
-        "js": ["content.js"],
-        "css": ["assets/content-B8lYIPta.css"]
+        "matches": ["https://github.com/*/*/issues/*"],
+        "js": ["src/content.js"]
       }
     ],
     "web_accessible_resources": [
       {
-        "resources": ["*"],
-        "matches": ["<all_urls>"]
+        "resources": ["src/assets/*", "dist/assets/*", "src/injectApp.js"],
+        "matches": ["https://github.com/*"]
       }
-    ],
-    "action": {
-      "default_title": "Git Earn"
-    }
+    ]
   }
-  
