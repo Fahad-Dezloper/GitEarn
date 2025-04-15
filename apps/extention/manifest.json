@@ -8,7 +8,8 @@
     "content_scripts": [
       {
         "matches": ["https://github.com/*/*/issues/*"],
-        "js": ["src/content.js"]
+        "js": ["src/content.js"],
+        "css": ["assets/injectApp-CDPaBQVA.css"]
       }
     ],
     "web_accessible_resources": [

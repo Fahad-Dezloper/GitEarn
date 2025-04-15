@@ -1,17 +1,10 @@
-import { useBounty } from '../context/BountyContext';
-import './BountyButton.css';
+import React from 'react'
+import "./bounty-styles.css"
 
-function BountyButton() {
-  const { openPopup } = useBounty();
-
+const BountyButton = ({ onClick }: { onClick: () => void }) => {
   return (
-    <button 
-      className="btn btn-sm bounty-button"
-      onClick={openPopup}
-    >
-      Add Bounty
-    </button>
-  );
+    <button className="bounty-button" onClick={onClick}>💰 Create Bounty</button>
+  )
 }
 
-export default BountyButton;
+export default BountyButton

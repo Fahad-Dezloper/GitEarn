@@ -1,100 +1,47 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react';
-import { useBounty } from '../context/BountyContext';
-import './BountyPopup.css';
+import React from 'react'
+import "./bounty-styles.css"
+import { useState } from 'react'
 
-function BountyPopup() {
-  const { isPopupOpen, closePopup, issueData, addBounty } = useBounty();
-  const [bountyAmount, setBountyAmount] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
-
-  if (!isPopupOpen) return null;
-
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setMessage(null);
-
-    // Add validation
-    if (!bountyAmount || isNaN(Number(bountyAmount)) || parseFloat(bountyAmount) <= 0) {
-      setMessage({ type: 'error', text: 'Please enter a valid amount' });
-      setIsSubmitting(false);
-      return;
-    }
-
-    // Call the addBounty function from context
-    const result = await addBounty(parseFloat(bountyAmount));
-    
-    setIsSubmitting(false);
-    
-    if (result.success) {
-      setMessage({ type: 'success', text: result.message });
-      // Reset form
-      setBountyAmount('');
-      // Close popup after success (optional)
-      setTimeout(closePopup, 2000);
-    } else {
-      setMessage({ type: 'error', text: result.message });
-    }
-  };
-
+const BountyPopup = ({isVisible}: { isVisible: boolean }) => {
+    const [selectedAmount, setSelectedAmount] = useState("10 USDC")
+    if(isVisible === false) return null;
   return (
-    <div className="bounty-overlay" onClick={(e) => {
-      if ((e.target as HTMLElement).className === 'bounty-overlay') closePopup();
-    }}>
-      <div className="bounty-popup">
-        <h2>Add Bounty</h2>
-        
-        {issueData && (
-          <div className="issue-info">
-            <p><strong>Issue:</strong> {issueData.title}</p>
-            <p><strong>Repo:</strong> {issueData.repo}#{issueData.number}</p>
-          </div>
-        )}
-        
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="bounty-amount">Bounty Amount ($)</label>
-            <input
-              type="number"
-              id="bounty-amount"
-              value={bountyAmount}
-              onChange={(e) => setBountyAmount(e.target.value)}
-              placeholder="Enter amount"
-              min="0"
-              step="0.01"
-              disabled={isSubmitting}
-            />
-          </div>
-          
-          {message && (
-            <div className={`message ${message.type}`}>
-              {message.text}
+    <div className="modal-overlay">
+          <div className="modal-container">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h2 className="modal-title">Add Bounty to Issue</h2>
+                <button className="close-button">
+                  ×
+                </button>
+              </div>
+
+              <p className="modal-description">Select a bounty amount to incentivize solving this issue.</p>
+
+              <div className="issue-container">
+                <h3 className="issue-title">Add Rag model for projects</h3>
+                <p className="issue-project">ProjectHunt</p>
+              </div>
+
+              <div className="amount-options">
+                {["10 USDC", "50 USDC", "100 USDC", "Custom"].map((amount) => (
+                  <button
+                    key={amount}
+                    className={`amount-button ${selectedAmount === amount ? "selected" : ""}`}
+                    onClick={() => setSelectedAmount(amount)}
+                  >
+                    {amount}
+                  </button>
+                ))}
+              </div>
+
+              <div className="action-buttons">
+                <button className="add-bounty-button">Add Bounty</button>
+              </div>
             </div>
-          )}
-          
-          <div className="popup-buttons">
-            <button 
-              type="button" 
-              className="btn" 
-              onClick={closePopup}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </button>
-            <button 
-              type="submit" 
-              className="btn-primary btn"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Processing...' : 'Click Me'}
-            </button>
           </div>
-        </form>
-      </div>
-    </div>
-  );
+        </div>
+  )
 }
 
-export default BountyPopup;
+export default BountyPopup

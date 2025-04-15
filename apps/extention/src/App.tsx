@@ -1,23 +1,21 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BountyProvider } from '../context/BountyContext';
-import './App.css';
+import BountyButton from '../components/BountyButton'
+import BountyPopup from '../components/BountyPopup'
+// import './App.css';
 
-function BountyButton({ onClick }: { onClick: () => void }) {
-  return (
-    <button className="bounty-button" onClick={onClick}>
-      💰 Create Bounty
-    </button>
-  );
-}
+// function BountyButton({ onClick }: { onClick: () => void }) {
+//   return (
+//     <BountyPopup />
+//   );
+// }
 
-function BountyPopup({ isVisible }: { isVisible: boolean }) {
-  return isVisible ? (
-    <div className="bounty-popup">
-      <p>Bounty Popup is open!</p>
-    </div>
-  ) : null;
-}
+// function BountyPopup({ isVisible }: { isVisible: boolean }) {
+//   return isVisible ? (
+//     <BountyPopup />
+//   ) : null;
+// }
 
 function App() {
   const [popupVisible, setPopupVisible] = useState(false);
