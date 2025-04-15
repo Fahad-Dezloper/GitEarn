@@ -18,3 +18,23 @@
     --github-text: #c9d1d9;
   }
 }
+
+.bounty-button {
+  padding: 8px 12px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.bounty-popup {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  padding: 16px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
