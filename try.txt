@@ -36,8 +36,12 @@ next steps
 --> create a extention to show bounties on github also add a tag on there github issue
 --> show users solana id. to the all the people who have extention
 
-------------------------------------------------
-correct the filter and make it work in explore bounty page
-show the issues
-
 then work on extention
+
+
+------------------------------------------------
+
+http://localhost:3000/earn/bounties/add [Ui improvement like explore page]
+
+
+
