@@ -32,7 +32,7 @@ export default function HowitWorks() {
                             ${activeSteps.includes(0) ? 'text-[#007AFF] dark:text-[#00D1FF]' : 'text-gray-400 dark:text-gray-600'}`} />
                     </div>
                     <div className="flex flex-col leading-none gap-1">
-                        <h3 className="text-lg font-sora text-gray-800 dark:text-gray-100">
+                        <h3 className="text-sm font-sora text-gray-800 dark:text-gray-100">
                             Create your Profile
                         </h3>
                         <p className="text-gray-500 dark:text-gray-400">
@@ -57,11 +57,11 @@ export default function HowitWorks() {
                             ${activeSteps.includes(1) ? 'text-[#007AFF] dark:text-[#00D1FF]' : 'text-gray-400 dark:text-gray-600'}`} />
                     </div>
                     <div className="flex flex-col whitespace-nowrap leading-none gap-1">
-                        <h3 className="text-lg font-sora flex items-center gap-2 text-gray-800 dark:text-gray-100">
+                        <h3 className="text-sm font-sora flex items-center gap-2 text-gray-800 dark:text-gray-100">
                             Participate in <Github size={20} /> Bounties & Projects
                         </h3>
                         <p className="text-gray-500 flex items-center gap-2 dark:text-gray-400">
-                            Get assigned <span className='text-blue-500 font-black text-lg'> / </span> Submit first
+                            Get assigned <span className='text-blue-500 font-black text-sm'> / </span> Submit first
                         </p>
                     </div>
                 </div>
@@ -82,7 +82,7 @@ export default function HowitWorks() {
                             ${activeSteps.includes(2) ? 'text-[#007AFF] dark:text-[#00D1FF]' : 'text-gray-400 dark:text-gray-600'}`} />
                     </div>
                     <div className="flex flex-col leading-none gap-1">
-                        <h3 className="text-lg font-sora text-gray-800 dark:text-gray-100">
+                        <h3 className="text-sm font-sora text-gray-800 dark:text-gray-100">
                             Get Paid for Your Work
                         </h3>
                         <p className="text-gray-500 dark:text-gray-400">

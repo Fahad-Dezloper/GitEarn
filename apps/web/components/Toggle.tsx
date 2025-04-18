@@ -40,9 +40,9 @@ export function ModeToggle() {
 
 <Tabs defaultValue="System" className="w-fit rounded-full">
 <TabsList className="rounded-full">
-  <TabsTrigger onClick={() => setTheme("light")} value="Sun"><Sun /></TabsTrigger>
-  <TabsTrigger onClick={() => setTheme("dark")} value="Moon"><Moon /></TabsTrigger>
-  <TabsTrigger onClick={() => setTheme("system")} value="System"><LaptopMinimal /></TabsTrigger>
+  <TabsTrigger onClick={() => setTheme("light")} value="Sun"><Sun size={18} /></TabsTrigger>
+  <TabsTrigger onClick={() => setTheme("dark")} value="Moon"><Moon size={18} /></TabsTrigger>
+  <TabsTrigger onClick={() => setTheme("system")} value="System"><LaptopMinimal size={18} /></TabsTrigger>
 </TabsList>
 </Tabs>
   )

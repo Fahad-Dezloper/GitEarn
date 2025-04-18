@@ -57,9 +57,9 @@ const Topbar = () => {
         </Breadcrumb>
       </div>
       <div className="flex items-center gap-2">
-      {/* <SignIn /> */}
+      <SignIn />
       <ModeToggle />
-      <WalletMultiButton style={{}} />
+      <WalletMultiButton />
       </div>
     </header>
   );

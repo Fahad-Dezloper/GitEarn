@@ -46,7 +46,7 @@ const MainPage = () => {
             </div>
 
             {/* right sidebar */}
-            <div className="w-full flex flex-col gap-3">
+            <div className="max-w-[25vw] flex flex-col gap-3">
                 <TotalEarning />
                 <HowitWorks />
                 <BountyEarners />
