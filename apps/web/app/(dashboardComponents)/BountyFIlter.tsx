@@ -35,8 +35,9 @@ export default function BountyFilter({ tagList, onFilter }: FilterProps) {
     onFilter({ tags: updatedTags }) // pass array
   }
   return (
-    <div className="w-full flex flex-wrap items-center justify-between gap-4 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl px-4 py-3 shadow-sm">
+    <div className="w-full flex items-center justify-between gap-4 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl px-4 py-3 shadow-sm">
       
+      <div className="w-full flex gap-6">
       {/* Title */}
       <Input
         placeholder="Search title"
@@ -45,7 +46,7 @@ export default function BountyFilter({ tagList, onFilter }: FilterProps) {
       />
 
             {/* Posted Within */}
-            <Select onValueChange={(value) => onFilter({ posted: value })}>
+      <Select onValueChange={(value) => onFilter({ posted: value })}>
         <SelectTrigger className="w-[160px]">
           <SelectValue placeholder="Last 7 days" />
         </SelectTrigger>
@@ -59,20 +60,20 @@ export default function BountyFilter({ tagList, onFilter }: FilterProps) {
 
       {/* Min Bounty Slider */}
       <div>
-  <div className="flex justify-between text-sm text-muted-foreground mb-1">
-    <span>Minimum Amount</span>
-    <span>${minAmount}</span>
-  </div>
-  <Slider
-    value={[minAmount]}
-    max={3000}
-    step={50}
-    onValueChange={(value) => {
-      setMinAmount(value[0])
-      onFilter({ minAmount: value[0] })
-    }}
-  />
-</div>
+        <div className="flex justify-between min-w-[10vw] text-sm text-muted-foreground mb-1">
+          {/* <span>Minimum Amount</span> */}
+          <span>${minAmount}</span>
+        </div>
+        <Slider
+          value={[minAmount]}
+          max={3000}
+          step={50}
+          onValueChange={(value) => {
+            setMinAmount(value[0])
+            onFilter({ minAmount: value[0] })
+          }}
+        />
+      </div>
 
       {/* Min Stars Slider */}
       {/* <div className="flex items-center gap-2">
@@ -108,6 +109,7 @@ export default function BountyFilter({ tagList, onFilter }: FilterProps) {
           </div>
         </PopoverContent>
       </Popover>
+      </div>
 
       {/* Reset Button */}
       <button

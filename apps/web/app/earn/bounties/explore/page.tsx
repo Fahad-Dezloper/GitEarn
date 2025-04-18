@@ -203,7 +203,7 @@ export default function Page() {
       </div>
 
       {/* Filters */}
-      <div className="lg:sticky lg:top-20">
+      <div className="sticky top-6">
         <BountyFilter tagList={tagList} onFilter={handleFilter} />
       </div>
 

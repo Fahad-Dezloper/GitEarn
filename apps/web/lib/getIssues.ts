@@ -5,13 +5,12 @@ export async function fetchAndSortGitHubIssues(githubToken: string) {
       Accept: "application/vnd.github+json",
     };
   
-    // 1. Fetch all repositories (owned & collaborators)
     const reposRes = await fetch("https://api.github.com/user/repos?per_page=100", {
       headers,
       cache: "no-store",
     });
     const repos = await reposRes.json();
-    // console.log("its repos", repos);
+    console.log("its repos", repos);
   
     const allIssues = [];
   
