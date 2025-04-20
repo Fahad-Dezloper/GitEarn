@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface UserDetails {
+    avatar_url: string | undefined;
     name?: string;
     email?: string;
 }
