@@ -17,6 +17,8 @@ import { LuExternalLink } from "react-icons/lu";
 import AddBountyButtonNew from "./AddBountyButtonNew";
 import { formatDate } from "@/lib/date";
 import { ExampleSheetWithKeyboard } from "../components/SheetWithKeyboard/ExampleSheetWithKeyboard";
+import { CursorClickIcon } from "@/components/ui/cursor-click";
+import { Sheet } from "@silk-hq/components";
 
 
 type Label = {
@@ -108,7 +110,7 @@ export default function IssuesList({
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{issue.title}</h3>
           </div>
           {/* Bounty Amount with Tooltip */}
-          <div className="relative group">
+          <div className="relative">
              <ExampleSheetWithKeyboard />
           </div>
         </div>
@@ -127,7 +129,7 @@ export default function IssuesList({
       
         {/* Footer Meta */}
         <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-          <span>#{issue.number} opened on{" "} {formatDate(new Date(issue.created_at).toLocaleDateString())}</span>
+          <span>#{issue.number} opened on{" "} <span className="underline">{formatDate(new Date(issue.created_at).toLocaleDateString())}</span></span>
           <div className="flex items-center gap-3">
             <Link
               href="/"
