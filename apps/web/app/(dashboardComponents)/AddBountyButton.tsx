@@ -15,7 +15,7 @@ const AddBountyButton = ({title, repo}: {title: any, repo: any }) => {
   return (
     <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant="outline" className="bg-[#007AFF]/10 cursor-pointer hover:bg-[#007AFF]/20 text-[#007AFF] border-[#007AFF]/20">
+                    <Button variant="outline" className="cursor-pointer">
                       Add Bounty
                     </Button>
                   </DialogTrigger>

@@ -10,6 +10,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { motion } from 'motion/react'
+import Link from "next/link";
+import { GithubIcon } from "@/components/ui/github";
+import { LuExternalLink } from "react-icons/lu";
+import AddBountyButtonNew from "./AddBountyButtonNew";
+import { formatDate } from "@/lib/date";
+import { ExampleSheetWithKeyboard } from "../components/SheetWithKeyboard/ExampleSheetWithKeyboard";
+
 
 type Label = {
   name: string;
@@ -83,62 +91,62 @@ export default function IssuesList({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {filteredIssues.map((issue) => (
-        <Card key={issue.id} className="bg-muted/30 hover:shadow-md transition">
-          <CardHeader>
-            <CardTitle className="text-base">{issue.title}</CardTitle>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {issue.labels.map((label) => (
-                <Badge
-                  key={label.name}
-                  style={{ backgroundColor: `#${label.color}` }}
-                >
-                  {label.name}
-                </Badge>
-              ))}
-            </div>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-2">
-            {issue.body && (
-              <p className="text-sm text-muted-foreground line-clamp-3">
-                {issue.body}
-              </p>
-            )}
-            <div className="text-xs text-gray-500">
-              #{issue.number} opened on{" "}
-              {new Date(issue.created_at).toLocaleDateString()} | Repo:{" "}
-              {issue.repoName}
-            </div>
-            <div className="flex justify-between items-center mt-2">
-              <a
-                href={issue.html_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-blue-600 underline"
-              >
-                View on GitHub
-              </a>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="default" size="sm">
-                    Add Bounty
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Add Bounty to Issue</DialogTitle>
-                  </DialogHeader>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    You're about to add a bounty to <strong>{issue.title}</strong> in{" "}
-                    <code>{issue.repoName}</code>
-                  </p>
-                  <div className="text-muted-foreground">[ Add your form here ]</div>
-                </DialogContent>
-              </Dialog>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {filteredIssues.map((issue, index) => (
+        <>
+        <motion.div
+        key={issue.title}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: index * 0.05 }}
+        className="bg-white flex flex-col justify-between dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-all"
+      >
+        {/* Header */}
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex flex-col gap-1">
+            <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{issue.repoName}</p>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{issue.title}</h3>
+          </div>
+          {/* Bounty Amount with Tooltip */}
+          <div className="relative group">
+             <ExampleSheetWithKeyboard />
+          </div>
+        </div>
+      
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {issue.labels.map((label, i) => (
+            <span
+              key={i}
+              className="text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 px-2 py-0.5 rounded-full"
+            >
+              {label.name}
+            </span>
+          ))}
+        </div>
+      
+        {/* Footer Meta */}
+        <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+          <span>#{issue.number} opened on{" "} {formatDate(new Date(issue.created_at).toLocaleDateString())}</span>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              target="_blank"
+              className="transition-colors"
+            >
+              <GithubIcon className="hover:text-blue-600 dark:hover:text-blue-400" />
+            </Link>
+            <Link
+              href="/"
+              target="_blank"
+              className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              <LuExternalLink size={22} />
+            </Link>
+          </div>
+        </div>
+      </motion.div>
+      </>
       ))}
     </div>
   );

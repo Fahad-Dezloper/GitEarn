@@ -32,7 +32,6 @@ export default function Page() {
       getIssues();
     }, []);
   
-    // Flatten all labels from issues
     const allLabels = Array.from(
       new Set(
         issuesRepo.flatMap((r) =>

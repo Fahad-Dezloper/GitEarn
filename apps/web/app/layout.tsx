@@ -28,9 +28,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${sora.variable} ${roboto.variable} font-roboto antialiased`}
+        className={`${sora.variable} ${roboto.variable} font-roboto antialiased relative`}
       >
         <Provider>
         <AppWalletProvider>
