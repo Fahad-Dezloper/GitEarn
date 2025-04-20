@@ -4,6 +4,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { SessionProvider } from "next-auth/react";
 import { ReactNode } from "react";
 import Topbar from "../(dashboardComponents)/Topbar";
+import { UserDetailsProvider } from "../context/UserDetailsProvider";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -11,6 +12,7 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return <div className="flex">
+    <UserDetailsProvider>
     <SessionProvider>
      <SidebarProvider>
     <AppSidebar />
@@ -20,5 +22,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     </div>
     </SidebarProvider>
     </SessionProvider>
+    </UserDetailsProvider>
     </div>;
 }

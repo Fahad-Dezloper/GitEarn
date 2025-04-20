@@ -144,25 +144,25 @@ const data = {
     //     },
     //   ],
     // },
-    {
-      title: "Settings",
-      url: "/earn/settings",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "/earn/settings/general",
-        },
-        {
-          title: "Notifications",
-          url: "/earn/settings/notifications",
-        },
-        {
-          title: "Wallet & Payments",
-          url: "/earn/settings/wallet",
-        },
-      ],
-    },
+    // {
+    //   title: "Settings",
+    //   url: "/earn/settings",
+    //   icon: Settings2,
+    //   items: [
+    //     {
+    //       title: "General",
+    //       url: "/earn/settings/general",
+    //     },
+    //     {
+    //       title: "Notifications",
+    //       url: "/earn/settings/notifications",
+    //     },
+    //     {
+    //       title: "Wallet & Payments",
+    //       url: "/earn/settings/wallet",
+    //     },
+    //   ],
+    // },
   ],
   navSecondary: [
     {

@@ -61,7 +61,7 @@ export default function Page() {
           onFilterChange={setFilters}
         />
   
-        <IssuesList issuesRepo={issuesRepo} filters={filters} />
+        <IssuesList issuesRepo={issuesRepo} filters={filters} loading={loading} />
       </div>
     );
   }

@@ -412,3 +412,9 @@ textarea {
   );
 }
 
+.imggg{
+  background-image: url("/Background.png");
+  width: 100%;
+  object-fit: contain;
+  background-repeat: no-repeat;
+}

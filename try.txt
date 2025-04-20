@@ -40,8 +40,11 @@ then work on extention
 
 
 ------------------------------------------------
+profile page
 
-http://localhost:3000/earn/bounties/add [Ui improvement like explore page]
+https://21st.dev/originui/button/user-button-with-username
+
+
 
 
 

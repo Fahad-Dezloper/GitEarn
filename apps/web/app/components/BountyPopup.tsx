@@ -146,8 +146,6 @@ const BountyPopup = ({title, description, labels, repository, assignees, prRaise
     }
   };
 
-
-
   return (
     <div className="h-full bg-white z-50 relative dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden flex flex-col shadow-lg">
       {/* Header */}
@@ -235,7 +233,7 @@ const BountyPopup = ({title, description, labels, repository, assignees, prRaise
                 <div className="space-y-1">
                   <p className="text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-medium">Status</p>
                   <div className="flex items-center gap-1.5">
-                    <span className={`inline-block w-2 h-2 rounded-full ${prRaise ? "bg-blue-500" : "bg-amber-500"}`}></span>
+                    <span className={`inline-block w-2 h-2 rounded-full ${prRaise ? "bg-blue-500" : "bg-green-500"}`}></span>
                     <p className="text-sm font-medium">{status}</p>
                   </div>
                 </div>

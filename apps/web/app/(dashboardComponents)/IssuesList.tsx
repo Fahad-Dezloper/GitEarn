@@ -33,6 +33,7 @@ type Repository = {
 export default function IssuesList({
   issuesRepo,
   filters,
+  loading
 }: {
   issuesRepo: Repository[];
   filters: {
@@ -74,11 +75,18 @@ export default function IssuesList({
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
 
+
+    if(loading){
+      return <div>We are coming MFS</div>
+    }
+
+
   if (!filteredIssues.length) {
     return <p className="text-muted-foreground">No matching issues found.</p>;
   }
 
   // console.log("issue List page", filteredIssues);
+
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

@@ -33,7 +33,7 @@ export default function IssueFilter({
   const handleChange = (field: string, value: string) => {
     onFilterChange({ ...filters, [field]: value });
     if (field === "reset") {
-      onFilterChange({ repo: "", label: "", search: "", date: "" });
+      onFilterChange({ repo: "All Repositories", label: "All Labels", search: "", date: "" });
       return;
     }
   
@@ -46,6 +46,8 @@ export default function IssueFilter({
     }
   };
   const [date, setDate] = useState<Date>();
+
+  // console.log("")
 
   return (
     <div className="w-full flex items-center justify-between gap-4 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl px-4 py-3 shadow-sm">
