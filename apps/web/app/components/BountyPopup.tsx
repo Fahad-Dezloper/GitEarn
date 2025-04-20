@@ -5,46 +5,46 @@ import { Scroll, Sheet, useClientMediaQuery } from "@silk-hq/components";
 import { Calendar, ExternalLink, GitPullRequest, MessageSquare, Plus, RefreshCw, Tag, X } from "lucide-react";
 import { useState } from "react";
 
-const mockIssue = {
-  title: "Fix dark mode flicker on initial load",
-  description:
-    "There's a visible flicker when the page switches between light and dark themes on initial render.",
-  labels: ["bug", "frontend", "dark-mode"],
-  repository: "open-source/ui-lib",
-  assignees: ["@johndoe", "@janesmith"],
-  prRaised: true,
-  issueLink: "https://github.com/open-source/ui-lib/issues/123",
-  createdAt: "2025-04-01T10:00:00Z",
-  updatedAt: "2025-04-18T17:30:00Z",
-  status: "In Progress",
-  latestComment: {
-    user: "@janesmith",
-    comment:
-      "I've pushed a fix for this to the `bug/flicker-fix` branch. Can someone review the PR?",
-    date: "2025-04-18T17:00:00Z",
-  },
-  activityLog: [
-    {
-      type: "comment",
-      user: "@johndoe",
-      content: "I can reproduce this issue on Chrome 123 and Safari 16. It happens because we're setting the theme class before the DOM is fully loaded.",
-      date: "2025-04-12T10:30:00Z"
-    },
-    {
-      type: "status",
-      from: "Open",
-      to: "In Progress",
-      user: "@janesmith",
-      date: "2025-04-15T14:20:00Z"
-    },
-    {
-      type: "commit",
-      user: "@janesmith",
-      content: "Added theme initialization in a preload script - 3c42f5a",
-      date: "2025-04-18T16:45:00Z"
-    }
-  ]
-};
+// const mockIssue = {
+//   title: "Fix dark mode flicker on initial load",
+//   description:
+//     "There's a visible flicker when the page switches between light and dark themes on initial render.",
+//   labels: ["bug", "frontend", "dark-mode"],
+//   repository: "open-source/ui-lib",
+//   assignees: ["@johndoe", "@janesmith"],
+//   prRaised: true,
+//   issueLink: "https://github.com/open-source/ui-lib/issues/123",
+//   createdAt: "2025-04-01T10:00:00Z",
+//   updatedAt: "2025-04-18T17:30:00Z",
+//   status: "In Progress",
+//   latestComment: {
+//     user: "@janesmith",
+//     comment:
+//       "I've pushed a fix for this to the `bug/flicker-fix` branch. Can someone review the PR?",
+//     date: "2025-04-18T17:00:00Z",
+//   },
+//   activityLog: [
+//     {
+//       type: "comment",
+//       user: "@johndoe",
+//       content: "I can reproduce this issue on Chrome 123 and Safari 16. It happens because we're setting the theme class before the DOM is fully loaded.",
+//       date: "2025-04-12T10:30:00Z"
+//     },
+//     {
+//       type: "status",
+//       from: "Open",
+//       to: "In Progress",
+//       user: "@janesmith",
+//       date: "2025-04-15T14:20:00Z"
+//     },
+//     {
+//       type: "commit",
+//       user: "@janesmith",
+//       content: "Added theme initialization in a preload script - 3c42f5a",
+//       date: "2025-04-18T16:45:00Z"
+//     }
+//   ]
+// };
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleString(undefined, {
@@ -71,26 +71,28 @@ const formatDateRelative = (iso: string) => {
   }
 };
 
-const BountyPopup = () => {
+const BountyPopup = ({title, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId}) => {
   const largeViewport = useClientMediaQuery("(min-width: 800px)");
   const [newLabel, setNewLabel] = useState("");
-  const [labels, setLabels] = useState(mockIssue.labels);
+  // const [labels, setLabels] = useState(labels);
   const [showLabelInput, setShowLabelInput] = useState(false);
   const [bountyAmount, setBountyAmount] = useState<string | number>("");
   const [customAmount, setCustomAmount] = useState("");
   const [showCustomAmount, setShowCustomAmount] = useState(false);
-  const [activityView, setActivityView] = useState<"latest" | "all">("latest");
+  const [activityView, setActivityView] = useState<"latest" | "all">("all");
+
+  console.log("bounty popup2", title, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId)
 
   const addLabel = () => {
     if (newLabel && !labels.includes(newLabel)) {
-      setLabels([...labels, newLabel]);
+      // setLabels([...labels, newLabel]);
       setNewLabel("");
       setShowLabelInput(false);
     }
   };
 
   const removeLabel = (labelToRemove: string) => {
-    setLabels(labels.filter(label => label !== labelToRemove));
+    // setLabels(labels.filter(label => label !== labelToRemove));
   };
 
   const handleBountySelect = (amount: string | number) => {
@@ -126,6 +128,7 @@ const BountyPopup = () => {
     ];
     
     // Use a simple hash function to select a color
+    console.log("label is this", label)
     const hash = label.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
     return colors[hash % colors.length];
   };
@@ -142,6 +145,8 @@ const BountyPopup = () => {
         return <Calendar size={14} className="text-gray-500" />;
     }
   };
+
+
 
   return (
     <div className="h-full bg-white z-50 relative dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden flex flex-col shadow-lg">
@@ -213,25 +218,25 @@ const BountyPopup = () => {
               
               {/* Title and Description */}
               <div className="space-y-2 mb-6">
-                <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{mockIssue.title}</h2>
-                <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed">{mockIssue.description}</p>
+                <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{title}</h2>
+                <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed">{description}</p>
               </div>
 
               {/* Metadata */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg p-4 border border-zinc-200 dark:border-zinc-700 mb-6">
                 <div className="space-y-1">
                   <p className="text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-medium">Created</p>
-                  <p className="text-sm font-medium">{formatDate(mockIssue.createdAt)}</p>
+                  <p className="text-sm font-medium">{formatDate(created)}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-medium">Last Updated</p>
-                  <p className="text-sm font-medium">{formatDate(mockIssue.updatedAt)}</p>
+                  <p className="text-sm font-medium">{formatDate(updated)}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-medium">Status</p>
                   <div className="flex items-center gap-1.5">
-                    <span className={`inline-block w-2 h-2 rounded-full ${mockIssue.prRaised ? "bg-blue-500" : "bg-amber-500"}`}></span>
-                    <p className="text-sm font-medium">{mockIssue.status}</p>
+                    <span className={`inline-block w-2 h-2 rounded-full ${prRaise ? "bg-blue-500" : "bg-amber-500"}`}></span>
+                    <p className="text-sm font-medium">{status}</p>
                   </div>
                 </div>
               </div>
@@ -254,14 +259,14 @@ const BountyPopup = () => {
                   )}
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {labels.map((label) => (
+                  {labels != null && labels.map((label, i) => (
                     <span
-                      key={label}
-                      className={`px-2.5 py-1 rounded-full text-sm font-medium flex items-center gap-1 ${getLabelColor(label)}`}
+                      key={i}
+                      className={`px-2.5 py-1 rounded-full text-sm font-medium flex items-center gap-1 ${getLabelColor(label.name)}`}
                     >
-                      {label}
+                      {label.name}
                       <button 
-                        onClick={() => removeLabel(label)}
+                        onClick={() => removeLabel(label.name)}
                         className="hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50 rounded-full p-0.5"
                       >
                         <X size={12} />
@@ -306,7 +311,7 @@ const BountyPopup = () => {
                 <div className="space-y-2">
                   <h3 className="font-semibold text-zinc-800 dark:text-zinc-100">Repository</h3>
                   <div className="px-3 py-2 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm font-mono">
-                    {mockIssue.repository}
+                    {repository}
                   </div>
                 </div>
 
@@ -314,12 +319,12 @@ const BountyPopup = () => {
                 <div className="space-y-2">
                   <h3 className="font-semibold text-zinc-800 dark:text-zinc-100">Pull Request</h3>
                   <div className={`px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${
-                    mockIssue.prRaised 
+                    prRaise 
                       ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800/50" 
                       : "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/50"
                   }`}>
-                    <span className={`inline-block w-2 h-2 rounded-full ${mockIssue.prRaised ? "bg-green-500" : "bg-amber-500"}`}></span>
-                    {mockIssue.prRaised ? "PR raised" : "No PR yet"}
+                    <span className={`inline-block w-2 h-2 rounded-full ${prRaise ? "bg-green-500" : "bg-amber-500"}`}></span>
+                    {prRaise ? "PR raised" : "No PR yet"}
                   </div>
                 </div>
               </div>
@@ -328,7 +333,7 @@ const BountyPopup = () => {
               <div className="space-y-3 mb-6">
                 <h3 className="font-semibold text-zinc-800 dark:text-zinc-100">Assignees</h3>
                 <div className="flex gap-2">
-                  {mockIssue.assignees.map((user) => (
+                  {assignees != null && assignees.map((user) => (
                     <div 
                       key={user} 
                       className="flex items-center gap-2 text-sm p-2 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-md"
@@ -346,13 +351,13 @@ const BountyPopup = () => {
               <div className="space-y-2 mb-6">
                 <h3 className="font-semibold text-zinc-800 dark:text-zinc-100">Issue Link</h3>
                 <a
-                  href={mockIssue.issueLink}
+                  href={issueLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors group"
                 >
                   <div className="px-3 py-2 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm w-full flex justify-between items-center group-hover:border-blue-300 dark:group-hover:border-blue-500 transition-colors">
-                    <span className="font-mono truncate">{mockIssue.issueLink}</span>
+                    <span className="font-mono truncate">{issueLink}</span>
                     <ExternalLink size={14} className="flex-shrink-0" />
                   </div>
                 </a>
@@ -388,7 +393,7 @@ const BountyPopup = () => {
 
                 {/* Activity Log */}
                 <div className="space-y-4">
-                  {(activityView === "latest" ? [mockIssue.activityLog[mockIssue.activityLog.length - 1]] : mockIssue.activityLog).map((activity, idx) => (
+                  {(activityView === "latest" ? [latestComment[latestComment.length - 1]] : latestComment).map((activity, idx) => (
                     <div key={idx} className="border border-zinc-200 dark:border-zinc-700 rounded-lg overflow-hidden">
                       <div className="bg-zinc-50 dark:bg-zinc-800 px-4 py-2 flex justify-between items-center border-b border-zinc-200 dark:border-zinc-700">
                         <div className="flex items-center gap-2">
@@ -424,26 +429,26 @@ const BountyPopup = () => {
                   ))}
                 </div>
 
-                {/* Latest Comment */}
-                <div className="mt-6">
+                {/* Latest Comments */}
+                {/* <div className="mt-6">
                   <h3 className="font-semibold text-zinc-800 dark:text-zinc-100 mb-3">Latest Comment</h3>
                   <div className="border border-zinc-200 dark:border-zinc-700 rounded-lg overflow-hidden">
                     <div className="bg-zinc-50 dark:bg-zinc-800 px-4 py-2 flex justify-between items-center border-b border-zinc-200 dark:border-zinc-700">
                       <div className="flex items-center gap-2">
                         <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white text-xs font-bold">
-                          {mockIssue.latestComment.user.charAt(1).toUpperCase()}
+                          {latestComment.user.charAt(1).toUpperCase()}
                         </div>
-                        <span className="font-medium text-sm">{mockIssue.latestComment.user}</span>
+                        <span className="font-medium text-sm">{latestComment.user}</span>
                       </div>
                       <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                        {formatDateRelative(mockIssue.latestComment.date)}
+                        {formatDateRelative(latestComment.date)}
                       </span>
                     </div>
                     <div className="p-4 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 text-sm leading-relaxed">
-                      {mockIssue.latestComment.comment}
+                      {latestComment.comment}
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </Scroll.Content>

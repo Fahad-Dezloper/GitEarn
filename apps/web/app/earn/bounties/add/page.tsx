@@ -21,6 +21,7 @@ export default function Page() {
         try {
           setLoading(true);
           const res = await axios.get(`/api/issues/get`);
+          // console.log("issues data", res.data);
           setIssuesRepo(res.data);
         } catch (e) {
           console.error("Error while fetching:", e);

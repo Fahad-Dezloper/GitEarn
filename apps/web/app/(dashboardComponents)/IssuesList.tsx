@@ -1,24 +1,10 @@
 "use client";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from 'motion/react'
 import Link from "next/link";
 import { GithubIcon } from "@/components/ui/github";
 import { LuExternalLink } from "react-icons/lu";
-import AddBountyButtonNew from "./AddBountyButtonNew";
 import { formatDate } from "@/lib/date";
 import { ExampleSheetWithKeyboard } from "../components/SheetWithKeyboard/ExampleSheetWithKeyboard";
-import { CursorClickIcon } from "@/components/ui/cursor-click";
-import { Sheet } from "@silk-hq/components";
 
 
 type Label = {
@@ -92,10 +78,11 @@ export default function IssuesList({
     return <p className="text-muted-foreground">No matching issues found.</p>;
   }
 
+  // console.log("issue List page", filteredIssues);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {filteredIssues.map((issue, index) => (
-        <>
         <motion.div
         key={issue.title}
         initial={{ opacity: 0, y: 20 }}
@@ -109,13 +96,11 @@ export default function IssuesList({
             <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{issue.repoName}</p>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{issue.title}</h3>
           </div>
-          {/* Bounty Amount with Tooltip */}
           <div className="relative">
-             <ExampleSheetWithKeyboard />
+             <ExampleSheetWithKeyboard title={issue.title} description={issue.body} labels={issue.labels} repository={issue.repoName} assignees={issue.assignees} prRaise={issue.prRaised} issueLink={issue.issueLink} created={issue.created_at} updated={issue.updated_at} status={issue.state} latestComment={issue.activityLog} issueId={issue.id}  />
           </div>
         </div>
       
-        {/* Tags */}
         <div className="flex flex-wrap gap-2 mb-4">
           {issue.labels.map((label, i) => (
             <span
@@ -127,7 +112,6 @@ export default function IssuesList({
           ))}
         </div>
       
-        {/* Footer Meta */}
         <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
           <span>#{issue.number} opened on{" "} <span className="underline">{formatDate(new Date(issue.created_at).toLocaleDateString())}</span></span>
           <div className="flex items-center gap-3">
@@ -148,7 +132,6 @@ export default function IssuesList({
           </div>
         </div>
       </motion.div>
-      </>
       ))}
     </div>
   );

@@ -32,7 +32,7 @@ export default function BountyFilter({ tagList, onFilter }: FilterProps) {
       : [...selectedTags, tag]
 
     setSelectedTags(updatedTags)
-    onFilter({ tags: updatedTags }) // pass array
+    onFilter({ tags: updatedTags })
   }
   return (
     <div className="w-full flex items-center justify-between gap-4 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl px-4 py-3 shadow-sm">
