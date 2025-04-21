@@ -199,7 +199,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const {data: session} = useSession();
   // console.log(session?.user);
   return (
-    <Sidebar variant="floating" {...props}>
+    <Sidebar variant="floating" className="" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
