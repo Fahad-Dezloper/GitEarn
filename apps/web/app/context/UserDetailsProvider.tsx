@@ -2,26 +2,28 @@
 import axios from 'axios';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-interface UserDetails {
+interface UserDetailss {
     avatar_url: string | undefined;
     name?: string;
     email?: string;
 }
 
-interface UserDetailsContextType {
-    userDetails: UserDetails;
-    setUserDetails: React.Dispatch<React.SetStateAction<UserDetails>>;
+interface UserDetailssContextType {
+    userDetailss: UserDetailss;
+    setUserDetailss: React.Dispatch<React.SetStateAction<UserDetailss>>;
 }
 
-const UserDetailsContext = createContext<UserDetailsContextType | undefined>(undefined);
+const UserDetailsContext = createContext<UserDetailssContextType | undefined>(undefined);
 
 export function UserDetailsProvider({ children }: { children: ReactNode }) {
-    const [userDetails, setUserDetails] = useState<UserDetails>({});
+    const [userDetailss, setUserDetailss] = useState<UserDetailss>({});
+    const [wakaTimeDetails, setWakaTimeDetails] = useState({});
 
     async function getUserDets(){
         const res = await axios.get("/api/user/details");
-        setUserDetails(res.data.message);
-        // console.log("user details", res.data.message);
+        setUserDetailss(res.data.github);
+        setWakaTimeDetails(res.data.wakatime)
+        // console.log("user details response from context", res.data);
     }
 
     useEffect(() => {
@@ -33,7 +35,7 @@ export function UserDetailsProvider({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <UserDetailsContext.Provider value={{ userDetails, setUserDetails }}>
+        <UserDetailsContext.Provider value={{ userDetailss, setUserDetailss, wakaTimeDetails, setWakaTimeDetails }}>
             {children}
         </UserDetailsContext.Provider>
     );
