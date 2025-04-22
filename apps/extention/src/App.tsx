@@ -75,7 +75,7 @@ function mountBountyPopup() {
         </BountyProvider>
       </React.StrictMode>
     );
-    console.log('Bounty Popup mounted.');
+    // console.log('Bounty Popup mounted.');
   }
 }
 
