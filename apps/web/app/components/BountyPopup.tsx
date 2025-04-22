@@ -81,7 +81,7 @@ const BountyPopup = ({title, description, labels, repository, assignees, prRaise
   const [showCustomAmount, setShowCustomAmount] = useState(false);
   const [activityView, setActivityView] = useState<"latest" | "all">("all");
 
-  console.log("bounty popup2", title, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId)
+  // console.log("bounty popup2", prRaise, issueLink)
 
   const addLabel = () => {
     if (newLabel && !labels.includes(newLabel)) {

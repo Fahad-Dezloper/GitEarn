@@ -149,7 +149,11 @@ export async function GET(_request: Request) {
           });
 
           const events = eventsRes.data;
-          const prRaised = events.some((event: any) => event.event === 'cross-referenced' && event.source?.pull_request);
+          const prRaised = events.some((event: any) =>
+            event.event === 'cross-referenced' &&
+            event.source?.issue?.pull_request &&
+            event.source?.type === 'issue'
+          );
 
           // Build Activity Log
           const activityLog: ActivityLogEntry[] = [];
@@ -164,7 +168,6 @@ export async function GET(_request: Request) {
             });
           }
 
-          // Add status change activity to log
           for (const event of events) {
             if (event.event === "closed" || event.event === "reopened") {
               activityLog.push({
@@ -185,7 +188,8 @@ export async function GET(_request: Request) {
             }
           }
 
-          // Return the fully mapped issue with all the details
+          console.log("issue main details", issue);
+
           return {
             id: issue.id,
             title: issue.title,

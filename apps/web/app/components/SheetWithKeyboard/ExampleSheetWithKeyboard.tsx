@@ -15,7 +15,7 @@ import { CursorClickIcon } from "@/components/ui/cursor-click";
 
 const ExampleSheetWithKeyboard = ({title, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId}) => {
 
-  console.log("bounty popup", title, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId)
+  // console.log("bounty popup", title, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId)
 
   return (
     <SheetWithKeyboard
