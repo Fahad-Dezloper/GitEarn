@@ -188,7 +188,7 @@ export async function GET(_request: Request) {
             }
           }
 
-          console.log("issue main details", issue);
+          // console.log("issue main details", issue);
 
           return {
             id: issue.id,

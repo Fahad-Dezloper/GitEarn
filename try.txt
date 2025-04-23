@@ -45,11 +45,9 @@ profile page
 https://21st.dev/originui/button/user-button-with-username
 
 
-next make the add bounty work for db save the bounty in db fetch in explore page hide it. make changes in github issue page by adding label. in add bounty page make change.
+next make the add bounty button work for db save the bounty in db fetch in explore page hide it. make changes in github issue page by adding label. in add bounty page make change.
 
 
+design schema
 
-
-
-
-
+https://chatgpt.com/c/6807de56-d908-800c-8112-ec1dca86fa9d

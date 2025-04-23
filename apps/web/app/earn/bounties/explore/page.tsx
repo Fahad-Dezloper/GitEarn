@@ -3,6 +3,7 @@
 import BountyList from "@/app/(dashboardComponents)/BountyList"
 import BountyFilter from "@/app/(dashboardComponents)/BountyFIlter"
 import { useEffect, useState } from "react"
+import { useBountyDetails } from "@/app/context/BountyContextProvider";
 
 export default function Page() {
   
@@ -145,17 +146,24 @@ export default function Page() {
     }
   ];
 
-  const [bounties, setBounties] = useState(Allbounties)
+  
+  const { bountyIssues, setBountyIssues } = useBountyDetails() as {
+    bountyIssues: typeof Allbounties;
+    setBountyIssues: (bounties: typeof Allbounties) => void;
+  };
+  
+  // const [bounties, setBounties] = useState(bountyIssues)
   const [tagList, setTaglist] = useState<string[]>([])
+  console.log("bounty explore page", bountyIssues);
 
   useEffect(() => {
-    const tags = [...new Set(Allbounties.flatMap((b) => b.tags))]
+    const tags = [...new Set(bountyIssues.flatMap((b) => b.tags))]
     setTaglist(tags)
   }, [])
 
   function handleFilter(filters: any) {
     if (filters.reset) {
-      setBounties(Allbounties)
+      setBountyIssues(bountyIssues)
       return
     }
   
@@ -182,7 +190,7 @@ export default function Page() {
       return matchesTitle && matchesTags && matchesAmount && matchesStars && matchesPosted
     })
   
-    setBounties(filtered)
+    setBountyIssues(filtered)
   }
 
   function parsePostedDays(postedString: string) {
@@ -208,7 +216,7 @@ export default function Page() {
       </div>
 
       {/* List */}
-      <BountyList bounties={bounties} />
+      <BountyList bounties={bountyIssues} />
     </div>
   )
 }

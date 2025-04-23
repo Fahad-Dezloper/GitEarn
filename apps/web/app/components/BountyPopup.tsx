@@ -4,6 +4,7 @@
 import { Scroll, Sheet, useClientMediaQuery } from "@silk-hq/components";
 import { Calendar, ExternalLink, GitPullRequest, MessageSquare, Plus, RefreshCw, Tag, X } from "lucide-react";
 import { useState } from "react";
+import { useBountyDetails } from "../context/BountyContextProvider";
 
 // const mockIssue = {
 //   title: "Fix dark mode flicker on initial load",
@@ -80,6 +81,13 @@ const BountyPopup = ({title, description, labels, repository, assignees, prRaise
   const [customAmount, setCustomAmount] = useState("");
   const [showCustomAmount, setShowCustomAmount] = useState(false);
   const [activityView, setActivityView] = useState<"latest" | "all">("all");
+
+  const { addBounty } = useBountyDetails();
+
+  function AddBountyToTheIssue(bountyAmt: number){
+    console.log("bounty amt is this", bountyAmt);
+    const res = addBounty( bountyAmt, issueId, issueLink, title, labels)
+  }
 
   // console.log("bounty popup2", prRaise, issueLink)
 
@@ -455,7 +463,7 @@ const BountyPopup = ({title, description, labels, repository, assignees, prRaise
 
       {/* Footer */}
       <div className="border-t border-zinc-200 dark:border-zinc-800 p-4 bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur-sm">
-        <button 
+        <button onClick={() => AddBountyToTheIssue(bountyAmount)}
           className={`w-full py-2.5 text-white font-medium rounded-lg transition-colors ${
             (bountyAmount && bountyAmount !== "custom") || (bountyAmount === "custom" && customAmount)
               ? "bg-blue-500 hover:bg-blue-600"

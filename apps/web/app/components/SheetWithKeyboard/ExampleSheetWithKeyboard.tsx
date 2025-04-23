@@ -11,10 +11,13 @@ import { ExternalLink, RefreshCw } from "lucide-react";
 import "./ExampleSheetWithKeyboard.css";
 import BountyPopup from "../BountyPopup";
 import { CursorClickIcon } from "@/components/ui/cursor-click";
+import axios from "axios";
+import { useBountyDetails } from "@/app/context/BountyContextProvider";
 
 
 const ExampleSheetWithKeyboard = ({title, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId}) => {
 
+  // console.log("labels", labels);
   // console.log("bounty popup", title, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId)
 
   return (

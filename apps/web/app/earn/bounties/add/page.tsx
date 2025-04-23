@@ -4,10 +4,13 @@ import axios from "axios";
 import { GithubIcon } from "@/components/ui/github";
 import IssueFilter from "@/app/(dashboardComponents)/IssueFilter";
 import IssuesList from "@/app/(dashboardComponents)/IssuesList";
+import { useBountyDetails } from "@/app/context/BountyContextProvider";
 
 export default function Page() {
-    const [issuesRepo, setIssuesRepo] = useState([]);
+    // const [issuesRepo, setIssuesRepo] = useState([]);
     const [loading, setLoading] = useState(false);
+    const {issuesRepo, setIssuesRepo} = useBountyDetails();
+    // console.log("add page", issuesRepo);
   
     const [filters, setFilters] = useState({
       search: "",
@@ -16,22 +19,22 @@ export default function Page() {
       date: "",
     });
   
-    useEffect(() => {
-      async function getIssues() {
-        try {
-          setLoading(true);
-          const res = await axios.get(`/api/issues/get`);
-          console.log("issues data", res.data);
-          setIssuesRepo(res.data);
-        } catch (e) {
-          console.error("Error while fetching:", e);
-        } finally {
-          setLoading(false);
-        }
-      }
+    // useEffect(() => {
+    //   async function getIssues() {
+    //     try {
+    //       setLoading(true);
+    //       const res = await axios.get(`/api/issues/get`);
+    //       // console.log("issues data", res.data);
+    //       setIssuesRepo(res.data);
+    //     } catch (e) {
+    //       console.error("Error while fetching:", e);
+    //     } finally {
+    //       setLoading(false);
+    //     }
+    //   }
   
-      getIssues();
-    }, []);
+    //   getIssues();
+    // }, []);
   
     const allLabels = Array.from(
       new Set(
