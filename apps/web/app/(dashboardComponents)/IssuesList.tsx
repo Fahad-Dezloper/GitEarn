@@ -85,6 +85,8 @@ export default function IssuesList({
     return <p className="text-muted-foreground">No matching issues found.</p>;
   }
 
+
+
   // console.log("issue List page", filteredIssues);
 
 
@@ -124,19 +126,19 @@ export default function IssuesList({
           <span>#{issue.number} opened on{" "} <span className="underline">{formatDate(new Date(issue.created_at).toLocaleDateString())}</span></span>
           <div className="flex items-center gap-3">
             <Link
-              href="/"
+              href={issue.html_url}
               target="_blank"
               className="transition-colors"
             >
               <GithubIcon className="hover:text-blue-600 dark:hover:text-blue-400" />
             </Link>
-            <Link
+            {/* <Link
               href="/"
               target="_blank"
               className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               <LuExternalLink size={22} />
-            </Link>
+            </Link> */}
           </div>
         </div>
       </motion.div>

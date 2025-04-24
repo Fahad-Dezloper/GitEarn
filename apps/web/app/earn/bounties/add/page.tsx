@@ -19,23 +19,6 @@ export default function Page() {
       date: "",
     });
   
-    // useEffect(() => {
-    //   async function getIssues() {
-    //     try {
-    //       setLoading(true);
-    //       const res = await axios.get(`/api/issues/get`);
-    //       // console.log("issues data", res.data);
-    //       setIssuesRepo(res.data);
-    //     } catch (e) {
-    //       console.error("Error while fetching:", e);
-    //     } finally {
-    //       setLoading(false);
-    //     }
-    //   }
-  
-    //   getIssues();
-    // }, []);
-  
     const allLabels = Array.from(
       new Set(
         issuesRepo.flatMap((r) =>

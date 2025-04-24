@@ -12,12 +12,15 @@ export const authOptions: NextAuthOptions = {
     GithubProvider({
       clientId: process.env.AUTH_GITHUB_ID || "",
       clientSecret: process.env.AUTH_GITHUB_SECRET || "",
+      authorization: {
+        params: {
+          scope: "read:user user:email public_repo"
+        }
+      }
     }),
   ],
   callbacks: {
     async jwt({ token, user, account }) {
-      // console.log("JWT callback - before update:", token);
-  
       if (user) {
         token.user = {
           name: user.name,
@@ -26,12 +29,10 @@ export const authOptions: NextAuthOptions = {
         };
       }
   
-      // If using OAuth (GitHub), store access token
       if (account) {
         token.accessToken = account.access_token;
       }
   
-      // console.log("JWT callback - after update:", token);
       return token; 
     },
   
@@ -41,15 +42,13 @@ export const authOptions: NextAuthOptions = {
   
       if (!token) {
         console.error("Token is undefined in session callback!");
-        return session; // Return session without modifications to prevent crash
+        return session;
       }
   
-      // Ensure session.user contains user data
       if (token.user) {
         session.user = token.user;
       }
   
-      // Ensure session includes accessToken
       if (token.accessToken) {
         session.accessToken = token.accessToken as string;
       }
