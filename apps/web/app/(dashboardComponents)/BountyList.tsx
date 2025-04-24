@@ -14,7 +14,7 @@ interface Bounty {
 }
 
 const BountyList = ({ bounties }) => {
-  console.log("bounties are here", bounties)
+  // console.log("bounties are here", bounties)
     return (
     <div className="w-full grid grid-cols-3 gap-4">
         {bounties.map((bounty: Bounty, index: number) => (
@@ -28,9 +28,9 @@ const BountyList = ({ bounties }) => {
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex flex-col gap-1">
-            {/* <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{bounty.repo}</p> */}
-            <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{bounty.githubId}</p>
-            {/* <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{bounty.title}</h3> */}
+            <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{bounty.repo}</p>
+            {/* <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{bounty.githubId}</p> */}
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{bounty.title}</h3>
           </div>
           {/* Bounty Amount with Tooltip */}
           <div className="relative group">
@@ -45,34 +45,34 @@ const BountyList = ({ bounties }) => {
       
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mb-4">
-          {/* {bounty.tags.map((tag: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<unknown>> | Iterable<React.ReactNode> | null | undefined> | null | undefined, i: React.Key | null | undefined) => (
+          {bounty.tags.map((tag: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<unknown>> | Iterable<React.ReactNode> | null | undefined> | null | undefined, i: React.Key | null | undefined) => (
             <span
               key={i}
               className="text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 px-2 py-0.5 rounded-full"
             >
               {tag}
             </span>
-          ))} */}
+          ))}
         </div>
       
         {/* Footer Meta */}
         <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
           <span>{bounty.posted}</span>
           <div className="flex items-center gap-3">
-            <Link
-              href="/"
+            {/* <Link
+              href={bounty.htmlUrl}
               target="_blank"
               className="transition-colors"
             >
               <GithubIcon className="hover:text-blue-600 dark:hover:text-blue-400" />
-            </Link>
-            <Link
+            </Link> */}
+            {/* <Link
               href="/"
               target="_blank"
               className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               <LuExternalLink size={22} />
-            </Link>
+            </Link> */}
           </div>
         </div>
       </motion.div>       

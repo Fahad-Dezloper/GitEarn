@@ -11,20 +11,34 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
-import { MultiSelect } from "./MultiSelect" // assumes you have or will create a custom multi-select component
 import { XIcon } from "@/components/ui/x"
 import { Checkbox } from "@/components/ui/checkbox"
-import {useState} from 'react'
+import { useEffect, useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 type FilterProps = {
   tagList: string[]
   onFilter: (filters: any) => void
+  activeFilters: {
+    title: string
+    tags: string[]
+    minAmount: number
+    minStars: number
+    posted: string
+  }
 }
 
-export default function BountyFilter({ tagList, onFilter }: FilterProps) {
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
-  const [minAmount, setMinAmount] = useState(0)
+export default function BountyFilter({ tagList, onFilter, activeFilters }: FilterProps) {
+  const [selectedTags, setSelectedTags] = useState<string[]>(activeFilters.tags)
+  const [minAmount, setMinAmount] = useState(activeFilters.minAmount)
+  const [searchTitle, setSearchTitle] = useState(activeFilters.title)
+  
+  // Update local state when activeFilters change (like on reset)
+  useEffect(() => {
+    setSelectedTags(activeFilters.tags);
+    setMinAmount(activeFilters.minAmount);
+    setSearchTitle(activeFilters.title);
+  }, [activeFilters]);
 
   function toggleTag(tag: string) {
     const updatedTags = selectedTags.includes(tag)
@@ -34,6 +48,7 @@ export default function BountyFilter({ tagList, onFilter }: FilterProps) {
     setSelectedTags(updatedTags)
     onFilter({ tags: updatedTags })
   }
+  
   return (
     <div className="w-full flex items-center justify-between gap-4 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl px-4 py-3 shadow-sm">
       
@@ -41,12 +56,19 @@ export default function BountyFilter({ tagList, onFilter }: FilterProps) {
       {/* Title */}
       <Input
         placeholder="Search title"
-        onChange={(e) => onFilter({ title: e.target.value })}
+        value={searchTitle}
+        onChange={(e) => {
+          setSearchTitle(e.target.value);
+          onFilter({ title: e.target.value });
+        }}
         className="w-[20vw]"
       />
 
-            {/* Posted Within */}
-      <Select onValueChange={(value) => onFilter({ posted: value })}>
+      {/* Posted Within */}
+      <Select 
+        value={activeFilters.posted}
+        onValueChange={(value) => onFilter({ posted: value })}
+      >
         <SelectTrigger className="w-[160px]">
           <SelectValue placeholder="Last 7 days" />
         </SelectTrigger>
@@ -61,7 +83,6 @@ export default function BountyFilter({ tagList, onFilter }: FilterProps) {
       {/* Min Bounty Slider */}
       <div>
         <div className="flex justify-between min-w-[10vw] text-sm text-muted-foreground mb-1">
-          {/* <span>Minimum Amount</span> */}
           <span>${minAmount}</span>
         </div>
         <Slider
@@ -74,19 +95,6 @@ export default function BountyFilter({ tagList, onFilter }: FilterProps) {
           }}
         />
       </div>
-
-      {/* Min Stars Slider */}
-      {/* <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-600 dark:text-gray-300">Stars</span>
-        <Slider
-          defaultValue={[0]}
-          max={4000}
-          step={100}
-          className="w-[120px]"
-          onValueChange={(value) => onFilter({ minStars: value[0] })}
-        />
-      </div> */}
-
 
       {/* Tags Multi-Select */}
       <Popover>

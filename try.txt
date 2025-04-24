@@ -47,6 +47,11 @@ https://21st.dev/originui/button/user-button-with-username
 
 next make the add bounty button work for db save the bounty in db fetch in explore page hide it. make changes in github issue page by adding label. in add bounty page make change.
 
+bounty is being saved to db and being fetched from db  -- done
+
+when add bounty in github issue page add label of how much bounty is added with description -- do this
+
+
 
 design schema
 
