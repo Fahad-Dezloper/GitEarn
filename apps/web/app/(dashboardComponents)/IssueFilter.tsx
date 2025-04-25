@@ -28,24 +28,17 @@ export default function IssueFilter({
   repositories,
   labels,
   filters,
-  onFilterChange,
+  handleChange,
 }: Props) {
-  const handleChange = (field: string, value: string) => {
-    onFilterChange({ ...filters, [field]: value });
-    if (field === "reset") {
-      onFilterChange({ repo: "All Repositories", label: "All Labels", search: "", date: "" });
-      return;
-    }
-  
-    onFilterChange({ ...filters, [field]: value });
-  
-
-
-    if(field === "date"){
-      setDate(new Date(value))
-    }
-  };
   const [date, setDate] = useState<Date>();
+  const resetFilters = () => {
+    handleChange({
+      search: "",
+      repo: "",
+      label: "",
+      date: "",
+    });
+  };
 
   // console.log("")
 
@@ -57,11 +50,12 @@ export default function IssueFilter({
         placeholder="Search issue..."
         value={filters.search}
         className="w-[20vw]"
-        onChange={(e) => handleChange("search", e.target.value)}
+        onChange={(e) => handleChange((prev) => ({ ...prev, search: e.target.value }))}
       />
 
 
-      <Select onValueChange={(value) => handleChange("repo", value)}>
+      <Select onValueChange={(value) =>
+            handleChange((prev) => ({ ...prev, repo: value }))} value={filters.repo}>
         <SelectTrigger className="w-[160px]">
           <SelectValue placeholder="All Repositories" />
         </SelectTrigger>
@@ -73,7 +67,9 @@ export default function IssueFilter({
       </Select>
 
       <Select
-        onValueChange={(value) => handleChange("label", value)}
+          onValueChange={(value) =>
+          handleChange((prev) => ({ ...prev, label: value }))}
+          value={filters.label}
       >
         <SelectTrigger className="w-[160px]">
           <SelectValue placeholder="All Labels" />
@@ -87,7 +83,7 @@ export default function IssueFilter({
         </SelectContent>
       </Select>
 
-<Popover>
+{/* <Popover>
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
@@ -108,11 +104,11 @@ export default function IssueFilter({
           initialFocus
         />
       </PopoverContent>
-    </Popover>
+    </Popover> */}
     </div>
 
     <button
-        onClick={() => handleChange("reset", "true")}
+        onClick={resetFilters}
         className=""
       >
         <XIcon size={22} />

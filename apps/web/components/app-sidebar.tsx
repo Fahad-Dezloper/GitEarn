@@ -19,7 +19,6 @@ import {
 } from "lucide-react"
 
 import { NavMain } from "./nav-main"
-import { NavProjects } from "./nav-projects"
 import { NavSecondary } from "./nav-secondary"
 import { NavUser } from "./nav-user"
 import {
@@ -59,10 +58,6 @@ const data = {
           title: "Add Bounty",
           url: "/earn/bounties/add",
         },
-        // {
-        //   title: "Create Bounty",
-        //   url: "/earn/bounties/create",
-        // },
       ],
     },
     {
@@ -84,85 +79,12 @@ const data = {
       title: "Leaderboard",
       url: "/earn/leaderboard",
       icon: Trophy,
-      // items: [
-      //   {
-      //     title: "Top Earners",
-      //     url: "/earn/leaderboard/top",
-      //   },
-      //   {
-      //     title: "Weekly Rankings",
-      //     url: "/earn/leaderboard/weekly",
-      //   },
-      // ],
     },
     {
       title: "Profile",
       url: "/earn/profile",
-      icon: User,
-      // items: [
-      //   {
-      //     title: "User Info",
-      //     url: "/profile/info",
-      //   },
-      //   {
-      //     title: "Past Contributions",
-      //     url: "/earn/profile/contributions",
-      //   },
-      //   {
-      //     title: "Wallet & Security",
-      //     url: "/earn/profile/wallet",
-      //   },
-      // ],
-    },
-    // {
-    //   title: "GitHub Integration",
-    //   url: "/earn/github",
-    //   icon: Code,
-    //   items: [
-    //     {
-    //       title: "Install Extension",
-    //       url: "/earn/github/extension",
-    //     },
-    //     {
-    //       title: "Manage Repos",
-    //       url: "/earn/github/repos",
-    //     },
-    //   ],
-    // },
-    // {
-    //   title: "Review Board",
-    //   url: "/earn/reviews",
-    //   icon: CheckCircle,
-    //   items: [
-    //     {
-    //       title: "Pending Reviews",
-    //       url: "/earn/reviews/pending",
-    //     },
-    //     {
-    //       title: "Approved Solutions",
-    //       url: "/earn/reviews/approved",
-    //     },
-    //   ],
-    // },
-    // {
-    //   title: "Settings",
-    //   url: "/earn/settings",
-    //   icon: Settings2,
-    //   items: [
-    //     {
-    //       title: "General",
-    //       url: "/earn/settings/general",
-    //     },
-    //     {
-    //       title: "Notifications",
-    //       url: "/earn/settings/notifications",
-    //     },
-    //     {
-    //       title: "Wallet & Payments",
-    //       url: "/earn/settings/wallet",
-    //     },
-    //   ],
-    // },
+      icon: User
+    }
   ],
   navSecondary: [
     {
@@ -176,23 +98,6 @@ const data = {
       icon: Send,
     },
   ],
-  // projects: [
-  //   {
-  //     name: "Git Analyzer",
-  //     url: "#",
-  //     icon: Frame,
-  //   },
-  //   {
-  //     name: "Cool Platforms",
-  //     url: "#",
-  //     icon: PieChart,
-  //   },
-  //   {
-  //     name: "Travel",
-  //     url: "#",
-  //     icon: Map,
-  //   },
-  // ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -219,12 +124,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        {/* <NavProjects projects={data.projects} /> */}
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        {session?.user ? <NavUser user={session?.user} /> : <div>Wait here</div>}
-        {/* <NavUser user={session?.user} /> */}
+        {session?.user ? <NavUser user={session?.user} /> : <div></div>}
       </SidebarFooter>
     </Sidebar>
   )

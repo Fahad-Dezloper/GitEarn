@@ -8,6 +8,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
   const [issuesRepo, setIssuesRepo] = useState([]);
   const [bountyIssues, setBountyIssues] = useState([]);
+  const [userBountyIssue, setUserBountyIssue] = useState([]);
 
   async function getIssues() {
     try {
@@ -15,6 +16,16 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
       setIssuesRepo(res.data);
     } catch (e) {
       console.error("Error while fetching:", e);
+    }
+  }
+
+  async function getUserBountyIssues(){
+    try{
+      const res = await axios.get('/api/user/bountyIssues');
+      console.log("users personal issue", res.data);
+      setUserBountyIssue(res.data.UsersBountyIssues);
+    } catch(e) {
+      console.log("Error fetching user bounty issues");
     }
   }
 
@@ -30,13 +41,14 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   useEffect(() => {
     getIssues();
     getBountyIssues();
+    getUserBountyIssues();
 
     const interval = setInterval(() => {
-      console.log("calling again and again")
+      // console.log("calling again and again")
       getBountyIssues();
-    }, 15000); // 15 seconds
+    }, 15000);
 
-    return () => clearInterval(interval); // Cleanup on unmount
+    return () => clearInterval(interval);
   }, []);
 
   async function addBounty(bountyAmt, issueId, issueLink, title) {
@@ -51,7 +63,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   }
 
   return (
-    <BountyDetailsContext.Provider value={{ issuesRepo, setIssuesRepo, addBounty, bountyIssues, setBountyIssues }}>
+    <BountyDetailsContext.Provider value={{ issuesRepo, setIssuesRepo, addBounty, bountyIssues, setBountyIssues, userBountyIssue}}>
       {children}
     </BountyDetailsContext.Provider>
   );

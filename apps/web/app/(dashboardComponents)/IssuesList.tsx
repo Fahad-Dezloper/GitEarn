@@ -31,79 +31,33 @@ type Repository = {
 };
 
 export default function IssuesList({
-  issuesRepo,
-  filters,
+  issues,
   loading
-}: {
-  issuesRepo: Repository[];
-  filters: {
-    search: string;
-    repo: string;
-    label: string;
-    date: string;
-  };
 }) {
-  const filteredIssues = issuesRepo
-    .filter((repo) => (filters.repo ? repo.name === filters.repo : true))
-    .flatMap((repo) =>
-      repo.issues
-        .filter((issue) => {
-          const matchesSearch =
-            filters.search === "" ||
-            issue.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-            (issue.body ?? "")
-              .toLowerCase()
-              .includes(filters.search.toLowerCase());
 
-          const matchesLabel =
-            filters.label === "" ||
-            issue.labels.some((label) => label.name === filters.label);
+  if (loading) {
+    return <div>We are coming MFS</div>;
+  }
 
-          const matchesDate =
-            filters.date === "" ||
-            new Date(issue.created_at).toISOString().split("T")[0] === filters.date;
-
-          return matchesSearch && matchesLabel && matchesDate;
-        })
-        .map((issue) => ({
-          ...issue,
-          repoName: repo.name,
-        }))
-    )
-    .sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
-
-
-    if(loading){
-      return <div>We are coming MFS</div>
-    }
-
-
-  if (!filteredIssues.length) {
+  if (!issues.length) {
     return <p className="text-muted-foreground">No matching issues found.</p>;
   }
 
-
-
-  // console.log("issue List page", filteredIssues);
-
+  // console.log("form issue page", issues);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {filteredIssues.map((issue, index) => (
+      {issues.map((issue, index) => (
         <motion.div
-        key={issue.title}
+        key={index}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: index * 0.05 }}
         className="bg-white flex flex-col justify-between dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-all"
       >
-        {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex flex-col gap-1">
-            <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{issue.repoName}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{issue.repo}</p>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{issue.title}</h3>
           </div>
           <div className="relative">
@@ -132,13 +86,6 @@ export default function IssuesList({
             >
               <GithubIcon className="hover:text-blue-600 dark:hover:text-blue-400" />
             </Link>
-            {/* <Link
-              href="/"
-              target="_blank"
-              className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-            >
-              <LuExternalLink size={22} />
-            </Link> */}
           </div>
         </div>
       </motion.div>

@@ -85,7 +85,6 @@ const BountyPopup = ({title, description, labels, repository, assignees, prRaise
   const { addBounty } = useBountyDetails();
 
   function AddBountyToTheIssue(bountyAmt: number){
-    console.log("bounty amt is this", bountyAmt);
     const res = addBounty( bountyAmt, issueId, issueLink, title, labels)
   }
 
@@ -99,9 +98,9 @@ const BountyPopup = ({title, description, labels, repository, assignees, prRaise
     }
   };
 
-  const removeLabel = (labelToRemove: string) => {
-    // setLabels(labels.filter(label => label !== labelToRemove));
-  };
+  // const removeLabel = (labelToRemove: string) => {
+  //   // setLabels(labels.filter(label => label !== labelToRemove));
+  // };
 
   const handleBountySelect = (amount: string | number) => {
     if (amount === "custom") {
@@ -122,6 +121,11 @@ const BountyPopup = ({title, description, labels, repository, assignees, prRaise
     if (decimalCount > 1) return;
     
     setCustomAmount(value);
+
+    if (value && !isNaN(Number(value))) {
+      setBountyAmount(Number(value));
+    }
+
   };
 
   // Generate a random pastel color based on string
@@ -254,7 +258,7 @@ const BountyPopup = ({title, description, labels, repository, assignees, prRaise
                     <Tag size={16} className="text-zinc-500 dark:text-zinc-400" />
                     Labels
                   </h3>
-                  {!showLabelInput && (
+                  {/* {!showLabelInput && (
                     <button 
                       onClick={() => setShowLabelInput(true)}
                       className="flex items-center gap-1 text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
@@ -262,7 +266,7 @@ const BountyPopup = ({title, description, labels, repository, assignees, prRaise
                       <Plus size={14} />
                       Add Label
                     </button>
-                  )}
+                  )} */}
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {labels != null && labels.map((label, i) => (
@@ -271,12 +275,12 @@ const BountyPopup = ({title, description, labels, repository, assignees, prRaise
                       className={`px-2.5 py-1 rounded-full text-sm font-medium flex items-center gap-1 ${getLabelColor(label.name)}`}
                     >
                       {label.name}
-                      <button 
+                      {/* <button 
                         onClick={() => removeLabel(label.name)}
                         className="hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50 rounded-full p-0.5"
                       >
                         <X size={12} />
-                      </button>
+                      </button> */}
                     </span>
                   ))}
                 </div>
