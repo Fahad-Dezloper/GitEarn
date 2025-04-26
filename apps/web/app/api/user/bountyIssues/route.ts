@@ -64,7 +64,7 @@ export async function GET() {
 
     // console.log
     const finalIssue = issues?.issue;
-    console.log("users issue", finalIssue);
+    // console.log("users issue", finalIssue);
 
     const enrichedIssues = await Promise.all(
         finalIssue.map(async (issue) => {

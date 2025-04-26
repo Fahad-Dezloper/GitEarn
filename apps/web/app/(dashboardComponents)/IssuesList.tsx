@@ -33,7 +33,7 @@ function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | M
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: index * 0.05 }}
-        className="bg-white flex flex-col justify-between dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-all"
+        className="bg-white flex flex-col min-h-[25vh] justify-between dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-all"
       >
         <div className="flex items-start justify-between mb-3">
           <div className="flex flex-col gap-1">
@@ -41,7 +41,7 @@ function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | M
             <a href={commonUrl} target="_blank" rel="noopener noreferrer" className="text-lg font-semibold text-gray-900 dark:text-white">{commonTitle}</a>
           </div>
           <div className="relative">
-             <ExampleSheetWithKeyboard title={commonTitle} description={issue.body} labels={commonLabels} repository={commonRepo} assignees={issue.assignees} prRaise={issue.prRaised} issueLink={issue.issueLink} created={issue.created_at} updated={issue.updated_at} status={issue.state} latestComment={issue.activityLog} issueId={issue.id}  />
+             <ExampleSheetWithKeyboard title={commonTitle} description={issue.body} labels={issue.labels} repository={commonRepo} assignees={issue.assignees} prRaise={issue.prRaised} issueLink={issue.issueLink} created={issue.created_at} updated={issue.updated_at} status={issue.state} latestComment={issue.activityLog} issueId={issue.id}  />
           </div>
         </div>
       
@@ -54,11 +54,11 @@ function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | M
               {label}
             </span>
           ))}
-          {isAddBountyIssue(issue) && (
+          {/* {isAddBountyIssue(issue) && (
                      <Badge variant={issue.state === 'open' ? 'default' : 'destructive'} className="ml-auto capitalize">
                          {issue.state}
                      </Badge>
-                 )}
+                 )} */}
         </div>
       
         <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">

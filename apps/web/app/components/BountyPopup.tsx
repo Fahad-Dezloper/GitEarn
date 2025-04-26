@@ -158,6 +158,43 @@ const BountyPopup = ({title, description, labels, repository, assignees, prRaise
     }
   };
 
+
+
+  function hexToRGBA(hex, alpha = 0.2) {
+    hex = hex.replace(/^#/, '');
+  
+    if (hex.length === 3) {
+      hex = hex.split('').map(x => x + x).join('');
+    }
+  
+    const num = parseInt(hex, 16);
+    const r = (num >> 16) & 255;
+    const g = (num >> 8) & 255;
+    const b = num & 255;
+  
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+  
+  function isColorDark(hex) {
+    hex = hex.replace(/^#/, '');
+  
+    if (hex.length === 3) {
+      hex = hex.split('').map(x => x + x).join('');
+    }
+  
+    const num = parseInt(hex, 16);
+    const r = (num >> 16) & 255;
+    const g = (num >> 8) & 255;
+    const b = num & 255;
+  
+    // Formula for luminance perception
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    
+    return brightness < 128; // if brightness low => color is dark
+  }
+
+  // console.log("final labels", labels);
+
   return (
     <div className="h-full bg-white z-50 relative dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden flex flex-col shadow-lg">
       {/* Header */}
@@ -270,18 +307,21 @@ const BountyPopup = ({title, description, labels, repository, assignees, prRaise
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {labels != null && labels.map((label, i) => (
-                    <span
-                      key={i}
-                      className={`px-2.5 py-1 rounded-full text-sm font-medium flex items-center gap-1 ${label}`}
-                    >
-                      {label.name}
-                      {/* <button 
-                        onClick={() => removeLabel(label.name)}
-                        className="hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50 rounded-full p-0.5"
-                      >
-                        <X size={12} />
-                      </button> */}
-                    </span>
+                    (() => {
+                      const textColor = isColorDark(label.color) ? "#ffffff" : `#${label.color}`;
+                      return (
+                        <span
+                          key={i}
+                          className="px-2.5 py-1 rounded-full text-sm font-medium flex items-center gap-1"
+                          style={{
+                            backgroundColor: hexToRGBA(label.color, 0.2), // slight transparency
+                            color: textColor,
+                          }}
+                        >
+                          {label.name}
+                        </span>
+                      );
+                    })()
                   ))}
                 </div>
                 
