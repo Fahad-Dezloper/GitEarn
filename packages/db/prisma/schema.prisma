@@ -16,25 +16,28 @@ model User {
   accounts      Account[]
   sessions      Session[]
   issue         BountyIssues[]
+  // address       String    @unique
+  // pending_amount   Int
+  // locked_amount    Int
+  // Submission
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
+
 
 model BountyIssues {
   id           String          @id @default(cuid())
   userId       String
   githubId     BigInt          @unique
   htmlUrl      String          @unique
+  // signature    String
   bounty       Int
   user         User @relation(fields: [userId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
 
-
-
-// its a bounty
 model Account {
   userId            String
   type              String

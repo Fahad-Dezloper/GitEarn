@@ -1,119 +1,208 @@
+// src/app/(dashboardComponents)/IssueFilter.tsx
 "use client";
 
-import { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import * as React from "react";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns"
-import { Calendar } from "@/components/ui/calendar"
-import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+    CommandSeparator,
+} from "@/components/ui/command"
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon, Check, ChevronsUpDown, X } from "lucide-react";
+import { cn } from "@/lib/utils"; // Your utility function for classnames
+import { DateRange } from "react-day-picker";
+import { Badge } from "@/components/ui/badge";
 import { XIcon } from "@/components/ui/x";
 
-
-type Props = {
+interface IssueFilterProps {
   repositories: string[];
   labels: string[];
-  filters: {
+  onFilterChange: (filters: {
+    search?: string;
+    labels?: string[];
+    repository?: string | null;
+    dates?: DateRange | undefined;
+  }) => void;
+  onResetFilters: () => void;
+  currentFilters: {
     search: string;
-    repo: string;
-    label: string;
-    date: string;
+    selectedLabels: string[];
+    selectedRepo: string | null;
+    dateRange?: DateRange | undefined;
   };
-  onFilterChange: (filters: Props["filters"]) => void;
-};
+}
 
 export default function IssueFilter({
   repositories,
   labels,
-  filters,
-  handleChange,
-}: Props) {
-  const [date, setDate] = useState<Date>();
-  const resetFilters = () => {
-    handleChange({
-      search: "",
-      repo: "",
-      label: "",
-      date: "",
-    });
+  onFilterChange,
+  onResetFilters,
+  currentFilters,
+}: IssueFilterProps) {
+
+  const { search, selectedLabels, selectedRepo, dateRange } = currentFilters;
+  const [labelPopoverOpen, setLabelPopoverOpen] = useState(false);
+
+
+  const handleLabelSelect = (label: string) => {
+    const newLabels = selectedLabels.includes(label)
+      ? selectedLabels.filter((l) => l !== label)
+      : [...selectedLabels, label];
+    onFilterChange({ labels: newLabels });
   };
 
-  // console.log("")
-
   return (
-    <div className="w-full flex items-center justify-between gap-4 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl px-4 py-3 shadow-sm">
-      {/* Search */}
-      <div className="flex gap-2">
+    <div className="flex flex-wrap items-center justify-between gap-4 p-4 border rounded-md bg-card">
+      <div className="flex items-center gap-4">
       <Input
-        placeholder="Search issue..."
-        value={filters.search}
-        className="w-[20vw]"
-        onChange={(e) => handleChange((prev) => ({ ...prev, search: e.target.value }))}
+        placeholder="Search issues..."
+        value={search}
+        onChange={(e) => onFilterChange({ search: e.target.value })}
+        className="flex-grow min-w-[25vw]"
       />
 
-
-      <Select onValueChange={(value) =>
-            handleChange((prev) => ({ ...prev, repo: value }))} value={filters.repo}>
-        <SelectTrigger className="w-[160px]">
-          <SelectValue placeholder="All Repositories" />
-        </SelectTrigger>
-        <SelectContent>
-        {repositories.map((repo) => (
-          <SelectItem key={repo} value={repo}>{repo}</SelectItem>
-        ))}
-        </SelectContent>
-      </Select>
-
+      {/* Repository Select */}
       <Select
-          onValueChange={(value) =>
-          handleChange((prev) => ({ ...prev, label: value }))}
-          value={filters.label}
+        value={selectedRepo ?? 'all'}
+        onValueChange={(value) => onFilterChange({ repository: value === 'all' ? null : value })}
       >
-        <SelectTrigger className="w-[160px]">
-          <SelectValue placeholder="All Labels" />
+        <SelectTrigger className="w-auto min-w-[180px]">
+          <SelectValue placeholder="Filter by repository" />
         </SelectTrigger>
         <SelectContent>
-        {labels.map((label) => (
-          <SelectItem key={label} value={label}>
-            {label}
-          </SelectItem>
-        ))}
+          <SelectItem value="all">All Repositories</SelectItem>
+          {repositories.map((repo) => (
+            <SelectItem key={repo} value={repo}>
+              {repo}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
 
-{/* <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant={"outline"}
-          className={cn(
-            "w-[280px] justify-start text-left font-normal",
-            !date && "text-muted-foreground"
-          )}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={(selectedDate) => selectedDate && handleChange("date", format(selectedDate, "yyyy-MM-dd"))}
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover> */}
-    </div>
+      <Popover open={labelPopoverOpen} onOpenChange={setLabelPopoverOpen}>
+            <PopoverTrigger asChild>
+                <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={labelPopoverOpen}
+                    className="w-auto min-w-[200px] justify-between"
+                >
+                    <span className="truncate">
+                        {selectedLabels.length === 0
+                            ? "Filter by labels"
+                            : selectedLabels.length === 1
+                            ? selectedLabels[0]
+                            : `${selectedLabels.length} labels selected`}
+                    </span>
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[250px] p-0">
+                <Command>
+                    <CommandInput placeholder="Search labels..." />
+                    <CommandList>
+                        <CommandEmpty>No labels found.</CommandEmpty>
+                        <CommandGroup>
+                            {labels.map((label) => {
+                                const isSelected = selectedLabels.includes(label);
+                                return (
+                                    <CommandItem
+                                        key={label}
+                                        value={label}
+                                        onSelect={() => handleLabelSelect(label)}
+                                    >
+                                        <Check
+                                            className={cn(
+                                                "mr-2 h-4 w-4",
+                                                isSelected ? "opacity-100" : "opacity-0"
+                                            )}
+                                        />
+                                        {label}
+                                    </CommandItem>
+                                );
+                            })}
+                        </CommandGroup>
+                        {selectedLabels.length > 0 && (
+                            <>
+                                <CommandSeparator />
+                                <CommandGroup>
+                                    <CommandItem
+                                        onSelect={() => onFilterChange({ labels: [] })}
+                                        className="justify-center text-center text-xs text-muted-foreground"
+                                    >
+                                        Clear selection
+                                    </CommandItem>
+                                </CommandGroup>
+                            </>
+                        )}
+                    </CommandList>
+                </Command>
+            </PopoverContent>
+        </Popover>
 
-    <button
-        onClick={resetFilters}
-        className=""
-      >
-        <XIcon size={22} />
-      </button>
+       {/* Date Range Picker */}
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button
+                    id="date"
+                    variant={"outline"}
+                    className={cn(
+                        "w-auto min-w-[260px] justify-start text-left font-normal",
+                        !dateRange && "text-muted-foreground"
+                    )}
+                >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateRange?.from ? (
+                        dateRange.to ? (
+                            <>
+                                {format(dateRange.from, "LLL dd, y")} -{" "}
+                                {format(dateRange.to, "LLL dd, y")}
+                            </>
+                        ) : (
+                            format(dateRange.from, "LLL dd, y")
+                        )
+                    ) : (
+                        <span>Filter by date</span>
+                    )}
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                    initialFocus
+                    mode="range"
+                    defaultMonth={dateRange?.from}
+                    selected={dateRange}
+                    onSelect={(range) => onFilterChange({ dates: range })}
+                    numberOfMonths={2}
+                />
+            </PopoverContent>
+        </Popover>
+        </div>
 
+
+      <Button variant="ghost" size="icon" onClick={onResetFilters} title="Reset Filters">
+        <XIcon />
+      </Button>
     </div>
   );
 }

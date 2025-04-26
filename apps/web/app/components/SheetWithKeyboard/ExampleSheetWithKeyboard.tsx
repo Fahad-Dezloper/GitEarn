@@ -18,7 +18,7 @@ import { useBountyDetails } from "@/app/context/BountyContextProvider";
 const ExampleSheetWithKeyboard = ({title, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId}) => {
 
   // console.log("labels", labels);
-  // console.log("bounty popup", title, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId)
+  console.log("bounty popup", title, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId)
 
   return (
     <SheetWithKeyboard

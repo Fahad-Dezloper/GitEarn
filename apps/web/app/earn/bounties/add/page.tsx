@@ -1,120 +1,191 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { GithubIcon } from "@/components/ui/github";
-import IssueFilter from "@/app/(dashboardComponents)/IssueFilter";
-import IssuesList from "@/app/(dashboardComponents)/IssuesList";
+import IssueFilter from "@/app/(dashboardComponents)/IssueFilter"; // Assuming this exists
+import IssuesList from "@/app/(dashboardComponents)/IssuesList"; // Assuming this exists
 import { useBountyDetails } from "@/app/context/BountyContextProvider";
-import { Button } from "@/components/ui/button"; // Ensure Button is imported
+import { Button } from "@/components/ui/button";
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
   const { issuesRepo, userBountyIssue } = useBountyDetails();
 
-  const [filteredIssues, setFilteredIssues] = useState([]);
-  const [filters, setFilters] = useState({
-    search: "",
-    repo: "",
-    label: "",
-    date: "",
-  });
-
   const [isAddingBounty, setIsAddingBounty] = useState(true);
 
-  useEffect(() => {
-    const applyFilters = () => {
-      const bountyIds = new Set(userBountyIssue.map((b) => b.githubId));
-      const bountyUrls = new Set(userBountyIssue.map((b) => b.htmlUrl));
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
+  const [selectedRepo, setSelectedRepo] = useState<string | null>(null);
+  const [dateRange, setDateRange] = useState<{ from: Date | undefined; to: Date | undefined } | undefined>(undefined);
 
-      let allIssues = [];
+  const allIssues = useMemo(() => {
+    return issuesRepo.flatMap(repo =>
+      repo.issues.map(issue => ({
+        ...issue,
+        repositoryName: repo.name,
+        repositoryFullName: `${repo.html_url.split('/')[3]}/${repo.name}`,
+        labelNames: issue.labels.map(label => label.name),
+      }))
+    );
+  }, [issuesRepo]);
 
-      if (isAddingBounty) {
-        allIssues = issuesRepo.flatMap((repo) =>
-          repo.issues
-            .filter(
-              (issue) =>
-                !bountyIds.has(issue.user.id) && !bountyUrls.has(issue.html_url)
-            )
-            .map((issue) => ({
-              ...issue,
-              repoName: repo.name,
-            }))
-        );
-      } else {
-        allIssues = userBountyIssue.map((bounty) => ({
-          ...bounty,
-          repoName: bounty.repo,
-        }));
-      }
+  const bountiedIssueIds = useMemo(() => {
+    return new Set(userBountyIssue.map(bounty => bounty.githubId));
+  }, [userBountyIssue]);
 
-      if (filters.repo) {
-        allIssues = allIssues.filter((issue) => issue.repoName === filters.repo);
-      }
+  const addBountyIssues = useMemo(() => {
+    return allIssues.filter(issue => !bountiedIssueIds.has(String(issue.id)));
+  }, [allIssues, bountiedIssueIds]);
 
-      if (filters.label) {
-        allIssues = allIssues.filter((issue) =>
-          issue.labels.some((label) =>
-            label.name.toLowerCase().includes(filters.label.toLowerCase())
-          )
-        );
-      }
+  const manageBountyIssues = useMemo(() => {
+      return userBountyIssue.map(issue => ({
+          ...issue,
+          createdAtDate: new Date(issue.createdAt),
+      }));
+  }, [userBountyIssue]);
 
-      if (filters.search) {
-        allIssues = allIssues.filter((issue) =>
-          issue.title.toLowerCase().includes(filters.search.toLowerCase())
-        );
-      }
+  const availableRepositories = useMemo(() => {
+    const repos = isAddingBounty
+      ? allIssues.map(issue => issue.repositoryFullName)
+      : manageBountyIssues.map(issue => issue.repo);
+    return [...new Set(repos)];
+  }, [allIssues, manageBountyIssues, isAddingBounty]);
 
-      setFilteredIssues(allIssues);
-    };
+  const availableLabels = useMemo(() => {
+    const labels = isAddingBounty
+      ? allIssues.flatMap(issue => issue.labelNames)
+      : manageBountyIssues.flatMap(issue => issue.tags);
+    return [...new Set(labels)].sort();
+  }, [allIssues, manageBountyIssues, isAddingBounty]);
 
-    applyFilters();
-  }, [filters, issuesRepo, userBountyIssue, isAddingBounty]);
+  const filteredIssues = useMemo(() => {
+    let issuesToFilter = isAddingBounty ? addBountyIssues : manageBountyIssues;
 
-  const allLabels = Array.from(
-    new Set(
-      issuesRepo.flatMap((r) =>
-        r.issues.flatMap((issue) => issue.labels.map((label) => label.name))
-      )
-    )
-  );
+    if (searchTerm) {
+      const lowerSearchTerm = searchTerm.toLowerCase();
+      issuesToFilter = issuesToFilter.filter(issue =>
+        issue.title.toLowerCase().includes(lowerSearchTerm) ||
+        (issue.body && issue.body.toLowerCase().includes(lowerSearchTerm)) // Optional: search body too
+      );
+    }
+
+    if (selectedRepo) {
+       issuesToFilter = issuesToFilter.filter(issue =>
+         (isAddingBounty ? issue.repositoryFullName : issue.repo) === selectedRepo
+       );
+    }
+
+    if (selectedLabels.length > 0) {
+      issuesToFilter = issuesToFilter.filter(issue => {
+        const issueLabels = isAddingBounty ? issue.labelNames : issue.tags;
+        return selectedLabels.every(label => issueLabels.includes(label));
+      });
+    }
+
+    if (dateRange?.from || dateRange?.to) {
+       const fromDate = dateRange.from;
+       const toDate = dateRange.to ? new Date(dateRange.to.setHours(23, 59, 59, 999)) : undefined;
+
+       issuesToFilter = issuesToFilter.filter(issue => {
+           const issueDate = isAddingBounty ? new Date(issue.created_at) : issue.createdAtDate;
+
+           const isAfterFrom = fromDate ? issueDate >= fromDate : true;
+           const isBeforeTo = toDate ? issueDate <= toDate : true;
+           return isAfterFrom && isBeforeTo;
+       });
+    }
+
+
+    return issuesToFilter;
+  }, [
+    isAddingBounty,
+    addBountyIssues,
+    manageBountyIssues,
+    searchTerm,
+    selectedRepo,
+    selectedLabels,
+    dateRange
+  ]);
+
+  const resetFilters = () => {
+    setSearchTerm("");
+    setSelectedLabels([]);
+    setSelectedRepo(null);
+    setDateRange(undefined);
+  };
+
+  const handleFilterChange = (filters: {
+    search?: string;
+    labels?: string[];
+    repository?: string | null;
+    dates?: { from: Date | undefined; to: Date | undefined } | undefined;
+  }) => {
+    if (filters.search !== undefined) setSearchTerm(filters.search);
+    if (filters.labels !== undefined) setSelectedLabels(filters.labels);
+    if (filters.repository !== undefined) setSelectedRepo(filters.repository);
+    if (filters.dates !== undefined) setDateRange(filters.dates);
+  };
 
   return (
     <div className="flex flex-col gap-6 py-4">
       <div className="flex flex-col gap-2">
         <h1 className="text-4xl font-sora font-semibold flex gap-2 items-center">
-          {isAddingBounty ? "Add Bounty" : "Manage Bounty"} to your <GithubIcon size={32} /> issues
+          {isAddingBounty ? "Add Bounty" : "Manage Bounty"} to your{" "}
+          <GithubIcon size={32} /> issues
         </h1>
         <p className="text-muted-foreground">
           {isAddingBounty
-            ? "Add Bounty to your GitHub issues and get them solved fast"
-            : "Manage the bounties on your GitHub issues"}
+            ? "Select GitHub issues to add a bounty and get them solved fast."
+            : "View and manage the bounties you've placed on GitHub issues."}
         </p>
       </div>
 
-      {/* Toggle Button */}
-      <div className="flex gap-4 mb-6">
+      <div className="flex gap-4 mb-2">
         <Button
-          onClick={() => setIsAddingBounty(true)}
+          onClick={() => {
+              setIsAddingBounty(true);
+              resetFilters(); // Reset filters when switching views
+          }}
           variant={isAddingBounty ? "default" : "outline"}
+          size="sm"
         >
           Add Bounty
         </Button>
         <Button
-          onClick={() => setIsAddingBounty(false)}
+          onClick={() => {
+              setIsAddingBounty(false);
+              resetFilters();
+          }}
           variant={!isAddingBounty ? "default" : "outline"}
+          size="sm"
         >
           Manage Bounty
         </Button>
       </div>
 
+      {/* Filter Component */}
       <IssueFilter
-        repositories={issuesRepo.map((r) => r.name)}
-        labels={allLabels}
-        filters={filters}
-        handleChange={setFilters}
+          repositories={availableRepositories}
+          labels={availableLabels}
+          onFilterChange={handleFilterChange} 
+          onResetFilters={resetFilters}
+          currentFilters={{
+              search: searchTerm,
+              selectedLabels: selectedLabels,
+              selectedRepo: selectedRepo,
+              dateRange: dateRange
+          }}
+          key={isAddingBounty ? 'add-filter' : 'manage-filter'} 
       />
 
-      <IssuesList issues={filteredIssues} loading={loading} />
+      {/* Issues List */}
+      {loading ? (
+        <p>Loading issues...</p> // Add a proper spinner/skeleton loader
+      ) : (
+        <IssuesList
+          issues={filteredIssues}
+          isAddingBounty={isAddingBounty}
+        />
+      )}
     </div>
   );
 }

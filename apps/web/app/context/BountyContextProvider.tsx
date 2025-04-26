@@ -13,7 +13,9 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   async function getIssues() {
     try {
       const res = await axios.get(`/api/issues/get`);
-      setIssuesRepo(res.data);
+      // console.log("res data", res.data);
+      const reposWithIssues = res.data.filter(repo => repo.issues && repo.issues.length > 0);
+      setIssuesRepo(reposWithIssues);
     } catch (e) {
       console.error("Error while fetching:", e);
     }
@@ -22,7 +24,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   async function getUserBountyIssues(){
     try{
       const res = await axios.get('/api/user/bountyIssues');
-      console.log("users personal issue", res.data);
+      // console.log("users personal issue", res.data);
       setUserBountyIssue(res.data.UsersBountyIssues);
     } catch(e) {
       console.log("Error fetching user bounty issues");

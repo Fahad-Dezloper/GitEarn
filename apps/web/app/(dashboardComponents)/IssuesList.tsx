@@ -1,55 +1,35 @@
-"use client";
-import { motion } from 'motion/react'
+// src/app/(dashboardComponents)/IssuesList.tsx
+import * as React from "react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ExternalLink, GitMerge, MessageSquare } from "lucide-react"; // Example icons
+import { formatDistanceToNow } from 'date-fns'; // For relative dates
+import { AddBountyIssue, ManageBountyIssue, isAddBountyIssue } from "@/types/issueTypes"; // Import the types
+import { motion } from 'framer-motion';
+import { ExampleSheetWithKeyboard } from "../components/SheetWithKeyboard/ExampleSheetWithKeyboard";
 import Link from "next/link";
 import { GithubIcon } from "@/components/ui/github";
-import { LuExternalLink } from "react-icons/lu";
-import { formatDate } from "@/lib/date";
-import { ExampleSheetWithKeyboard } from "../components/SheetWithKeyboard/ExampleSheetWithKeyboard";
+
+interface IssuesListProps {
+  issues: (AddBountyIssue | ManageBountyIssue)[];
+  isAddingBounty: boolean;
+}
 
 
-type Label = {
-  name: string;
-  color: string;
-  description?: string | null;
-};
+function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | ManageBountyIssue, isAddingBounty: boolean, index: number }) {
+    // console.log("issues from issueList", issue);
+    const commonTitle = issue.title;
+    const commonUrl = isAddBountyIssue(issue) ? issue.html_url : issue.htmlUrl;
+    const commonRepo = isAddBountyIssue(issue) ? issue.repositoryFullName : issue.repo;
+    const commonDate = isAddBountyIssue(issue) ? new Date(issue.created_at) : issue.createdAtDate;
+    const commonLabels = isAddBountyIssue(issue) ? issue.labelNames : issue.tags;
 
-type Issue = {
-  id: number;
-  title: string;
-  state: string;
-  html_url: string;
-  created_at: string;
-  body: string | null;
-  number: number;
-  labels: Label[];
-};
+    const formattedDate = formatDistanceToNow(commonDate, { addSuffix: true });
 
-type Repository = {
-  id: number;
-  name: string;
-  issues: Issue[];
-};
+    return (
 
-export default function IssuesList({
-  issues,
-  loading
-}) {
-
-  if (loading) {
-    return <div>We are coming MFS</div>;
-  }
-
-  if (!issues.length) {
-    return <p className="text-muted-foreground">No matching issues found.</p>;
-  }
-
-  // console.log("form issue page", issues);
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {issues.map((issue, index) => (
-        <motion.div
-        key={index}
+    <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: index * 0.05 }}
@@ -57,30 +37,35 @@ export default function IssuesList({
       >
         <div className="flex items-start justify-between mb-3">
           <div className="flex flex-col gap-1">
-            <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{issue.repo}</p>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{issue.title}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{commonRepo}</p>
+            <a href={commonUrl} target="_blank" rel="noopener noreferrer" className="text-lg font-semibold text-gray-900 dark:text-white">{commonTitle}</a>
           </div>
           <div className="relative">
-             <ExampleSheetWithKeyboard title={issue.title} description={issue.body} labels={issue.labels} repository={issue.repoName} assignees={issue.assignees} prRaise={issue.prRaised} issueLink={issue.issueLink} created={issue.created_at} updated={issue.updated_at} status={issue.state} latestComment={issue.activityLog} issueId={issue.id}  />
+             <ExampleSheetWithKeyboard title={commonTitle} description={issue.body} labels={commonLabels} repository={commonRepo} assignees={issue.assignees} prRaise={issue.prRaised} issueLink={issue.issueLink} created={issue.created_at} updated={issue.updated_at} status={issue.state} latestComment={issue.activityLog} issueId={issue.id}  />
           </div>
         </div>
       
         <div className="flex flex-wrap gap-2 mb-4">
-          {issue.labels.map((label, i) => (
+          {commonLabels.map((label) => (
             <span
-              key={i}
+              key={label}
               className="text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 px-2 py-0.5 rounded-full"
             >
-              {label.name}
+              {label}
             </span>
           ))}
+          {isAddBountyIssue(issue) && (
+                     <Badge variant={issue.state === 'open' ? 'default' : 'destructive'} className="ml-auto capitalize">
+                         {issue.state}
+                     </Badge>
+                 )}
         </div>
       
         <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-          <span>#{issue.number} opened on{" "} <span className="underline">{formatDate(new Date(issue.created_at).toLocaleDateString())}</span></span>
+          <span>#{isAddBountyIssue(issue) && `${issue.number}`} opened on{" "} <span className="underline">{isAddBountyIssue(issue) ? `opened ${formattedDate}` : `bounty added ${formattedDate}`}</span></span>
           <div className="flex items-center gap-3">
             <Link
-              href={issue.html_url}
+              href={commonUrl}
               target="_blank"
               className="transition-colors"
             >
@@ -89,6 +74,28 @@ export default function IssuesList({
           </div>
         </div>
       </motion.div>
+    );
+}
+
+
+export default function IssuesList({ issues, isAddingBounty }: IssuesListProps) {
+  if (issues.length === 0) {
+    return (
+      <div className="text-center text-muted-foreground py-10">
+        No issues found matching your criteria.
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {issues.map((issue, index) => (
+        <IssueItem
+            key={`${isAddingBounty ? 'add' : 'manage'}-${isAddBountyIssue(issue) ? issue.id : issue.githubId}`}
+            issue={issue}
+            index={index}
+            isAddingBounty={isAddingBounty}
+        />
       ))}
     </div>
   );

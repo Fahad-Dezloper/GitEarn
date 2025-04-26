@@ -129,21 +129,21 @@ const BountyPopup = ({title, description, labels, repository, assignees, prRaise
   };
 
   // Generate a random pastel color based on string
-  const getLabelColor = (label: string) => {
-    const colors = [
-      "bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300",
-      "bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300",
-      "bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300",
-      "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-300",
-      "bg-pink-100 text-pink-700 dark:bg-pink-900/50 dark:text-pink-300",
-      "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300",
-    ];
+  // const getLabelColor = (label: string) => {
+  //   const colors = [
+  //     "bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300",
+  //     "bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300",
+  //     "bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300",
+  //     "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/50 dark:text-yellow-300",
+  //     "bg-pink-100 text-pink-700 dark:bg-pink-900/50 dark:text-pink-300",
+  //     "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300",
+  //   ];
     
-    // Use a simple hash function to select a color
-    console.log("label is this", label)
-    const hash = label.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return colors[hash % colors.length];
-  };
+  //   // Use a simple hash function to select a color
+  //   console.log("label is this", label)
+  //   const hash = label.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  //   return colors[hash % colors.length];
+  // };
 
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -272,7 +272,7 @@ const BountyPopup = ({title, description, labels, repository, assignees, prRaise
                   {labels != null && labels.map((label, i) => (
                     <span
                       key={i}
-                      className={`px-2.5 py-1 rounded-full text-sm font-medium flex items-center gap-1 ${getLabelColor(label.name)}`}
+                      className={`px-2.5 py-1 rounded-full text-sm font-medium flex items-center gap-1 ${label}`}
                     >
                       {label.name}
                       {/* <button 
