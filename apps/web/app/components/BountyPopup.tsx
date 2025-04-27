@@ -314,7 +314,7 @@ const BountyPopup = ({title, description, labels, repository, assignees, prRaise
                           key={i}
                           className="px-2.5 py-1 rounded-full text-sm font-medium flex items-center gap-1"
                           style={{
-                            backgroundColor: hexToRGBA(label.color, 0.2), // slight transparency
+                            backgroundColor: hexToRGBA(label.color, 0.2),
                             color: textColor,
                           }}
                         >
