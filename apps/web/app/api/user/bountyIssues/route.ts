@@ -60,9 +60,10 @@ async function fetchGitHubIssueData(htmlUrl: string) {
     );
 
     // Build activity log from comments
+    console.log("comments data", commentsData);
     const activityLog = commentsData.map((comment: any) => ({
       type: "comment",
-      user: `@${comment.user.login}`,
+      user: comment.user,
       content: comment.body,
       date: comment.created_at
     }));
@@ -75,7 +76,7 @@ async function fetchGitHubIssueData(htmlUrl: string) {
       );
       
       latestComment = {
-        user: `@${mostRecent.user.login}`,
+        user: mostRecent.user,
         comment: mostRecent.body,
         date: mostRecent.created_at
       };
@@ -96,7 +97,7 @@ async function fetchGitHubIssueData(htmlUrl: string) {
         description: typeof label === 'string' ? null : label.description,
       })),
       repository: repo,
-      assignees: issueData.assignees?.map((assignee: any) => assignee.login) || [],
+      assignees: issueData.assignees || [],
       prRaised,
       issueLink: issueData.html_url,
       latestComment,

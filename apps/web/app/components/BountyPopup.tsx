@@ -32,6 +32,7 @@ const formatDateRelative = (iso: string) => {
 };
 
 const BountyPopup = ({title, isAddingBounty, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId}) => {
+  // console.log("activity logs", latestComment);
   // console.log("labels here", labels)
   const largeViewport = useClientMediaQuery("(min-width: 800px)");
   const [newLabel, setNewLabel] = useState("");
@@ -268,15 +269,15 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
               <div className="space-y-3 mb-6">
                 <h3 className="font-semibold text-zinc-800 dark:text-zinc-100">Assignees</h3>
                 <div className="flex gap-2">
-                  {assignees != null && assignees.map((user) => (
+                  {assignees.length != null && assignees.map((user) => (
                     <div 
                       key={user} 
                       className="flex items-center gap-2 text-sm p-2 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-md"
                     >
-                      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
-                        {user.charAt(1).toUpperCase()}
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br overflow-hidden from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+                        <img src={user.avatar_url} className="w-full h-full object-cover" alt="avatar url" />
                       </div>
-                      <span className="font-medium">{user}</span>
+                      <span className="font-medium">{user.login}</span>
                     </div>
                   ))}
                 </div>
@@ -329,10 +330,10 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
                     <div key={idx} className="border border-zinc-200 dark:border-zinc-700 rounded-lg overflow-hidden">
                       <div className="bg-zinc-50 dark:bg-zinc-800 px-4 py-2 flex justify-between items-center border-b border-zinc-200 dark:border-zinc-700">
                         <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white text-xs font-bold">
-                            {activity.user.charAt(1).toUpperCase()}
+                          <div className="w-6 h-6 rounded-full overflow-hidden bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white text-xs font-bold">
+                            <img src={activity.user.avatar_url} alt="user avatar" className="w-full h-full object-cover" />
                           </div>
-                          <span className="font-medium text-sm">{activity.user}</span>
+                          <span className="font-medium text-sm">{activity.user.login}</span>
                           <span className="text-xs text-zinc-500 dark:text-zinc-400 flex items-center gap-1">
                             {getActivityIcon(activity.type)}
                             {activity.type === 'status' ? 'changed status' : activity.type}

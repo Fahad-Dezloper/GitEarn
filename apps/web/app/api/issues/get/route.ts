@@ -121,7 +121,8 @@ export async function GET(_request: Request) {
 
         const mappedIssues: IssueExtended[] = await Promise.all(filteredIssues.map(async (issue) => {
           // Get Assignees
-          const assignees = issue.assignees?.map((a) => `@${a.login}`) || [];
+          // console.log("here assigness", issue.assignees);
+          const assignees = issue.assignees || [];
 
           // Get comments (for latest comment)
           const commentsRes = await octokit.issues.listComments({
@@ -134,7 +135,7 @@ export async function GET(_request: Request) {
           const comments = commentsRes.data;
           const latestComment = comments.length
             ? {
-                user: `@${comments[comments.length - 1].user?.login}`,
+                user: comments[comments.length - 1].user,
                 comment: comments[comments.length - 1].body || "",
                 date: comments[comments.length - 1].created_at,
               }
@@ -162,7 +163,7 @@ export async function GET(_request: Request) {
           for (const comment of comments) {
             activityLog.push({
               type: "comment",
-              user: `@${comment.user?.login}`,
+              user: comment.user,
               content: comment.body || "",
               date: comment.created_at,
             });

@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Scroll, Sheet, useClientMediaQuery } from "@silk-hq/components";
 import { AlertTriangle, Calendar, ExternalLink, GitPullRequest, MessageSquare, Plus, RefreshCw, Tag, X } from "lucide-react";
 import { useState } from "react";
 import { useBountyDetails } from "../context/BountyContextProvider";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const formatDate = (iso: string) =>
@@ -33,7 +34,7 @@ const formatDateRelative = (iso: string) => {
 };
 
 const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId, bounty}) => {
-  // console.log("labels here", assignees);
+  // console.log("labels here", latestComment);
   const largeViewport = useClientMediaQuery("(min-width: 800px)");
   const [newLabel, setNewLabel] = useState("");
   // const [labels, setLabels] = useState(labels);
@@ -42,7 +43,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
   const [customAmount, setCustomAmount] = useState("");
   const [showCustomAmount, setShowCustomAmount] = useState(false);
   const [activityView, setActivityView] = useState<"latest" | "all">("all");
-  const [selectedAssignee, setSelectedAssignee] = useState("");
+  const [selectedAssignee, setSelectedAssignee] = useState<any>(null);
   const [showApproveDialog, setShowApproveDialog] = useState(false);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [showAddFundsDialog, setShowAddFundsDialog] = useState(false);
@@ -125,18 +126,21 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
 
   const handleApprove = () => {
     setShowApproveDialog(true);
-    console.log("assignees here", assignees);
-    if(assignees != null){
-      setSelectedAssignee(assignees[0].name);
-    }else{
-      console.error("no assignees available");
-    }
+    console.log("assignees here", assignees); 
+    // if(assignees != null){
+    //   setSelectedAssignee(assignees.user.name);
+    // }else{
+    //   console.error("no assignees available");
+    // }
   };
 
   const confirmApproval = () => {
-    // Handle the actual approval logic
-    setShowApproveDialog(false);
-    // Add API call or state updates here
+    if (selectedAssignee) {
+      console.log("Approving payment to:", selectedAssignee);
+      // Call your API, function, whatever you want with selectedAssignee
+    } else {
+      console.error("No assignee selected");
+    }
   };
 
   const handleCancel = () => {
@@ -276,10 +280,10 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                       key={user} 
                       className="flex items-center gap-2 text-sm p-2 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-md"
                     >
-                      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
-                        {user.charAt(1).toUpperCase()}
+                      <div className="w-8 h-8 overflow-hidden rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+                        <img src={user.avatar_url} alt="user avatar" className="w-full h-full object-cover" />
                       </div>
-                      <span className="font-medium">{user}</span>
+                      <span className="font-medium">{user.login}</span>
                     </div>
                   ))}
                 </div>
@@ -332,10 +336,10 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                     <div key={idx} className="border border-zinc-200 dark:border-zinc-700 rounded-lg overflow-hidden">
                       <div className="bg-zinc-50 dark:bg-zinc-800 px-4 py-2 flex justify-between items-center border-b border-zinc-200 dark:border-zinc-700">
                         <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white text-xs font-bold">
-                            {activity.user.charAt(1).toUpperCase()}
+                          <div className="w-6 h-6 rounded-full overflow-hidden bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white text-xs font-bold">
+                            <img src={activity.user.avatar_url} alt="user_avatar" className="w-full h-full object-cover" />
                           </div>
-                          <span className="font-medium text-sm">{activity.user}</span>
+                          <span className="font-medium text-sm">{activity.user.login}</span>
                           <span className="text-xs text-zinc-500 dark:text-zinc-400 flex items-center gap-1">
                             {getActivityIcon(activity.type)}
                             {activity.type === 'status' ? 'changed status' : activity.type}
@@ -408,53 +412,40 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                   <div className="p-4 space-y-4">
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Select Assignee</label>
-                      <Select value={selectedAssignee} onValueChange={setSelectedAssignee}>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select an assignee" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {assignees.map((user) => (
-                            <SelectItem key={user.name} value={user.name}>
-                              <div className="flex items-center gap-2">
-                                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
-                                  {user ? user.charAt(0).toUpperCase() : '?'}
-                                </div>
-                                <span>{user || 'Unknown User'}</span>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                <Select onValueChange={(value) => {
+                    // console.log(assignees);
+                        const user = assignees.find(u => u.login === value);
+                        if (user) {
+                          setSelectedAssignee(user);
+                        }}}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select a hunter" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>Assignees</SelectLabel>
+                              {assignees.map((user,i) => (
+                                <SelectItem key={i} value={user.login} className="flex gap-2">
+                                 <img src={user.avatar_url} className="h-6 w-6 rounded-full" alt="user avatar" /> {user.login}
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
                     </div>
                     
                     {selectedAssignee && (
-                      <Card className="border border-zinc-200 dark:border-zinc-800">
-                        <CardHeader className="pb-2">
-                          <CardTitle className="text-base flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold">
-                              {selectedAssignee.charAt(0).toUpperCase()}
-                            </div>
-                            {selectedAssignee}
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>
+                            <div className="flex gap-2 items-center">
+                              <img src={selectedAssignee.avatar_url} alt="user avatar" className="w-6 h-6 rounded-full" />
+                              {selectedAssignee?.login}</div>
                           </CardTitle>
                         </CardHeader>
-                        <CardContent className="pb-3 space-y-2 text-sm">
-                          {assignees.map(user => {
-                            if (user.name === selectedAssignee) {
-                              return (
-                                <div key={user.name} className="space-y-2">
-                                  <div className="flex flex-col">
-                                    <span className="text-zinc-500 dark:text-zinc-400">Email:</span>
-                                    <span className="font-medium">{user.email}</span>
-                                  </div>
-                                  <div className="flex flex-col">
-                                    <span className="text-zinc-500 dark:text-zinc-400">Wallet:</span>
-                                    <span className="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 p-2 rounded">{user.wallet}</span>
-                                  </div>
-                                </div>
-                              );
-                            }
-                            return null;
-                          })}
+                        <CardContent>
+                          <div>GitHub Id: {selectedAssignee?.id}</div>
+                          <div>Wallet: SNDFKSNADFKNASKDF</div>
                         </CardContent>
                       </Card>
                     )}
@@ -467,7 +458,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                     >
                       Cancel
                     </Button>
-                    <Button 
+                    <Button
                       className="bg-green-600 hover:bg-green-700 text-white"
                       onClick={confirmApproval}
                       // disabled={!selectedAssignee}
