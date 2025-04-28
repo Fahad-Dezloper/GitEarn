@@ -7,9 +7,10 @@ import { ExternalLink, GitMerge, MessageSquare } from "lucide-react"; // Example
 import { formatDistanceToNow } from 'date-fns'; // For relative dates
 import { AddBountyIssue, ManageBountyIssue, isAddBountyIssue } from "@/types/issueTypes"; // Import the types
 import { motion } from 'framer-motion';
-import { ExampleSheetWithKeyboard } from "../components/SheetWithKeyboard/ExampleSheetWithKeyboard";
+import { AddBountyPopup } from "../components/SheetWithKeyboard/AddBountyPopup";
 import Link from "next/link";
 import { GithubIcon } from "@/components/ui/github";
+import { RemoveBountyPopup } from "../components/SheetWithKeyboard/RemoveBountyPopup";
 
 interface IssuesListProps {
   issues: (AddBountyIssue | ManageBountyIssue)[];
@@ -18,12 +19,17 @@ interface IssuesListProps {
 
 
 function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | ManageBountyIssue, isAddingBounty: boolean, index: number }) {
-    // console.log("issues from issueList", issue);
+  // if(!isAddBountyIssue(issue)){
+  //     console.log("isAddingBounty", issue);
+  //   }
+  // console.log(isAddingBounty);
+  // console.log(issue);
     const commonTitle = issue.title;
     const commonUrl = isAddBountyIssue(issue) ? issue.html_url : issue.htmlUrl;
-    const commonRepo = isAddBountyIssue(issue) ? issue.repositoryFullName : issue.repo;
+    const commonRepo = isAddBountyIssue(issue) ? issue.repositoryFullName : issue.repository;
     const commonDate = isAddBountyIssue(issue) ? new Date(issue.created_at) : issue.createdAtDate;
-    const commonLabels = isAddBountyIssue(issue) ? issue.labelNames : issue.tags;
+    const commonLabels = isAddBountyIssue(issue) ? issue.labelNames : issue.labelNames;
+    // console.log("common labels", issue.labelNames);
 
     const formattedDate = formatDistanceToNow(commonDate, { addSuffix: true });
 
@@ -41,12 +47,14 @@ function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | M
             <a href={commonUrl} target="_blank" rel="noopener noreferrer" className="text-lg font-semibold text-gray-900 dark:text-white">{commonTitle}</a>
           </div>
           <div className="relative">
-             <ExampleSheetWithKeyboard title={commonTitle} description={issue.body} labels={issue.labels} repository={commonRepo} assignees={issue.assignees} prRaise={issue.prRaised} issueLink={issue.issueLink} created={issue.created_at} updated={issue.updated_at} status={issue.state} latestComment={issue.activityLog} issueId={issue.id}  />
-          </div>
+            {isAddingBounty ? 
+            <AddBountyPopup isAddingBounty={isAddingBounty} title={commonTitle} description={issue.body} labels={issue.labels} repository={commonRepo} assignees={issue.assignees} prRaise={issue.prRaised} issueLink={issue.issueLink} created={issue.created_at} updated={issue.updated_at} status={issue.state} latestComment={issue.activityLog} issueId={issue.id}  />
+           : <RemoveBountyPopup bounty={issue.bounty} isAddingBounty={isAddingBounty} title={commonTitle} labels={issue.labels} repository={issue.repository} assignees={issue.assignees} prRaise={issue.prRaised} issueLink={issue.issueLink} created={issue.created_at} updated={issue.updated_at} status={issue.state} latestComment={issue.activityLog} issueId={issue.id} />}
+             </div>
         </div>
       
         <div className="flex flex-wrap gap-2 mb-4">
-          {commonLabels.map((label) => (
+          {commonLabels != null && commonLabels.map((label) => (
             <span
               key={label}
               className="text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 px-2 py-0.5 rounded-full"

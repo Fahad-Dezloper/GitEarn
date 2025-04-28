@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Scroll, Sheet, useClientMediaQuery } from "@silk-hq/components";
-import { Calendar, ExternalLink, GitPullRequest, MessageSquare, Plus, RefreshCw, Tag, X } from "lucide-react";
+import { AlertTriangle, Calendar, ExternalLink, GitPullRequest, MessageSquare, Plus, RefreshCw, Tag, X } from "lucide-react";
 import { useState } from "react";
 import { useBountyDetails } from "../context/BountyContextProvider";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleString(undefined, {
@@ -31,8 +32,8 @@ const formatDateRelative = (iso: string) => {
   }
 };
 
-const BountyPopup = ({title, isAddingBounty, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId}) => {
-  // console.log("labels here", labels)
+const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId, bounty}) => {
+  // console.log("labels here", assignees);
   const largeViewport = useClientMediaQuery("(min-width: 800px)");
   const [newLabel, setNewLabel] = useState("");
   // const [labels, setLabels] = useState(labels);
@@ -41,6 +42,11 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
   const [customAmount, setCustomAmount] = useState("");
   const [showCustomAmount, setShowCustomAmount] = useState(false);
   const [activityView, setActivityView] = useState<"latest" | "all">("all");
+  const [selectedAssignee, setSelectedAssignee] = useState("");
+  const [showApproveDialog, setShowApproveDialog] = useState(false);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [showAddFundsDialog, setShowAddFundsDialog] = useState(false);
+  const [additionalFunds, setAdditionalFunds] = useState("");
 
   const { addBounty } = useBountyDetails();
 
@@ -85,8 +91,6 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
     }
   };
 
-
-
   function hexToRGBA(hex, alpha = 0.2) {
     hex = hex.replace(/^#/, '');
   
@@ -119,6 +123,43 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
     return brightness < 128;
   }
 
+  const handleApprove = () => {
+    setShowApproveDialog(true);
+    console.log("assignees here", assignees);
+    if(assignees != null){
+      setSelectedAssignee(assignees[0].name);
+    }else{
+      console.error("no assignees available");
+    }
+  };
+
+  const confirmApproval = () => {
+    // Handle the actual approval logic
+    setShowApproveDialog(false);
+    // Add API call or state updates here
+  };
+
+  const handleCancel = () => {
+    setShowCancelDialog(true);
+  };
+
+  const confirmCancel = () => {
+    // Handle the actual cancellation
+    setShowCancelDialog(false);
+    // Add API call or state updates here
+  };
+
+  const handleAddFunds = () => {
+    setShowAddFundsDialog(true);
+  };
+
+  const confirmAddFunds = () => {
+    // Handle adding funds to bounty
+    setShowAddFundsDialog(false);
+    // Add API call or state updates here
+  };
+
+
   // console.log("final labels", labels);
 
   return (
@@ -131,7 +172,7 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
         >
           Close
         </Sheet.Trigger>
-        <Sheet.Title className="text-lg font-semibold">Add Bounty</Sheet.Title>
+        <Sheet.Title className="text-lg font-semibold">Manage Bounty</Sheet.Title>
         <button className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors p-1 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800">
           <RefreshCw size={16} />
         </button>
@@ -143,48 +184,10 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
               scrollGestureTrap={{ yEnd: !largeViewport }}>
           <Scroll.Content className="p-6 max-h-[38vw] flex flex-col overflow-y-auto gap-8">
             {/* Bounty Section */}
-            <div className="space-y-4">
-              <div className="text-center space-y-2">
-                <h2 className="text-xl font-bold text-zinc-900 dark:text-white">Add Bounty to Issue</h2>
-                <p className="text-zinc-600 dark:text-zinc-300">Select a bounty amount to incentivize solving this issue.</p>
-              </div>
-              
-              <div className="grid grid-cols-4 gap-2 mt-4">
-                {[10, 50, 100, "custom"].map((amount) => (
-                  <button
-                    key={amount}
-                    onClick={() => handleBountySelect(amount)}
-                    className={`py-2.5 px-4 rounded-lg font-medium transition-all ${
-                      bountyAmount === amount 
-                        ? "bg-blue-500 text-white ring-2 ring-blue-300 dark:ring-blue-500/50 ring-offset-2 dark:ring-offset-zinc-900" 
-                        : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
-                    }`}
-                  >
-                    {amount === "custom" ? "Custom" : `$${amount}`}
-                  </button>
-                ))}
-              </div>
-              
-              {showCustomAmount && (
-                <div className="mt-3 flex items-center">
-                  <div className="relative flex-grow">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">$</span>
-                    <input
-                      type="text"
-                      value={customAmount}
-                      onChange={handleCustomAmountChange}
-                      className="w-full pl-8 pr-3 py-2.5 border border-zinc-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Enter amount"
-                      inputMode="decimal"
-                    />
-                  </div>
-                </div>
-              )}
               
               <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800/50 rounded-lg p-3 text-sm text-blue-700 dark:text-blue-300">
                 💡 Bounties are paid out once the issue is resolved and the PR is merged.
               </div>
-            </div>
             
             <div className="border-t border-zinc-200 dark:border-zinc-800 pt-6">
               <h3 className="text-lg font-semibold mb-4">Issue Details</h3>
@@ -192,7 +195,7 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
               {/* Title and Description */}
               <div className="space-y-2 mb-6">
                 <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{title}</h2>
-                <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed">{description}</p>
+                {/* <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed">{description}</p> */}
               </div>
 
               {/* Metadata */}
@@ -360,27 +363,6 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
                     </div>
                   ))}
                 </div>
-
-                {/* Latest Comments */}
-                {/* <div className="mt-6">
-                  <h3 className="font-semibold text-zinc-800 dark:text-zinc-100 mb-3">Latest Comment</h3>
-                  <div className="border border-zinc-200 dark:border-zinc-700 rounded-lg overflow-hidden">
-                    <div className="bg-zinc-50 dark:bg-zinc-800 px-4 py-2 flex justify-between items-center border-b border-zinc-200 dark:border-zinc-700">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white text-xs font-bold">
-                          {latestComment.user.charAt(1).toUpperCase()}
-                        </div>
-                        <span className="font-medium text-sm">{latestComment.user}</span>
-                      </div>
-                      <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                        {formatDateRelative(latestComment.date)}
-                      </span>
-                    </div>
-                    <div className="p-4 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 text-sm leading-relaxed">
-                      {latestComment.comment}
-                    </div>
-                  </div>
-                </div> */}
               </div>
             </div>
           </Scroll.Content>
@@ -388,23 +370,204 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
       </Scroll.Root>
 
       <div className="border-t border-zinc-200 dark:border-zinc-800 p-4 bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur-sm">
-        <button onClick={() => AddBountyToTheIssue(bountyAmount)}
-          className={`w-full py-2.5 text-white font-medium rounded-lg transition-colors ${
-            (bountyAmount && bountyAmount !== "custom") || (bountyAmount === "custom" && customAmount)
-              ? "bg-blue-500 hover:bg-blue-600"
-              : "bg-blue-400 cursor-not-allowed opacity-70"
-          }`}
-          disabled={!bountyAmount || (bountyAmount === "custom" && !customAmount)}
-        >
-          {bountyAmount === "custom" && customAmount 
-            ? `Add $${customAmount} Bounty` 
-            : bountyAmount 
-              ? `Add $${bountyAmount} Bounty`
-              : "Select Bounty Amount"}
-        </button>
+          <div className="flex flex-col sm:flex-row gap-3 justify-between">
+            <Button 
+              variant="outline" 
+              className="bg-white dark:bg-zinc-800 border-red-200 dark:border-red-800/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300"
+              onClick={handleCancel}
+              disabled={assignees != null}
+            >
+              <X size={16} className="mr-2" /> Cancel Bounty
+            </Button>
+            
+            <Button 
+              variant="outline"
+              className="bg-white dark:bg-zinc-800 border-blue-200 dark:border-blue-800/50 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-700 dark:hover:text-blue-300"
+              onClick={handleAddFunds}
+            >
+              <Plus size={16} className="mr-2" /> Add Funds
+            </Button>
+            
+            <Button 
+              className="bg-green-600 hover:bg-green-700 text-white"
+              onClick={handleApprove}
+            >
+              Approve Bounty
+            </Button>
+          </div>
+        </div>
+
+        {showApproveDialog && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-xl w-full max-w-md mx-4 overflow-hidden">
+                  <div className="p-4 border-b border-zinc-200 dark:border-zinc-800">
+                    <h3 className="text-lg font-semibold">Approve Bounty</h3>
+                    <p className="text-zinc-600 dark:text-zinc-400 text-sm">Select who should receive the {bounty} bounty</p>
+                  </div>
+                  
+                  <div className="p-4 space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Select Assignee</label>
+                      <Select value={selectedAssignee} onValueChange={setSelectedAssignee}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select an assignee" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {assignees.map((user) => (
+                            <SelectItem key={user.name} value={user.name}>
+                              <div className="flex items-center gap-2">
+                                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+                                  {user ? user.charAt(0).toUpperCase() : '?'}
+                                </div>
+                                <span>{user || 'Unknown User'}</span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    {selectedAssignee && (
+                      <Card className="border border-zinc-200 dark:border-zinc-800">
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-base flex items-center gap-2">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold">
+                              {selectedAssignee.charAt(0).toUpperCase()}
+                            </div>
+                            {selectedAssignee}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="pb-3 space-y-2 text-sm">
+                          {assignees.map(user => {
+                            if (user.name === selectedAssignee) {
+                              return (
+                                <div key={user.name} className="space-y-2">
+                                  <div className="flex flex-col">
+                                    <span className="text-zinc-500 dark:text-zinc-400">Email:</span>
+                                    <span className="font-medium">{user.email}</span>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-zinc-500 dark:text-zinc-400">Wallet:</span>
+                                    <span className="font-mono text-xs bg-zinc-100 dark:bg-zinc-800 p-2 rounded">{user.wallet}</span>
+                                  </div>
+                                </div>
+                              );
+                            }
+                            return null;
+                          })}
+                        </CardContent>
+                      </Card>
+                    )}
+                  </div>
+                  
+                  <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 flex justify-end gap-3">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setShowApproveDialog(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button 
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                      onClick={confirmApproval}
+                      // disabled={!selectedAssignee}
+                    >
+                      Approve Payment
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {showCancelDialog && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-xl w-full max-w-md mx-4 overflow-hidden">
+                  <div className="p-4 border-b border-zinc-200 dark:border-zinc-800">
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="text-red-500" size={20} />
+                      <h3 className="text-lg font-semibold">Cancel Bounty</h3>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4">
+                    <p className="text-zinc-700 dark:text-zinc-300">
+                      Are you sure you want to cancel the {bounty} bounty for issue "<span className="font-medium">Add Rag model for projects</span>"?
+                    </p>
+                    <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                      This action cannot be undone.
+                    </p>
+                  </div>
+                  
+                  <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 flex justify-end gap-3">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setShowCancelDialog(false)}
+                    >
+                      Keep Bounty
+                    </Button>
+                    <Button 
+                      className="bg-red-600 hover:bg-red-700 text-white"
+                      onClick={confirmCancel}
+                    >
+                      Yes, Cancel Bounty
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {showAddFundsDialog && (
+              <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+                <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-xl w-full max-w-md mx-4 overflow-hidden">
+                  <div className="p-4 border-b border-zinc-200 dark:border-zinc-800">
+                    <h3 className="text-lg font-semibold">Add Funds to Bounty</h3>
+                    <p className="text-zinc-600 dark:text-zinc-400 text-sm">Current bounty: {bounty}</p>
+                  </div>
+                  
+                  <div className="p-4 space-y-4">
+                    <div className="space-y-2">
+                      <label htmlFor="additional-amount" className="text-sm font-medium">Additional Amount (USD)</label>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500">$</span>
+                        <input
+                          id="additional-amount"
+                          type="number"
+                          min="1"
+                          className="w-full pl-8 pr-4 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md bg-white dark:bg-zinc-800 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent"
+                          placeholder="Enter amount"
+                          value={additionalFunds}
+                          onChange={(e) => setAdditionalFunds(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    
+                    {additionalFunds && Number(additionalFunds) > 0 && (
+                      <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded text-sm text-blue-700 dark:text-blue-300">
+                        {/* New total bounty will be: ${Number(bounty.replace('$', '')) + Number(additionalFunds)} */}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 flex justify-end gap-3">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setShowAddFundsDialog(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button 
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={confirmAddFunds}
+                      disabled={!additionalFunds || Number(additionalFunds) <= 0}
+                    >
+                      Add Funds
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
       </div>
-    </div>
   );
 };
 
-export default BountyPopup;
+export default BountyRemovePopup;

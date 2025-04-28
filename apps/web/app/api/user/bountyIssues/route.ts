@@ -3,49 +3,112 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 function safeJson(obj: any) {
-    return JSON.parse(
-      JSON.stringify(obj, (_, value) =>
-        typeof value === "bigint" ? value.toString() : value
-      )
-    );
-  }  
+  return JSON.parse(
+    JSON.stringify(obj, (_, value) =>
+      typeof value === "bigint" ? value.toString() : value
+    )
+  );
+}
 
 async function fetchGitHubIssueData(htmlUrl: string) {
   const match = htmlUrl.match(/github\.com\/([^/]+)\/([^/]+)\/issues\/(\d+)/);
   if (!match) {
-    return { title: "Invalid URL", repo: "", tags: [] };
+    return null;
   }
 
   const [_, owner, repo, issue_number] = match;
+  const headers = {
+    Accept: "application/vnd.github.v3+json",
+    Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+  };
 
   try {
-    const res = await fetch(
+    // Fetch issue details
+    const issueRes = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/issues/${issue_number}`,
-      {
-        headers: {
-          Accept: "application/vnd.github.v3+json",
-          Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-        },
-      }
+      { headers }
     );
 
-    if (!res.ok) throw new Error("GitHub fetch failed");
+    if (!issueRes.ok) throw new Error("GitHub issue fetch failed");
+    const issueData = await issueRes.json();
 
-    const data = await res.json();
+    // Fetch comments
+    const commentsRes = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/issues/${issue_number}/comments`,
+      { headers }
+    );
+    
+    if (!commentsRes.ok) throw new Error("GitHub comments fetch failed");
+    const commentsData = await commentsRes.json();
+
+    // Fetch pull requests associated with the issue
+    const prRes = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/issues/${issue_number}/timeline`,
+      { 
+        headers: {
+          ...headers,
+          Accept: "application/vnd.github.mockingbird-preview+json"
+        }
+      }
+    );
+    
+    const timelineData = prRes.ok ? await prRes.json() : [];
+    
+    // Check if there's a PR linked to this issue
+    const prRaised = timelineData.some((event: any) => 
+      event.event === "cross-referenced" && event.source?.issue?.pull_request
+    );
+
+    // Build activity log from comments
+    const activityLog = commentsData.map((comment: any) => ({
+      type: "comment",
+      user: `@${comment.user.login}`,
+      content: comment.body,
+      date: comment.created_at
+    }));
+
+    // Find the latest comment
+    let latestComment = null;
+    if (commentsData.length > 0) {
+      const mostRecent = commentsData.reduce((latest: any, current: any) => 
+        new Date(latest.created_at) > new Date(current.created_at) ? latest : current
+      );
+      
+      latestComment = {
+        user: `@${mostRecent.user.login}`,
+        comment: mostRecent.body,
+        date: mostRecent.created_at
+      };
+    }
 
     return {
-      title: data.title,
-      repo: `${owner}/${repo}`,
-      tags: data.labels.map((label: any) => label.name),
+      id: issueData.id,
+      title: issueData.title,
+      state: issueData.state,
+      html_url: issueData.html_url,
+      created_at: issueData.created_at,
+      updated_at: issueData.updated_at,
+      body: issueData.body,
+      number: issueData.number,
+      labels: (issueData.labels || []).map(label => ({
+        name: typeof label === 'string' ? label : label.name,
+        color: typeof label === 'string' ? 'ffffff' : label.color,
+        description: typeof label === 'string' ? null : label.description,
+      })),
+      repository: repo,
+      assignees: issueData.assignees?.map((assignee: any) => assignee.login) || [],
+      prRaised,
+      issueLink: issueData.html_url,
+      latestComment,
+      activityLog
     };
   } catch (err) {
     console.error("GitHub issue fetch error", err);
-    return { title: "Unavailable", repo: `${owner}/${repo}`, tags: [] };
+    return null;
   }
 }
 
 export async function GET() {
-
   try {
     const session = await getServerSession();
 
@@ -57,33 +120,40 @@ export async function GET() {
       return NextResponse.json({ message: "No user email found" }, { status: 401 });
     }
 
-    const issues = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email: session.user.email },
       include: { issue: true },
     });
 
-    // console.log
-    const finalIssue = issues?.issue;
-    // console.log("users issue", finalIssue);
+    if (!user || !user.issue) {
+      return NextResponse.json({ 
+        message: "No issues found", 
+        UsersBountyIssues: [] 
+      }, { status: 200 });
+    }
 
     const enrichedIssues = await Promise.all(
-        finalIssue.map(async (issue) => {
-          const meta = await fetchGitHubIssueData(issue.htmlUrl);
-          return {
-            ...issue,
-            title: meta.title,
-            repo: meta.repo,
-            tags: meta.tags,
-            posted: new Date(issue.createdAt).toLocaleDateString(),
-          };
-        })
-      );
-      
-      console.log("enriched issues", enrichedIssues);
+      user.issue.map(async (issue) => {
+        const enrichedData = await fetchGitHubIssueData(issue.htmlUrl);
+        if (!enrichedData) {
+          return null;
+        }
+        
+        return {
+          ...issue,
+          ...enrichedData,
+          posted: new Date(issue.createdAt).toLocaleDateString()
+        };
+      })
+    );
+
+    // Filter out any null values and convert BigInt to strings
+    const validIssues = safeJson(enrichedIssues.filter(Boolean));
+    // console.log("valid Issues", validIssues);
     return NextResponse.json(
       {
         message: "Bounty issues fetched successfully",
-        UsersBountyIssues: safeJson(enrichedIssues),
+        UsersBountyIssues: validIssues,
       },
       { status: 200 }
     );

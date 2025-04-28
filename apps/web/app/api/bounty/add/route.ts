@@ -58,12 +58,28 @@ export async function POST(req: NextRequest) {
       owner,
       repo,
       issue_number,
-      body: `💰 This issue has a bounty of **$${bountyAmt}** via [GitEarn](${baseUrl}/earn)!
+    //   body: `🔗 This issue has a bounty of **$${bountyAmt}** via [GitEarn](${baseUrl}/earn)!
+    
+    // Please read the [Participation Guide](https://github.com/your-org/your-repo/blob/main/README.md) before starting.
+    
+    // Good luck! 🚀`
+    body: `
+ 💎 **$${bountyAmt} bounty** • [GitEarn](${baseUrl}/earn)
 
-To participate and claim the bounty:
-👉 Create an account here: [${baseUrl}/earn](${baseUrl}/earn)
+---
 
-Happy hacking! 🚀`
+### Steps to claim:
+
+1. **Start working**: Sign up on [GitEarn](${baseUrl}/earn) and start your implementation.
+2. **Submit work**: Create a pull request mentioning this issue.
+3. **Receive payment**: 100% of the bounty is sent within 2–5 days after approval.
+
+---
+
+📖 **Important:** Please read the [Participation Guide](https://github.com/your-org/your-repo/blob/main/README.md) before starting!
+
+Thank you for contributing! 🚀
+    `    
     });
 
     
@@ -71,7 +87,7 @@ Happy hacking! 🚀`
       try {
         await octokit.issues.createLabel({ owner, repo, name, color, description });
       } catch (err: any) {
-        if (err.status !== 422) throw err; // Ignore already exists
+        if (err.status !== 422) throw err;
       }
     };
 

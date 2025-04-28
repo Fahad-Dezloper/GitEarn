@@ -12,8 +12,8 @@ import UserIssuesSolved from '@/app/(dashboardComponents)/UserIssuesSolved';
 const Page = () => {
   // const [userDetails, setUserDetails]
   const { userDetailss, wakaTimeDetails } = useUserDetails();
-  console.log("userDetails", userDetailss);
-  console.log("userDetails", wakaTimeDetails);
+  // console.log("userDetails", userDetailss);
+  // console.log("userDetails", wakaTimeDetails);
   
   return (
     <div className='w-full max-h-screen overflow-hidden py-6'>

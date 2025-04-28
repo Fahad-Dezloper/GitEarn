@@ -12,7 +12,7 @@ export default function Dashboard() {
   const [data, setData] = useState(null);
   const { data: session } = useSession()
   const [repos, setRepos] = useState([])
-  console.log("from session", session);
+  // console.log("from session", session);
 
   const fetchData = async () => {
     if (!publicKey) {

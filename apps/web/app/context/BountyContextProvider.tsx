@@ -15,6 +15,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
       const res = await axios.get(`/api/issues/get`);
       // console.log("res data", res.data);
       const reposWithIssues = res.data.filter(repo => repo.issues && repo.issues.length > 0);
+      // console.log("data", reposWithIssues);
       setIssuesRepo(reposWithIssues);
     } catch (e) {
       console.error("Error while fetching:", e);
@@ -62,6 +63,24 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     });
 
     setBountyIssues(res.data.bountyIssues);
+  }
+
+  async function RemoveBounty(bountyAmt, issueId, issueLink, title){
+    const res = await axios.post("/api/bounty/remove", {
+      bountyAmt,
+      issueId,
+      issueLink,
+      title,
+    });
+  }
+
+  async function ApproveBounty(bountyAmt, issueId, issueLink, title){
+    const res = await axios.post("/api/bounty/approve", {
+      bountyAmt,
+      issueId,
+      issueLink,
+      title,
+    });
   }
 
   return (

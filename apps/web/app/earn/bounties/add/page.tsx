@@ -7,8 +7,10 @@ import { useBountyDetails } from "@/app/context/BountyContextProvider";
 import { Button } from "@/components/ui/button";
 
 export default function Page() {
+  // users bountyIssue structure check and move forward till /earn/bounties/add -> Manage Bounty -> Issue Popup
   const [loading, setLoading] = useState(false);
   const { issuesRepo, userBountyIssue } = useBountyDetails();
+  // console.log("userBountyIssue", userBountyIssue);
 
   const [isAddingBounty, setIsAddingBounty] = useState(true);
 
@@ -106,6 +108,8 @@ export default function Page() {
     dateRange
   ]);
 
+  // console.log("filtered issue", filteredIssues);
+
   const resetFilters = () => {
     setSearchTerm("");
     setSelectedLabels([]);
@@ -162,7 +166,6 @@ export default function Page() {
         </Button>
       </div>
 
-      {/* Filter Component */}
       <IssueFilter
           repositories={availableRepositories}
           labels={availableLabels}
@@ -177,9 +180,8 @@ export default function Page() {
           key={isAddingBounty ? 'add-filter' : 'manage-filter'} 
       />
 
-      {/* Issues List */}
       {loading ? (
-        <p>Loading issues...</p> // Add a proper spinner/skeleton loader
+        <p>Loading issues...</p>
       ) : (
         <IssuesList
           issues={filteredIssues}
