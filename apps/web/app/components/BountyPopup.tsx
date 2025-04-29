@@ -42,11 +42,18 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
   const [customAmount, setCustomAmount] = useState("");
   const [showCustomAmount, setShowCustomAmount] = useState(false);
   const [activityView, setActivityView] = useState<"latest" | "all">("all");
+  const [isLoading, setIsLoading] = useState(false);
 
   const { addBounty } = useBountyDetails();
 
-  function AddBountyToTheIssue(bountyAmt: number){
-    const res = addBounty( bountyAmt, issueId, issueLink, title, labels)
+  async function AddBountyToTheIssue(bountyAmt: number){
+    try {
+      setIsLoading(true);
+      const res = await addBounty(bountyAmt, issueId, issueLink, title, labels);
+      console.log("res after add bounty", res);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const handleBountySelect = (amount: string | number) => {
@@ -269,9 +276,9 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
               <div className="space-y-3 mb-6">
                 <h3 className="font-semibold text-zinc-800 dark:text-zinc-100">Assignees</h3>
                 <div className="flex gap-2">
-                  {assignees.length != null && assignees.map((user) => (
+                  {assignees.length != null && assignees.map((user, i) => (
                     <div 
-                      key={user} 
+                      key={i} 
                       className="flex items-center gap-2 text-sm p-2 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-md"
                     >
                       <div className="w-8 h-8 rounded-full bg-gradient-to-br overflow-hidden from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
@@ -361,27 +368,6 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
                     </div>
                   ))}
                 </div>
-
-                {/* Latest Comments */}
-                {/* <div className="mt-6">
-                  <h3 className="font-semibold text-zinc-800 dark:text-zinc-100 mb-3">Latest Comment</h3>
-                  <div className="border border-zinc-200 dark:border-zinc-700 rounded-lg overflow-hidden">
-                    <div className="bg-zinc-50 dark:bg-zinc-800 px-4 py-2 flex justify-between items-center border-b border-zinc-200 dark:border-zinc-700">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white text-xs font-bold">
-                          {latestComment.user.charAt(1).toUpperCase()}
-                        </div>
-                        <span className="font-medium text-sm">{latestComment.user}</span>
-                      </div>
-                      <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                        {formatDateRelative(latestComment.date)}
-                      </span>
-                    </div>
-                    <div className="p-4 bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 text-sm leading-relaxed">
-                      {latestComment.comment}
-                    </div>
-                  </div>
-                </div> */}
               </div>
             </div>
           </Scroll.Content>
@@ -389,19 +375,15 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
       </Scroll.Root>
 
       <div className="border-t border-zinc-200 dark:border-zinc-800 p-4 bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur-sm">
-        <button onClick={() => AddBountyToTheIssue(bountyAmount)}
-          className={`w-full py-2.5 text-white font-medium rounded-lg transition-colors ${
-            (bountyAmount && bountyAmount !== "custom") || (bountyAmount === "custom" && customAmount)
-              ? "bg-blue-500 hover:bg-blue-600"
-              : "bg-blue-400 cursor-not-allowed opacity-70"
-          }`}
-          disabled={!bountyAmount || (bountyAmount === "custom" && !customAmount)}
-        >
-          {bountyAmount === "custom" && customAmount 
-            ? `Add $${customAmount} Bounty` 
-            : bountyAmount 
-              ? `Add $${bountyAmount} Bounty`
-              : "Select Bounty Amount"}
+        <button onClick={() => AddBountyToTheIssue(Number(bountyAmount))}
+        disabled={isLoading || !bountyAmount || isNaN(Number(bountyAmount))}
+        className={`mt-4 w-full py-2.5 cursor-pointer px-4 rounded-lg font-semibold transition-all text-white ${
+          isLoading 
+            ? "bg-blue-300 cursor-not-allowed"
+            : "bg-blue-600 hover:bg-blue-700"
+        }`}
+      >
+        {isLoading ? "Adding Bounty..." : "Confirm Bounty"}
         </button>
       </div>
     </div>

@@ -34,7 +34,7 @@ const formatDateRelative = (iso: string) => {
 };
 
 const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId, bounty}) => {
-  console.log("assignees", assignees.length);
+  // console.log("assignees", assignees.length);
   const largeViewport = useClientMediaQuery("(min-width: 800px)");
   const [newLabel, setNewLabel] = useState("");
   // const [labels, setLabels] = useState(labels);
@@ -126,7 +126,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
 
   const handleApprove = () => {
     setShowApproveDialog(true);
-    console.log("assignees here", assignees); 
+    // console.log("assignees here", assignees); 
     // if(assignees != null){
     //   setSelectedAssignee(assignees.user.name);
     // }else{

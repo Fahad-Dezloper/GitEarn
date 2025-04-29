@@ -43,8 +43,8 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     getIssues();
-    getBountyIssues();
     getUserBountyIssues();
+    getBountyIssues();
 
     const interval = setInterval(() => {
       // console.log("calling again and again")
@@ -55,14 +55,20 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   }, []);
 
   async function addBounty(bountyAmt, issueId, issueLink, title) {
-    const res = await axios.post("/api/bounty/add", {
+    try {
+      const res = await axios.post("/api/bounty/add", {
       bountyAmt,
       issueId,
-      issueLink,
+      issueLink,  
       title,
     });
 
     setBountyIssues(res.data.bountyIssues);
+    getIssues();
+    getUserBountyIssues();
+  } catch(e){
+    console.log("Error adding bounty to the issue");
+  }
   }
 
   async function RemoveBounty(bountyAmt, issueId, issueLink, title){

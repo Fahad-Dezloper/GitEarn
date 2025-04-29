@@ -16,7 +16,7 @@ export async function GET(){
             }
         });
 
-        console.log("res here", res);
+        // console.log("res here", res);
 
         return NextResponse.json({message: "Wallet Address Found Successfully", walletAdd: res?.walletAddress}, {status: 200});
     } catch(e){
