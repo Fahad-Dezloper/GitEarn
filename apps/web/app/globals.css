@@ -48,6 +48,24 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  @keyframes marquee {
+  from {
+    transform: translateX(0);
+    }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+    }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
 }
 
 :root {
@@ -86,7 +104,7 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background: oklch(0 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -417,4 +435,46 @@ textarea {
   width: 100%;
   object-fit: contain;
   background-repeat: no-repeat;
+}
+
+/* landing page */
+
+.gradSec{
+  /* background-image: linear-gradient(to bottom, #b3caee, #94b8f4, #75a6f9, #5493fd, #2b7fff); */
+  /* background-image: linear-gradient(to bottom, #dbe9ff, #b2cfff, #8ab5ff, #609aff, #2b7fff); */
+  /* background-image: linear-gradient(to top, #5695ff, #699ffd, #7caafb, #8db4f8, #9ebef5, #a5c7f4, #afd0f3, #bbd8f1, #c4e1f1, #d1e9f1, #e1f0f3, #f1f7f7); */
+  /* background-image: linear-gradient(to top, #5695ff, #72a3fc, #8ab1f9, #a2bff5, #b9cdf1, #b1bed9, #a9b0c2, #9fa2ab, #76777e, #4f4f53, #2a2a2c, #030303); */
+}
+
+.mainGrad{
+  background: radial-gradient(
+    ellipse 80% 80% at center top,
+    #3b82f6 -80%,    
+    #1e1e2f 60%,   
+    #000000 110% 
+  );
+  height: 100vh;
+  margin: 0;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.mainGrad::before{
+  content: "";
+  position: absolute;
+  bottom: -10%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: repeating-radial-gradient(
+    circle at center,
+    rgba(59, 130, 246, 0.08) 0px,
+    rgba(59, 130, 246, 0.08) 1px,
+    transparent 1px,
+    transparent 60px
+  );
+  transform: translateX(-50%);
+  z-index: 0;
+  pointer-events: none;
 }
