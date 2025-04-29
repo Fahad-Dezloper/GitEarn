@@ -91,8 +91,8 @@ export default function IssueFilter({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Repositories</SelectItem>
-          {repositories.map((repo) => (
-            <SelectItem key={repo} value={repo}>
+          {repositories.map((repo, i) => (
+            <SelectItem key={i} value={repo}>
               {repo}
             </SelectItem>
           ))}

@@ -19,6 +19,7 @@ function extractGitHubIssueInfo(url: string) {
 
 export async function POST(req: NextRequest) {
   try {
+    
     const session = await getServerSession();
     const body = await req.json();
     const { bountyAmt, issueId, issueLink, title } = body;

@@ -7,6 +7,7 @@ import languageColors from 'github-language-colors';
 import { Separator } from "@/components/ui/separator"
 import UserBountyDets from '@/app/(dashboardComponents)/UserBountyDets';
 import UserIssuesSolved from '@/app/(dashboardComponents)/UserIssuesSolved';
+import AddWallet from '@/app/(dashboardComponents)/AddWallet';
 
 
 const Page = () => {
@@ -17,20 +18,14 @@ const Page = () => {
   
   return (
     <div className='w-full max-h-screen overflow-hidden py-6'>
-      {/* Cover and Profile Section */}
-      <div className='w-full relative h-[200px] flex items-center justify-center rounded-2xl border '>
-        <div className='w-full h-full  flex items-center justify-end pr-16'>
-      <GitHubCalendar username={userDetailss.login} year={2025} />
-      </div>
-        <div className='absolute -bottom-16 left-8 flex items-center gap-2'>
-          {/* Profile Image */}
+        <div className='flex items-center gap-2'>
           <div className='w-32 h-32 rounded-full border-2 border-white overflow-hidden relative'>
             <Image 
               src={userDetailss.avatar_url} 
               alt="User Avatar" 
               fill 
               className="object-cover"
-            />
+              />
           </div>
           
           {/* User Info */}
@@ -39,10 +34,9 @@ const Page = () => {
             <p className=''>@{userDetailss.login}</p>
           </div>
         </div>
-      </div>
 
       {/* User Details Section */}
-      <div className='mt-18 flex justify-between gap-6'>
+      <div className=' flex justify-between gap-6'>
         <div className='flex flex-col gap-6 py-4'>
         <div className='px-6'>
           <h2 className='text-xl font-semibold font-sora mb-4'>Profile Information</h2>
@@ -105,9 +99,13 @@ const Page = () => {
             </div>
           )}
         </div>
+        <div className='max-w-[38vw] h-fit flex items-center justify-center'>
+                <GitHubCalendar username={userDetailss.login} year={2025} />
+              </div>
         </div>
 
-        <div className="max-w-[30vw]  flex flex-col gap-3 h-full">
+        <div className="max-w-[30vw] flex flex-col gap-3 h-full">
+          <AddWallet />
           <UserBountyDets />
           <Separator />
           <UserIssuesSolved />

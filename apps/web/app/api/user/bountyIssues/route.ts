@@ -60,7 +60,7 @@ async function fetchGitHubIssueData(htmlUrl: string) {
     );
 
     // Build activity log from comments
-    console.log("comments data", commentsData);
+    // console.log("comments data", commentsData);
     const activityLog = commentsData.map((comment: any) => ({
       type: "comment",
       user: comment.user,
@@ -68,7 +68,7 @@ async function fetchGitHubIssueData(htmlUrl: string) {
       date: comment.created_at
     }));
 
-    // Find the latest comment
+
     let latestComment = null;
     if (commentsData.length > 0) {
       const mostRecent = commentsData.reduce((latest: any, current: any) => 

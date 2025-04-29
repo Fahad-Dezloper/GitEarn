@@ -34,7 +34,7 @@ const formatDateRelative = (iso: string) => {
 };
 
 const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId, bounty}) => {
-  // console.log("labels here", latestComment);
+  console.log("assignees", assignees.length);
   const largeViewport = useClientMediaQuery("(min-width: 800px)");
   const [newLabel, setNewLabel] = useState("");
   // const [labels, setLabels] = useState(labels);
@@ -275,9 +275,9 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
               <div className="space-y-3 mb-6">
                 <h3 className="font-semibold text-zinc-800 dark:text-zinc-100">Assignees</h3>
                 <div className="flex gap-2">
-                  {assignees != null && assignees.map((user) => (
+                  {assignees != null && assignees.map((user, i) => (
                     <div 
-                      key={user} 
+                      key={i} 
                       className="flex items-center gap-2 text-sm p-2 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-md"
                     >
                       <div className="w-8 h-8 overflow-hidden rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
@@ -379,7 +379,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
               variant="outline" 
               className="bg-white dark:bg-zinc-800 border-red-200 dark:border-red-800/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300"
               onClick={handleCancel}
-              disabled={assignees != null}
+              disabled={assignees.length > 0}
             >
               <X size={16} className="mr-2" /> Cancel Bounty
             </Button>
