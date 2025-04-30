@@ -59,7 +59,7 @@ export function HowItWorks() {
 
   return (
     <Tabs defaultValue="Contributors" className="w">
-      <TabsList className="grid w-fit  grid-cols-2">
+      <TabsList className="grid w-fit grid-cols-2">
         <TabsTrigger value="Contributors">For Contributors</TabsTrigger>
         <TabsTrigger value="Maintainers">For Maintainers</TabsTrigger>
       </TabsList>

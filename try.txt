@@ -59,12 +59,10 @@ https://chatgpt.com/c/6807de56-d908-800c-8112-ec1dca86fa9d
 
 
 ///issues
--- custom bounty i am not able to add -  DONE
--- bounty labels color i am adding from here are not changing there - DONE
 -- loading state when adding bounty from frontend
--- remove the users issues which has bounty from frontend show a diffrent tab for that for management - DONE
--- sidebar option selected based on url - DONE
--- Filters not working on bounty explore bounty page and add bounty page - DONE
+-- landing page how it works section show steps and video for both. [[steps][video]]
+-- On-Chain Rewards for Dev Contributions give opacity in background of it to maket it look better
+-- heading section
 
 
 
