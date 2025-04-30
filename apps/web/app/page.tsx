@@ -1,5 +1,4 @@
 "use client"
-import { BentoGrid } from "@/components/magicui/bento-grid";
 import { BoxesIcon } from "@/components/ui/boxes";
 import { Button } from "@/components/ui/button";
 import { GithubIcon } from "@/components/ui/github";
@@ -14,6 +13,9 @@ import { useState } from "react";
 import { Tabs } from "@/components/ui/tabs";
 import { HowItWorks } from "./(landingpageComponent)/HowItWorks";
 import FeaturesSectionDemo from "@/components/features-section-demo-2";
+import { MarqueeDemoVertical } from "./(landingpageComponent)/Testimonials";
+import ExploreButton from "@/components/fancyComponents/page";
+import GitEarnFooter from "./(landingpageComponent)/GitEarnFooter";
 
 export default function Home() {
   const [hovered, setHovered] = useState(false);
@@ -132,16 +134,31 @@ export default function Home() {
 
 
 {/* section 2 */}
-      <div className="w-full h-full px-18 py-4">
+      <div className="w-full h-full px-34 py-4 flex flex-col gap-3">
       <h1 className="text-[4rem] font-sora text-white font-semibold">How it Works</h1>
       <HowItWorks />
         </div>
 
 
 {/* section 3 */}
-      <div className="w-full h-full px-18 py-4">
-      <h1 className="text-[4rem] w-full text-center font-sora text-white font-semibold">Features</h1>
+      <div className="w-full h-full px-34 py-4">
+      <h1 className="text-[4rem] w-full text-left font-sora text-white font-semibold">Features</h1>
       <FeaturesSectionDemo />
+        </div>
+
+
+        {/* Powered By
+        <div>
+          
+        </div> */}
+        {/* testimonials By */}
+        <div className="w-full h-full px-18">
+          <MarqueeDemoVertical />
+        </div>
+
+        {/* footer */}
+        <div className="w-full h-full mt-12">
+          <GitEarnFooter />
         </div>
     </div>
   );
