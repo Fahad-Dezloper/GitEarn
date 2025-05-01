@@ -38,15 +38,17 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
   const [newLabel, setNewLabel] = useState("");
   // const [labels, setLabels] = useState(labels);
   const [showLabelInput, setShowLabelInput] = useState(false);
-  const [bountyAmount, setBountyAmount] = useState<string | number>("");
+  const [bountyAmount, setBountyAmount] = useState<string | number | null>(null);
   const [customAmount, setCustomAmount] = useState("");
   const [showCustomAmount, setShowCustomAmount] = useState(false);
   const [activityView, setActivityView] = useState<"latest" | "all">("all");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedAmount, setSelectedAmount] = useState(null);
 
   const { addBounty } = useBountyDetails();
 
   async function AddBountyToTheIssue(bountyAmt: number){
+    alert("happeing")
     try {
       setIsLoading(true);
       const res = await addBounty(bountyAmt, issueId, issueLink, title, labels);
@@ -73,11 +75,13 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
     if (decimalCount > 1) return;
     
     setCustomAmount(value);
+    const numericValue = parseFloat(value);
 
-    if (value && !isNaN(Number(value))) {
-      setBountyAmount(Number(value));
+    if (isNaN(numericValue) || numericValue <= 0) {
+      setSelectedAmount(null);
+    } else {
+      setSelectedAmount(numericValue);
     }
-
   };
 
   const getActivityIcon = (type: string) => {
@@ -374,16 +378,21 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
         </Scroll.View>
       </Scroll.Root>
 
-      <div className="border-t border-zinc-200 dark:border-zinc-800 p-4 bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur-sm">
+      <div className="border-t flex w-full items-center !bg-red-500 justify-center border-zinc-200 dark:border-zinc-800 p-2 bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur-sm">
         <button onClick={() => AddBountyToTheIssue(Number(bountyAmount))}
-        disabled={isLoading || !bountyAmount || isNaN(Number(bountyAmount))}
-        className={`mt-4 w-full py-2.5 cursor-pointer px-4 rounded-lg font-semibold transition-all text-white ${
-          isLoading 
-            ? "bg-blue-300 cursor-not-allowed"
-            : "bg-blue-600 hover:bg-blue-700"
+        disabled={
+          bountyAmount === null ||
+          (selectedAmount !== null && selectedAmount <= 0) ||
+          bountyAmount === "custom" && (customAmount.trim() === "" || isNaN(Number(customAmount)))
+        }
+        className={` w-full py-3 px-4 rounded-lg text-white font-semibold transition-all ${
+          bountyAmount === null ||
+          (bountyAmount === "custom" && (customAmount.trim() === "" || isNaN(Number(customAmount))))
+            ? "bg-blue-600 cursor-not-allowed"
+            : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
         }`}
       >
-        {isLoading ? "Adding Bounty..." : "Confirm Bounty"}
+        {isLoading ? "Adding Bounty..." : "Addd Bounty"}
         </button>
       </div>
     </div>

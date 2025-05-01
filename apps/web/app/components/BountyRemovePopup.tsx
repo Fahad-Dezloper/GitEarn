@@ -36,48 +36,15 @@ const formatDateRelative = (iso: string) => {
 const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId, bounty}) => {
   // console.log("assignees", assignees.length);
   const largeViewport = useClientMediaQuery("(min-width: 800px)");
-  const [newLabel, setNewLabel] = useState("");
-  // const [labels, setLabels] = useState(labels);
-  const [showLabelInput, setShowLabelInput] = useState(false);
-  const [bountyAmount, setBountyAmount] = useState<string | number>("");
-  const [customAmount, setCustomAmount] = useState("");
-  const [showCustomAmount, setShowCustomAmount] = useState(false);
   const [activityView, setActivityView] = useState<"latest" | "all">("all");
   const [selectedAssignee, setSelectedAssignee] = useState<any>(null);
   const [showApproveDialog, setShowApproveDialog] = useState(false);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [showAddFundsDialog, setShowAddFundsDialog] = useState(false);
   const [additionalFunds, setAdditionalFunds] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const { addBounty } = useBountyDetails();
-
-  function AddBountyToTheIssue(bountyAmt: number){
-    const res = addBounty( bountyAmt, issueId, issueLink, title, labels)
-  }
-
-  const handleBountySelect = (amount: string | number) => {
-    if (amount === "custom") {
-      setShowCustomAmount(true);
-      setBountyAmount("custom");
-    } else {
-      setShowCustomAmount(false);
-      setBountyAmount(amount);
-    }
-  };
-
-  const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^0-9.]/g, '');
-    
-    const decimalCount = (value.match(/\./g) || []).length;
-    if (decimalCount > 1) return;
-    
-    setCustomAmount(value);
-
-    if (value && !isNaN(Number(value))) {
-      setBountyAmount(Number(value));
-    }
-
-  };
+  const {  removeBounty } = useBountyDetails();
 
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -147,22 +114,21 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
     setShowCancelDialog(true);
   };
 
-  const confirmCancel = () => {
+  async function confirmCancel() {
+    // alert(`details required to cancel ${issueId} ${issueLink}`)
+    try{
+      setLoading(true);
+      const res = await removeBounty({issueId, issueLink});
+    } catch(e){
+      console.log("error occured while cancelling the bounty");
+    }finally{
+      setLoading(false);
+      setShowCancelDialog(false);
+    }
     // Handle the actual cancellation
-    setShowCancelDialog(false);
     // Add API call or state updates here
+    // const res = await RemoveBounty(bountyAmt, issueId, issueLink, title, labels);
   };
-
-  const handleAddFunds = () => {
-    setShowAddFundsDialog(true);
-  };
-
-  const confirmAddFunds = () => {
-    // Handle adding funds to bounty
-    setShowAddFundsDialog(false);
-    // Add API call or state updates here
-  };
-
 
   // console.log("final labels", labels);
 
@@ -384,13 +350,13 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
               <X size={16} className="mr-2" /> Cancel Bounty
             </Button>
             
-            <Button 
+            {/* <Button 
               variant="outline"
               className="bg-white dark:bg-zinc-800 border-blue-200 dark:border-blue-800/50 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-700 dark:hover:text-blue-300"
               onClick={handleAddFunds}
             >
               <Plus size={16} className="mr-2" /> Add Funds
-            </Button>
+            </Button> */}
             
             <Button 
               className="bg-green-600 hover:bg-green-700 text-white"
@@ -500,7 +466,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                       className="bg-red-600 hover:bg-red-700 text-white"
                       onClick={confirmCancel}
                     >
-                      Yes, Cancel Bounty
+                      {loading ? "Cancelling..." : "Yes, Cancel Bounty"}
                     </Button>
                   </div>
                 </div>

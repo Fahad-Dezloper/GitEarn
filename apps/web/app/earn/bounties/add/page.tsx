@@ -12,7 +12,7 @@ export default function Page() {
   const { issuesRepo, userBountyIssue } = useBountyDetails();
   // console.log("userBountyIssue", userBountyIssue);
 
-  const [isAddingBounty, setIsAddingBounty] = useState(true);
+  const [isAddingBounty, setIsAddingBounty] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLabels, setSelectedLabels] = useState<string[]>([]);

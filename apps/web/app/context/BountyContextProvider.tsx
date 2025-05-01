@@ -55,6 +55,9 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   }, []);
 
   async function addBounty(bountyAmt, issueId, issueLink, title) {
+
+    // make solana transaction here before db call
+
     try {
       const res = await axios.post("/api/bounty/add", {
       bountyAmt,
@@ -71,14 +74,25 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   }
   }
 
-  async function RemoveBounty(bountyAmt, issueId, issueLink, title){
-    const res = await axios.post("/api/bounty/remove", {
-      bountyAmt,
-      issueId,
-      issueLink,
-      title,
-    });
+  async function removeBounty({issueId, issueLink}){
+    
+    // wallet call
+    try {
+      const res = await axios.delete("/api/bounty/remove", {
+        headers: { 'Content-Type': 'application/json' },
+        data: {
+          issueId: issueId,
+          issueLink: issueLink,
+        }
+      });
+
+      getIssues();
+      getUserBountyIssues();
+    } catch (error) {
+      console.log("in context provider cancel bounty error"); 
+    }
   }
+    // console.log(res);
 
   async function ApproveBounty(bountyAmt, issueId, issueLink, title){
     const res = await axios.post("/api/bounty/approve", {
@@ -90,7 +104,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   }
 
   return (
-    <BountyDetailsContext.Provider value={{ issuesRepo, setIssuesRepo, addBounty, bountyIssues, setBountyIssues, userBountyIssue}}>
+    <BountyDetailsContext.Provider value={{ issuesRepo, setIssuesRepo, addBounty, bountyIssues, setBountyIssues, userBountyIssue, removeBounty}}>
       {children}
     </BountyDetailsContext.Provider>
   );

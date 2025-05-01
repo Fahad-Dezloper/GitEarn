@@ -1,0 +1,12 @@
+//bounty remove popup
+
+  // add funds
+  // const handleAddFunds = () => {
+  //   setShowAddFundsDialog(true);
+  // };
+
+  // const confirmAddFunds = () => {
+  //   // Handle adding funds to bounty
+  //   setShowAddFundsDialog(false);
+  //   // Add API call or state updates here
+  // };

@@ -59,10 +59,15 @@ https://chatgpt.com/c/6807de56-d908-800c-8112-ec1dca86fa9d
 
 
 ///issues
--- loading state when adding bounty from frontend
+-- loading state when adding bounty from frontend -- done
 -- landing page how it works section show steps and video for both. [[steps][video]]
 -- On-Chain Rewards for Dev Contributions give opacity in background of it to maket it look better
 -- heading section
+
+
+--cancel bounty
+
+--add more money to the bounty
 
 
 
