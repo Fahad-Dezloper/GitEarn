@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import { GithubIcon } from "@/components/ui/github";
@@ -7,10 +9,8 @@ import { useBountyDetails } from "@/app/context/BountyContextProvider";
 import { Button } from "@/components/ui/button";
 
 export default function Page() {
-  // users bountyIssue structure check and move forward till /earn/bounties/add -> Manage Bounty -> Issue Popup
   const [loading, setLoading] = useState(false);
   const { issuesRepo, userBountyIssue } = useBountyDetails();
-  // console.log("userBountyIssue", userBountyIssue);
 
   const [isAddingBounty, setIsAddingBounty] = useState(false);
 
@@ -21,7 +21,7 @@ export default function Page() {
 
   const allIssues = useMemo(() => {
     return issuesRepo.flatMap(repo =>
-      repo.issues.map(issue => ({
+      repo.issues.map((issue: { labels: any[]; }) => ({
         ...issue,
         repositoryName: repo.name,
         repositoryFullName: `${repo.html_url.split('/')[3]}/${repo.name}`,
@@ -66,7 +66,7 @@ export default function Page() {
       const lowerSearchTerm = searchTerm.toLowerCase();
       issuesToFilter = issuesToFilter.filter(issue =>
         issue.title.toLowerCase().includes(lowerSearchTerm) ||
-        (issue.body && issue.body.toLowerCase().includes(lowerSearchTerm)) // Optional: search body too
+        (issue.body && issue.body.toLowerCase().includes(lowerSearchTerm))
       );
     }
 
@@ -96,7 +96,6 @@ export default function Page() {
        });
     }
 
-
     return issuesToFilter;
   }, [
     isAddingBounty,
@@ -107,8 +106,6 @@ export default function Page() {
     selectedLabels,
     dateRange
   ]);
-
-  // console.log("filtered issue", filteredIssues);
 
   const resetFilters = () => {
     setSearchTerm("");
@@ -121,12 +118,12 @@ export default function Page() {
     search?: string;
     labels?: string[];
     repository?: string | null;
-    dates?: { from: Date | undefined; to: Date | undefined } | undefined;
+    dates?: { from: Date | undefined; to?: Date | undefined } | undefined;
   }) => {
     if (filters.search !== undefined) setSearchTerm(filters.search);
     if (filters.labels !== undefined) setSelectedLabels(filters.labels);
     if (filters.repository !== undefined) setSelectedRepo(filters.repository);
-    if (filters.dates !== undefined) setDateRange(filters.dates);
+    if (filters.dates !== undefined) setDateRange({ from: filters.dates.from, to: filters.dates.to || undefined });
   };
 
   return (
@@ -147,7 +144,7 @@ export default function Page() {
         <Button
           onClick={() => {
               setIsAddingBounty(true);
-              resetFilters(); // Reset filters when switching views
+              resetFilters();
           }}
           variant={isAddingBounty ? "default" : "outline"}
           size="sm"

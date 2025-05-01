@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Scroll, Sheet, useClientMediaQuery } from "@silk-hq/components";
-import { Calendar, ExternalLink, GitPullRequest, MessageSquare, Plus, RefreshCw, Tag, X } from "lucide-react";
+import { Calendar, ExternalLink, GitPullRequest, MessageSquare, RefreshCw, Tag } from "lucide-react";
 import { useState } from "react";
 import { useBountyDetails } from "../context/BountyContextProvider";
 
@@ -31,19 +32,39 @@ const formatDateRelative = (iso: string) => {
   }
 };
 
-const BountyPopup = ({title, isAddingBounty, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId}) => {
-  // console.log("activity logs", latestComment);
-  // console.log("labels here", labels)
+interface Label {
+  name: string;
+  color: string;
+}
+
+interface BountyPopupProps {
+  title: string;
+  isAddingBounty: boolean;
+  description: string;
+  labels: Label[];
+  repository: string;
+  assignees: { avatar_url: string; login: string; }[];
+  prRaise: boolean;
+  issueLink: string;
+  created: string;
+  updated: string;
+  status: string;
+  latestComment: any[];
+  issueId: string;
+}
+
+const BountyPopup = ({title, isAddingBounty, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId}: BountyPopupProps) => {
+  
+console.log("main", title, isAddingBounty, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId)
   const largeViewport = useClientMediaQuery("(min-width: 800px)");
   const [newLabel, setNewLabel] = useState("");
-  // const [labels, setLabels] = useState(labels);
   const [showLabelInput, setShowLabelInput] = useState(false);
   const [bountyAmount, setBountyAmount] = useState<string | number | null>(null);
   const [customAmount, setCustomAmount] = useState("");
   const [showCustomAmount, setShowCustomAmount] = useState(false);
   const [activityView, setActivityView] = useState<"latest" | "all">("all");
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedAmount, setSelectedAmount] = useState(null);
+  const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
 
   const { addBounty } = useBountyDetails();
 
@@ -51,6 +72,7 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
     alert("happeing")
     try {
       setIsLoading(true);
+      // @ts-ignore
       const res = await addBounty(bountyAmt, issueId, issueLink, title, labels);
       console.log("res after add bounty", res);
     } finally {
@@ -99,7 +121,7 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
 
 
 
-  function hexToRGBA(hex, alpha = 0.2) {
+  function hexToRGBA(hex: string, alpha = 0.2) {
     hex = hex.replace(/^#/, '');
   
     if (hex.length === 3) {
@@ -114,22 +136,23 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
   
-  function isColorDark(hex) {
-    hex = hex.replace(/^#/, '');
+  // function isColorDark(hex: string) {
+  //   console.log("hex", hex);
+  //   hex = hex.replace(/^#/, '');
   
-    if (hex.length === 3) {
-      hex = hex.split('').map(x => x + x).join('');
-    }
+  //   if (hex.length === 3) {
+  //     hex = hex.split('').map(x => x + x).join('');
+  //   }
   
-    const num = parseInt(hex, 16);
-    const r = (num >> 16) & 255;
-    const g = (num >> 8) & 255;
-    const b = num & 255;
+  //   const num = parseInt(hex, 16);
+  //   const r = (num >> 16) & 255;
+  //   const g = (num >> 8) & 255;
+  //   const b = num & 255;
   
-    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  //   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
     
-    return brightness < 128;
-  }
+  //   return brightness < 128;
+  // }
 
   // console.log("final labels", labels);
 
@@ -237,15 +260,15 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
                 <div className="flex flex-wrap gap-2">
                   {labels != null && labels.map((label, i) => (
                     (() => {
-                      const textColor = isColorDark(label.color) ? "#ffffff" : `#${label.color}`;
+                      // const textColor = isColorDark(label.color) ? "#ffffff" : `#${label.color}`;
                       return (
                         <span
                           key={i}
                           className="px-2.5 py-1 rounded-full text-sm font-medium flex items-center gap-1"
-                          style={{
-                            backgroundColor: hexToRGBA(label.color, 0.2),
-                            color: textColor,
-                          }}
+                          // style={{
+                          //   backgroundColor: hexToRGBA(label.color, 0.2),
+                          //   color: textColor,
+                          // }}
                         >
                           {label.name}
                         </span>
@@ -378,7 +401,7 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
         </Scroll.View>
       </Scroll.Root>
 
-      <div className="border-t flex w-full items-center !bg-red-500 justify-center border-zinc-200 dark:border-zinc-800 p-2 bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur-sm">
+      <div className="border-t flex w-full items-center  justify-center border-zinc-200 dark:border-zinc-800 p-2 bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur-sm">
         <button onClick={() => AddBountyToTheIssue(Number(bountyAmount))}
         disabled={
           bountyAmount === null ||

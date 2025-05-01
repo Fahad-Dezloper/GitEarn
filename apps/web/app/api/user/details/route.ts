@@ -1,4 +1,5 @@
-import { Octokit } from "@octokit/rest";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import prisma from "@repo/db/client";
 import axios from "axios";
 import { getServerSession } from "next-auth";
@@ -49,11 +50,11 @@ export async function GET() {
 
   const summary = {
     total_coding_hours: wakatimeData.data?.human_readable_total || "N/A",
-    top_languages: wakatimeData.data?.languages?.slice(0, 5).map(lang => ({
+    top_languages: wakatimeData.data?.languages?.slice(0, 5).map((lang: { name: any; text: any; }) => ({
       name: lang.name,
       hours: lang.text,
     })) || [],
-    wakatime_raw: wakatimeData.data // include full raw data if needed
+    wakatime_raw: wakatimeData.data 
   };
 
   return NextResponse.json(

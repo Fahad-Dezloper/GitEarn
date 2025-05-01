@@ -54,7 +54,6 @@ const AddBountyButton = ({title, repo}: {title: any, repo: any }) => {
                     </Tabs>
                     
                     <DialogFooter className="flex justify-end gap-2 mt-4">
-                      {/* <Button variant="outline">Cancel</Button> */}
                       <Button className="bg-[#007AFF] hover:bg-[#007AFF]/90">
                         Add Bounty
                       </Button>

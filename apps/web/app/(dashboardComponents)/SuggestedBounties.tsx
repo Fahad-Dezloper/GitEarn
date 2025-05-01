@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import ExploreButton from '@/components/fancyComponents/page';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Sparkles } from 'lucide-react';

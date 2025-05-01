@@ -1,17 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import { useState } from "react"
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { Check, ChevronRight, Zap } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useTheme } from "next-themes"
 import { Badge } from "@/components/ui/badge"
 import { ArchiveIcon } from "@/components/ui/archive"
-import { ExampleSheetWithStacking } from "../components/SheetWithStacking/ExampleSheetWithStacking"
-import { ExampleSheetWithStackingData } from "../components/SheetWithStacking/ExampleSheetWithStackingData"
 
 const topHunters = [
   {
@@ -140,9 +135,9 @@ export default function HuntersLeaderboard() {
   {allHunters.map((hunter, index) => {
     const isTopRank = hunter.rank <= 3;
     const bountyClass =
-      hunter.bounty > 1000
+      parseFloat(hunter.bounty.replace('$', '')) > 1000
         ? "text-green-500 font-semibold"
-        : hunter.bounty > 500
+        : parseFloat(hunter.bounty.replace('$', '')) > 500
         ? "text-yellow-500"
         : "text-muted-foreground";
 
@@ -190,7 +185,6 @@ export default function HuntersLeaderboard() {
         <td className={`p-4 font-sora text-green-500`}>{hunter.bounty}</td>
         <td className="p-4">
           <ArchiveIcon size={20} />
-        {/* <ExampleSheetWithStacking data={ExampleSheetWithStackingData} /> */}
         </td>
       </motion.tr>
     );

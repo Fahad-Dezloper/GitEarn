@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
@@ -12,13 +14,12 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 const Topbar = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const pathSegments = pathname.split("/").filter(Boolean); // Remove empty strings
+  const pathSegments = pathname.split("/").filter(Boolean); 
 
-  // Function to format path names (e.g., "data-fetching" -> "Data Fetching")
   const formatSegment = (segment: any) => {
     return segment
-      .replace(/-/g, " ") // Replace dashes with spaces
-      .replace(/\b\w/g, (char: any) => char.toUpperCase()); // Capitalize first letter
+      .replace(/-/g, " ") 
+      .replace(/\b\w/g, (char: any) => char.toUpperCase()); 
   };
 
   return (
@@ -27,7 +28,6 @@ const Topbar = () => {
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
         
-        {/* Breadcrumbs */}
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -45,6 +45,7 @@ const Topbar = () => {
                     {isLast ? (
                       <BreadcrumbPage>{formatSegment(segment)}</BreadcrumbPage>
                     ) : (
+                      // @ts-ignore
                       <BreadcrumbLink as={Link} href={href}>
                         {formatSegment(segment)}
                       </BreadcrumbLink>

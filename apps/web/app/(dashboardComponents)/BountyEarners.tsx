@@ -90,8 +90,8 @@ const dummyEarners = [
     },
 ];
 
-const SCROLL_SPEED = 1.5; // Pixels to move per frame
-const FRAME_RATE = 25; // Update every 16ms (approximately 60fps)
+const SCROLL_SPEED = 1.5;
+const FRAME_RATE = 25;
 
 const BountyEarners = () => {
     const [items, setItems] = useState([...dummyEarners, ...dummyEarners, ...dummyEarners]); // Triple the items for smoother transition

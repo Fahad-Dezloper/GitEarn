@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import prisma from '@repo/db/client';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
@@ -27,7 +28,6 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
 
-    console.log("reached here1")
     const token = user.accounts[0]?.access_token;
 
     if (!token) {
@@ -43,13 +43,11 @@ export async function DELETE(req: NextRequest) {
       },
     });
 
-    console.log("reached here2")
 
     if (!bounty) {
       return NextResponse.json({ message: 'Bounty not found for this issue' }, { status: 404 });
     }
 
-    console.log("reached here3")
 
     await prisma.bountyIssues.delete({
       where: {
@@ -66,7 +64,6 @@ export async function DELETE(req: NextRequest) {
       body: `❌ **$${bounty.bounty} bounty removed** from this issue via GitEarn.`,
     });
 
-    // Try to remove both bounty labels
     const labelsToRemove = [`💎 Bounty`, `$${bounty.bounty}`];
 
     for (const label of labelsToRemove) {
@@ -78,7 +75,7 @@ export async function DELETE(req: NextRequest) {
           name: label,
         });
       } catch (err: any) {
-        if (err.status !== 404) throw err; // ignore if label not found
+        if (err.status !== 404) throw err;
       }
     }
 

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,16 +12,12 @@ import { useUserDetails } from "../context/UserDetailsProvider";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useState, useEffect } from "react";
 import { ed25519 } from "@noble/curves/ed25519";
-import bs58 from "bs58";
 import { CopyIcon } from "@/components/ui/copy";
-import axios from "axios";
 
 export default function AddWallet() {
   const { publicKey, signMessage, connected } = useWallet();
   const { userDetailss, addWalletAdd, walletAdd } = useUserDetails();
   const [copied, setCopied] = useState(false);
-
-  // console.log("user details here", walletAdd);
 
   const [dbWallet, setDbWallet] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -48,7 +46,7 @@ export default function AddWallet() {
     try {
       setLoading(true);
 
-      const message = "verify-wallet"; // or generate a random nonce
+      const message = "verify-wallet";
         const encodedMessage = new TextEncoder().encode(message);
         const signature = await signMessage(encodedMessage);
 
@@ -63,7 +61,6 @@ export default function AddWallet() {
         return;
       }
 
-      // console.log("sending this", dbWallet);
       const res = await addWalletAdd({dbWallet});
 
       alert("Wallet address saved!");
@@ -77,7 +74,6 @@ export default function AddWallet() {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Connected Wallet */}
       <div className="flex items-center gap-2">
   {connected && publicKey ? (
     <>
@@ -120,7 +116,6 @@ export default function AddWallet() {
   )}
 </div>
 
-      {/* Permanent Wallet from DB */}
       <div className="flex items-center gap-2">
         <Input
           value={dbWallet ?? ""}

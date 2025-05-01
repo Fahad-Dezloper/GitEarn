@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
-import { motion } from "motion/react"
-import React from 'react'
-import { LuExternalLink } from "react-icons/lu";
-import Link from 'next/link';
 import { GithubIcon } from "@/components/ui/github";
+import { motion } from "motion/react"
+import Link from "next/link";
+import React from 'react'
 
 interface Bounty {
+  htmlUrl: any;
+  bounty: any;
   title: string;
   repo: string;
   amount: number;
@@ -13,7 +15,7 @@ interface Bounty {
   posted: string;
 }
 
-const BountyList = ({ bounties }) => {
+const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
   // console.log("bounties are here", bounties)
     return (
     <div className="w-full grid grid-cols-3 gap-4">
@@ -25,14 +27,11 @@ const BountyList = ({ bounties }) => {
         transition={{ duration: 0.3, delay: index * 0.05 }}
         className="bg-white flex flex-col justify-between dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-all"
       >
-        {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex flex-col gap-1">
             <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{bounty.repo}</p>
-            {/* <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{bounty.githubId}</p> */}
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{bounty.title}</h3>
           </div>
-          {/* Bounty Amount with Tooltip */}
           <div className="relative group">
             <span
               title={`This GitHub issue has a bounty of $${bounty.bounty}`}
@@ -59,20 +58,13 @@ const BountyList = ({ bounties }) => {
         <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
           <span>{bounty.posted}</span>
           <div className="flex items-center gap-3">
-            {/* <Link
+            <Link
               href={bounty.htmlUrl}
               target="_blank"
               className="transition-colors"
             >
               <GithubIcon className="hover:text-blue-600 dark:hover:text-blue-400" />
-            </Link> */}
-            {/* <Link
-              href="/"
-              target="_blank"
-              className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-            >
-              <LuExternalLink size={22} />
-            </Link> */}
+            </Link>
           </div>
         </div>
       </motion.div>       

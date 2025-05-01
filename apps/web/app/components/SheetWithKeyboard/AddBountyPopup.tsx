@@ -1,26 +1,31 @@
 "use client";
-import { useState } from "react";
 import {
-  Sheet,
-  Scroll,
-  VisuallyHidden,
-  useClientMediaQuery,
+  Sheet
 } from "@silk-hq/components";
 import { SheetWithKeyboard } from "./SheetWithKeyboard";
-import { ExternalLink, RefreshCw } from "lucide-react";
 import "./ExampleSheetWithKeyboard.css";
 import BountyPopup from "../BountyPopup";
-import BountyRemovePopup from "../BountyRemovePopup";
 import { CursorClickIcon } from "@/components/ui/cursor-click";
-import axios from "axios";
-import { useBountyDetails } from "@/app/context/BountyContextProvider";
 
 
-const AddBountyPopup = ({title, isAddingBounty, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId}) => {
 
-  // console.log("labels", labels);
-  // console.log("bounty popup", title, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId)
+interface AddBountyPopupProps {
+  title: string;
+  isAddingBounty: boolean;
+  description: string;
+  labels: string[];
+  repository: string;
+  assignees: string[];
+  prRaise: boolean;
+  issueLink: string;
+  created: string;
+  updated: string;
+  status: string;
+  latestComment: string;
+  issueId: string;
+}
 
+const AddBountyPopup = ({title, isAddingBounty, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId}: AddBountyPopupProps) => {
   return (
     <SheetWithKeyboard
       presentTrigger={<Sheet.Trigger className="realtive cursor-pointer w-full h-full">

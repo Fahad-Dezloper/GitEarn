@@ -6,7 +6,6 @@ export default function HowitWorks() {
     const [activeSteps, setActiveSteps] = useState<number[]>([]);
 
     useEffect(() => {
-        // Animate steps and lines sequentially
         const timeouts = [
             setTimeout(() => setActiveSteps(prev => [...prev, 0]), 500),
             setTimeout(() => setActiveSteps(prev => [...prev, 1]), 1500),

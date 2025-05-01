@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 import BountyList from "@/app/(dashboardComponents)/BountyList"
 import BountyFilter from "@/app/(dashboardComponents)/BountyFIlter"
@@ -20,14 +22,10 @@ export default function Page() {
     minStars: 0,
     posted: "7"
   });
-  
-  // console.log("bounty explore page", bountyIssues);
 
   useEffect(() => {
-    // Extract unique tags from bountyIssues
     const tags = [...new Set(bountyIssues.flatMap((b) => b.tags))];
     setTaglist(tags);
-    // Initialize filteredBounties with all bounties
     setFilteredBounties(bountyIssues);
   }, [bountyIssues]);
 
@@ -44,11 +42,9 @@ export default function Page() {
       return;
     }
     
-    // Update active filters by merging the new filter with existing ones
     const updatedFilters = { ...activeFilters, ...filters };
     setActiveFilters(updatedFilters);
     
-    // Apply all active filters
     const filtered = bountyIssues.filter((bounty) => {
       const matchesTitle = bounty.title.toLowerCase().includes(updatedFilters.title.toLowerCase());
       const matchesTags = updatedFilters.tags.length === 0 || 

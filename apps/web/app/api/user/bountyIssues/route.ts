@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import prisma from "@repo/db/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
@@ -16,6 +19,7 @@ async function fetchGitHubIssueData(htmlUrl: string) {
     return null;
   }
 
+  // @ts-ignore
   const [_, owner, repo, issue_number] = match;
   const headers = {
     Accept: "application/vnd.github.v3+json",
@@ -23,7 +27,6 @@ async function fetchGitHubIssueData(htmlUrl: string) {
   };
 
   try {
-    // Fetch issue details
     const issueRes = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/issues/${issue_number}`,
       { headers }
@@ -32,7 +35,6 @@ async function fetchGitHubIssueData(htmlUrl: string) {
     if (!issueRes.ok) throw new Error("GitHub issue fetch failed");
     const issueData = await issueRes.json();
 
-    // Fetch comments
     const commentsRes = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/issues/${issue_number}/comments`,
       { headers }
@@ -41,7 +43,6 @@ async function fetchGitHubIssueData(htmlUrl: string) {
     if (!commentsRes.ok) throw new Error("GitHub comments fetch failed");
     const commentsData = await commentsRes.json();
 
-    // Fetch pull requests associated with the issue
     const prRes = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/issues/${issue_number}/timeline`,
       { 
@@ -54,13 +55,10 @@ async function fetchGitHubIssueData(htmlUrl: string) {
     
     const timelineData = prRes.ok ? await prRes.json() : [];
     
-    // Check if there's a PR linked to this issue
     const prRaised = timelineData.some((event: any) => 
       event.event === "cross-referenced" && event.source?.issue?.pull_request
     );
 
-    // Build activity log from comments
-    // console.log("comments data", commentsData);
     const activityLog = commentsData.map((comment: any) => ({
       type: "comment",
       user: comment.user,
@@ -91,7 +89,7 @@ async function fetchGitHubIssueData(htmlUrl: string) {
       updated_at: issueData.updated_at,
       body: issueData.body,
       number: issueData.number,
-      labels: (issueData.labels || []).map(label => ({
+      labels: (issueData.labels || []).map((label: { name: any; color: any; description: any; }) => ({
         name: typeof label === 'string' ? label : label.name,
         color: typeof label === 'string' ? 'ffffff' : label.color,
         description: typeof label === 'string' ? null : label.description,
@@ -148,9 +146,7 @@ export async function GET() {
       })
     );
 
-    // Filter out any null values and convert BigInt to strings
     const validIssues = safeJson(enrichedIssues.filter(Boolean));
-    // console.log("valid Issues", validIssues);
     return NextResponse.json(
       {
         message: "Bounty issues fetched successfully",

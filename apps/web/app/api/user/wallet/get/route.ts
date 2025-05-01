@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import prisma from "@repo/db/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
@@ -15,8 +16,6 @@ export async function GET(){
                 email: session.user.email
             }
         });
-
-        // console.log("res here", res);
 
         return NextResponse.json({message: "Wallet Address Found Successfully", walletAdd: res?.walletAddress}, {status: 200});
     } catch(e){

@@ -9,13 +9,10 @@ import { useSession } from 'next-auth/react';
 
 const MainPage = () => {
     const { data: session } = useSession()
-    // console.log("its session", session);
-    // console.log("its session2", session.accessToken);
 
     if(!session){
         return <div>Wait here</div>
     }
-    // console.log(session.accessToken);
 
     const token = session.accessToken
     if(!token){
@@ -56,6 +53,3 @@ const MainPage = () => {
 }
 
 export default MainPage
-
-// , let&apos;s make some 
-//                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 font-bold ml-1">$bucks</span>

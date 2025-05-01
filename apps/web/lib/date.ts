@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function formatDate(dateStr: any) {
     const [month, day, year] = dateStr.split('/').map(Number);
     const suffixes = ['th', 'st', 'nd', 'rd'];

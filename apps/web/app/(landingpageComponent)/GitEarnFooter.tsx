@@ -1,6 +1,5 @@
 import { GithubIcon } from "@/components/ui/github";
 import { TwitterIcon } from "@/components/ui/twitter";
-import { Github, Twitter } from "lucide-react";
 import Link from "next/link";
 
 export default function GitEarnFooter() {

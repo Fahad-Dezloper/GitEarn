@@ -1,11 +1,7 @@
 // src/app/(dashboardComponents)/IssuesList.tsx
 import * as React from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ExternalLink, GitMerge, MessageSquare } from "lucide-react"; // Example icons
-import { formatDistanceToNow } from 'date-fns'; // For relative dates
-import { AddBountyIssue, ManageBountyIssue, isAddBountyIssue } from "@/types/issueTypes"; // Import the types
+import { formatDistanceToNow } from 'date-fns'; 
+import { AddBountyIssue, ManageBountyIssue, isAddBountyIssue } from "@/types/issueTypes"; 
 import { motion } from 'framer-motion';
 import { AddBountyPopup } from "../components/SheetWithKeyboard/AddBountyPopup";
 import Link from "next/link";
@@ -19,17 +15,13 @@ interface IssuesListProps {
 
 
 function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | ManageBountyIssue, isAddingBounty: boolean, index: number }) {
-  // if(!isAddBountyIssue(issue)){
-  //     console.log("isAddingBounty", issue);
-  //   }
-  // console.log(isAddingBounty);
-  // console.log(issue);
     const commonTitle = issue.title;
     const commonUrl = isAddBountyIssue(issue) ? issue.html_url : issue.htmlUrl;
     const commonRepo = isAddBountyIssue(issue) ? issue.repositoryFullName : issue.repository;
     const commonDate = isAddBountyIssue(issue) ? new Date(issue.created_at) : issue.createdAtDate;
     const commonLabels = isAddBountyIssue(issue) ? issue.labelNames : issue.labelNames;
     // console.log("common labels", issue.labelNames);
+    // console.log("issues here", issue);
 
     const formattedDate = formatDistanceToNow(commonDate, { addSuffix: true });
 
@@ -48,13 +40,42 @@ function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | M
           </div>
           <div className="relative">
             {isAddingBounty ? 
-            <AddBountyPopup isAddingBounty={isAddingBounty} title={commonTitle} description={issue.body} labels={issue.labels} repository={commonRepo} assignees={issue.assignees} prRaise={issue.prRaised} issueLink={issue.issueLink} created={issue.created_at} updated={issue.updated_at} status={issue.state} latestComment={issue.activityLog} issueId={issue.id}  />
-           : <RemoveBountyPopup bounty={issue.bounty} isAddingBounty={isAddingBounty} title={commonTitle} labels={issue.labels} repository={issue.repository} assignees={issue.assignees} prRaise={issue.prRaised} issueLink={issue.issueLink} created={issue.created_at} updated={issue.updated_at} status={issue.state} latestComment={issue.activityLog} issueId={issue.id} />}
+            <AddBountyPopup 
+              isAddingBounty={isAddingBounty} 
+              title={commonTitle} 
+              description={isAddBountyIssue(issue) ? issue.body : ''} 
+              labels={commonLabels} 
+              repository={commonRepo} 
+              assignees={issue.assignees} 
+              prRaise={issue.prRaised} 
+              issueLink={commonUrl} 
+              created={isAddBountyIssue(issue) ? issue.created_at : issue.createdAt} 
+              updated={isAddBountyIssue(issue) ? issue.updated_at : issue.updatedAt} 
+              status={issue.state} 
+              latestComment={issue.activityLog} 
+              issueId={isAddBountyIssue(issue) ? issue.id : issue.githubId} 
+            />
+           : <RemoveBountyPopup 
+              bounty={!isAddBountyIssue(issue) ? issue.bounty : 0} 
+              isAddingBounty={isAddingBounty} 
+              title={commonTitle} 
+              labels={commonLabels} 
+              repository={commonRepo} 
+              assignees={issue.assignees} 
+              prRaise={issue.prRaised} 
+              issueLink={commonUrl} 
+              created={isAddBountyIssue(issue) ? issue.created_at : issue.createdAt} 
+              updated={isAddBountyIssue(issue) ? issue.updated_at : issue.updatedAt} 
+              status={issue.state} 
+              latestComment={issue.activityLog} 
+              // @ts-ignore
+              issueId={isAddBountyIssue(issue) ? issue.id : issue.githubId} 
+            />}
              </div>
         </div>
       
         <div className="flex flex-wrap gap-2 mb-4">
-          {commonLabels != null && commonLabels.map((label) => (
+          {commonLabels != null && commonLabels.map((label: string) => (
             <span
               key={label}
               className="text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 px-2 py-0.5 rounded-full"
@@ -62,11 +83,6 @@ function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | M
               {label}
             </span>
           ))}
-          {/* {isAddBountyIssue(issue) && (
-                     <Badge variant={issue.state === 'open' ? 'default' : 'destructive'} className="ml-auto capitalize">
-                         {issue.state}
-                     </Badge>
-                 )} */}
         </div>
       
         <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">

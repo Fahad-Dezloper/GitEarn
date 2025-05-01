@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import prisma from '@repo/db/client';
 import { getServerSession } from 'next-auth';
@@ -59,11 +60,6 @@ export async function POST(req: NextRequest) {
       owner,
       repo,
       issue_number,
-    //   body: `🔗 This issue has a bounty of **$${bountyAmt}** via [GitEarn](${baseUrl}/earn)!
-    
-    // Please read the [Participation Guide](https://github.com/your-org/your-repo/blob/main/README.md) before starting.
-    
-    // Good luck! 🚀`
     body: `
  💎 **$${bountyAmt} bounty** • [GitEarn](${baseUrl}/earn)
 

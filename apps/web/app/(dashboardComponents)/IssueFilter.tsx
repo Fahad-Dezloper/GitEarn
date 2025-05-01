@@ -28,10 +28,9 @@ import {
 } from "@/components/ui/command"
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Check, ChevronsUpDown, X } from "lucide-react";
+import { Calendar as CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils"; // Your utility function for classnames
 import { DateRange } from "react-day-picker";
-import { Badge } from "@/components/ui/badge";
 import { XIcon } from "@/components/ui/x";
 
 interface IssueFilterProps {
@@ -81,7 +80,6 @@ export default function IssueFilter({
         className="flex-grow min-w-[25vw]"
       />
 
-      {/* Repository Select */}
       <Select
         value={selectedRepo ?? 'all'}
         onValueChange={(value) => onFilterChange({ repository: value === 'all' ? null : value })}
@@ -160,7 +158,6 @@ export default function IssueFilter({
             </PopoverContent>
         </Popover>
 
-       {/* Date Range Picker */}
         <Popover>
             <PopoverTrigger asChild>
                 <Button

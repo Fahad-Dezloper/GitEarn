@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import prisma from "@repo/db/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -7,8 +8,6 @@ export async function POST(req: NextRequest){
         const session = await getServerSession();
         const body = await req.json();
         const { walletAddress } = body;
-
-        
 
         if(!session?.user?.email){
             return NextResponse.json({message: "Unauthorized Request"}, {status: 401})

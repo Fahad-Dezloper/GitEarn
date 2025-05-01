@@ -33,7 +33,6 @@ export default function BountyFilter({ tagList, onFilter, activeFilters }: Filte
   const [minAmount, setMinAmount] = useState(activeFilters.minAmount)
   const [searchTitle, setSearchTitle] = useState(activeFilters.title)
   
-  // Update local state when activeFilters change (like on reset)
   useEffect(() => {
     setSelectedTags(activeFilters.tags);
     setMinAmount(activeFilters.minAmount);
@@ -64,7 +63,6 @@ export default function BountyFilter({ tagList, onFilter, activeFilters }: Filte
         className="w-[20vw]"
       />
 
-      {/* Posted Within */}
       <Select 
         value={activeFilters.posted}
         onValueChange={(value) => onFilter({ posted: value })}
@@ -80,7 +78,6 @@ export default function BountyFilter({ tagList, onFilter, activeFilters }: Filte
         </SelectContent>
       </Select>
 
-      {/* Min Bounty Slider */}
       <div>
         <div className="flex justify-between min-w-[10vw] text-sm text-muted-foreground mb-1">
           <span>${minAmount}</span>
@@ -96,7 +93,6 @@ export default function BountyFilter({ tagList, onFilter, activeFilters }: Filte
         />
       </div>
 
-      {/* Tags Multi-Select */}
       <Popover>
         <PopoverTrigger asChild>
           <Button variant="outline">
@@ -119,7 +115,6 @@ export default function BountyFilter({ tagList, onFilter, activeFilters }: Filte
       </Popover>
       </div>
 
-      {/* Reset Button */}
       <button
         onClick={() => onFilter({ reset: true })}
         className=""

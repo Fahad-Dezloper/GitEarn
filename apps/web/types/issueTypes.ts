@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/types/issueTypes.ts
 
 // Represents a label as received from the GitHub API
@@ -31,6 +32,8 @@ export interface AddBountyIssue {
 // Represents an issue that already has a bounty, fetched from your database (userBountyIssue data)
 // Tailored for the "Manage Bounty" view
 export interface ManageBountyIssue {
+    repository: any;
+    labelNames: any;
     id: string; // Your database's unique ID for the bounty record
     userId: string; // Your database's user ID
     githubId: string; // GitHub's issue ID (stored as string in your example data)

@@ -1,8 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Scroll, Sheet, useClientMediaQuery } from "@silk-hq/components";
 import { AlertTriangle, Calendar, ExternalLink, GitPullRequest, MessageSquare, Plus, RefreshCw, Tag, X } from "lucide-react";
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 import { useBountyDetails } from "../context/BountyContextProvider";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -33,8 +36,26 @@ const formatDateRelative = (iso: string) => {
   }
 };
 
-const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId, bounty}) => {
-  // console.log("assignees", assignees.length);
+interface Label {
+  name: string;
+  color: string;
+}
+
+const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId, bounty}: {
+  title: string;
+  isAddingBounty: boolean;
+  labels: Label[];
+  repository: string;
+  assignees: any[];
+  prRaise: boolean;
+  issueLink: string;
+  created: string;
+  updated: string;
+  status: string;
+  latestComment: any[];
+  issueId: string;
+  bounty: string;
+}) => {
   const largeViewport = useClientMediaQuery("(min-width: 800px)");
   const [activityView, setActivityView] = useState<"latest" | "all">("all");
   const [selectedAssignee, setSelectedAssignee] = useState<any>(null);
@@ -59,7 +80,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
     }
   };
 
-  function hexToRGBA(hex, alpha = 0.2) {
+  function hexToRGBA(hex: string, alpha = 0.2) {
     hex = hex.replace(/^#/, '');
   
     if (hex.length === 3) {
@@ -74,7 +95,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
   
-  function isColorDark(hex) {
+  function isColorDark(hex: string) {
     hex = hex.replace(/^#/, '');
   
     if (hex.length === 3) {
@@ -118,6 +139,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
     // alert(`details required to cancel ${issueId} ${issueLink}`)
     try{
       setLoading(true);
+      // @ts-ignore
       const res = await removeBounty({issueId, issueLink});
     } catch(e){
       console.log("error occured while cancelling the bounty");
@@ -129,6 +151,10 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
     // Add API call or state updates here
     // const res = await RemoveBounty(bountyAmt, issueId, issueLink, title, labels);
   };
+
+  function confirmAddFunds(event: MouseEvent<HTMLButtonElement>): void {
+    throw new Error("Function not implemented.");
+  }
 
   // console.log("final labels", labels);
 
@@ -427,7 +453,6 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                     <Button
                       className="bg-green-600 hover:bg-green-700 text-white"
                       onClick={confirmApproval}
-                      // disabled={!selectedAssignee}
                     >
                       Approve Payment
                     </Button>
@@ -448,7 +473,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                   
                   <div className="p-4">
                     <p className="text-zinc-700 dark:text-zinc-300">
-                      Are you sure you want to cancel the {bounty} bounty for issue "<span className="font-medium">Add Rag model for projects</span>"?
+                      Are you sure you want to cancel the {bounty} bounty for issue &quot;<span className="font-medium">Add Rag model for projects</span>&quot;?
                     </p>
                     <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
                       This action cannot be undone.

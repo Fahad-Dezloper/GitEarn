@@ -1,8 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 "use client"
-import { Button } from "@/components/ui/button2";
 import { motion } from "motion/react";
-import Image from "next/image";
-import { useMemo } from "react";
 
 const users = [
     {
@@ -59,24 +57,6 @@ const users = [
       top: `top-[18%]`,
       bottom: `left-[85%]`,
     },
-    // {
-    //   username: "@hkirat",
-    //   avatar: "https://avatars.githubusercontent.com/u/155962781?v=4",
-    //   badge: "rookie",
-    //   issuesSolved: 8,
-    //   earnings: "$300",
-    //   top: 50,
-    //   bottom: 30,
-    // },
-    // {
-    //   username: "@samdoe",
-    //   avatar: "https://avatars.githubusercontent.com/u/8079861?v=4",
-    //   badge: "newbie",
-    //   issuesSolved: 2,
-    //   earnings: "$50",
-    //   top: 50,
-    //   bottom: 30,
-    // },
   ];
 
 

@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState, useMemo, useCallback } from "react";
+import React, { useRef, useCallback } from "react";
 import { Sheet, useClientMediaQuery, type SheetViewProps } from "@silk-hq/components";
 
 import "./SheetWithKeyboard.css";
@@ -21,8 +21,6 @@ const SheetWithKeyboard = ({ presentTrigger, sheetContent, ...restProps }: Props
    const travelHandler = useCallback<Exclude<SheetViewProps["onTravel"], undefined>>(({ progress }) => {
       if (!viewRef.current) return;
 
-      // Dismiss the on-screen keyboard as soon as travel
-      // occurs by focusing the view element.
       if (progress < 0.999) {
          viewRef.current.focus();
       }

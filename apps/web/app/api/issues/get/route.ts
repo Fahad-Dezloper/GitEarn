@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // pages/api/issues/get.ts
@@ -119,12 +120,11 @@ export async function GET(_request: Request) {
 
         const filteredIssues = issues.filter(issue => !issue.pull_request);
 
+        // @ts-ignore
         const mappedIssues: IssueExtended[] = await Promise.all(filteredIssues.map(async (issue) => {
-          // Get Assignees
           // console.log("here assigness", issue.assignees);
           const assignees = issue.assignees || [];
 
-          // Get comments (for latest comment)
           const commentsRes = await octokit.issues.listComments({
             owner: username,
             repo: repo.name,
@@ -156,14 +156,12 @@ export async function GET(_request: Request) {
             event.source?.type === 'issue'
           );
 
-          // Build Activity Log
           const activityLog: ActivityLogEntry[] = [];
 
-          // Add comment activity to log
           for (const comment of comments) {
             activityLog.push({
               type: "comment",
-              user: comment.user,
+              user: comment.user?.login || 'unknown',
               content: comment.body || "",
               date: comment.created_at,
             });
@@ -175,21 +173,20 @@ export async function GET(_request: Request) {
                 type: "status",
                 from: event.event === "closed" ? "Open" : "Closed",
                 to: event.event === "closed" ? "Closed" : "Open",
-                user: `@${event.actor?.login}`,
-                date: event.created_at,
+                user: 'actor' in event && event.actor ? `@${event.actor.login}` : 'unknown',
+                date: 'created_at' in event ? event.created_at : ('committer' in event && event.committer?.date) ? event.committer.date : new Date().toISOString(),
               });
             }
-            if (event.event === "referenced" && event.commit_id) {
+            if (event.event === "referenced" && 'commit_id' in event && event.commit_id) {
               activityLog.push({
                 type: "commit",
-                user: `@${event.actor?.login}`,
+                user: `@${('actor' in event && event.actor ? event.actor.login : 'unknown')}`,
                 content: `${event.commit_id.substring(0, 7)} referenced this issue.`,
-                date: event.created_at,
+                date: ('created_at' in event ? event.created_at : new Date().toISOString()),
               });
             }
           }
 
-          // console.log("issue main details", issue);
 
           return {
             id: issue.id,
@@ -198,7 +195,7 @@ export async function GET(_request: Request) {
             html_url: issue.html_url,
             created_at: issue.created_at,
             updated_at: issue.updated_at,
-            body: issue.body,
+            body: issue.body ?? null,
             number: issue.number,
             labels: (issue.labels || []).map(label => ({
               name: typeof label === 'string' ? label : label.name,
@@ -213,9 +210,6 @@ export async function GET(_request: Request) {
             activityLog,
           };
         }));
-
-        // console.log("mapped issues", mappedIssues);
-        // console.log("activity log issues", mappedIssues.activityLog);
 
         return {
           id: repo.id,

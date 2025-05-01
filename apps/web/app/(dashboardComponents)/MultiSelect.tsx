@@ -25,7 +25,7 @@ export function MultiSelect({
   const [open, setOpen] = React.useState(false)
 
   const toggleOption = (option: string) => {
-    let updated = selected.includes(option)
+    const updated = selected.includes(option)
       ? selected.filter((v) => v !== option)
       : [...selected, option]
     setSelected(updated)

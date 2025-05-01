@@ -1,7 +1,5 @@
 "use client"
 import HuntersLeaderboard from '@/app/(dashboardComponents)/BountyTable'
-import { ExampleSheetWithStacking } from '@/app/components/SheetWithStacking/ExampleSheetWithStacking'
-import { ExampleSheetWithStackingData } from '@/app/components/SheetWithStacking/ExampleSheetWithStackingData'
 import React from 'react'
 
 const page = () => {
@@ -13,7 +11,6 @@ const page = () => {
 
       <div>
         <HuntersLeaderboard />
-        {/* <ExampleSheetWithStacking data={ExampleSheetWithStackingData} /> */}
       </div>
     </div>
   )
