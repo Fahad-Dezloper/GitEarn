@@ -34,6 +34,8 @@ async function fetchGitHubIssueData(htmlUrl: string) {
 
     if (!issueRes.ok) throw new Error("GitHub issue fetch failed");
     const issueData = await issueRes.json();
+    // console.log("issue data final is here", issueData);
+
 
     const commentsRes = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/issues/${issue_number}/comments`,

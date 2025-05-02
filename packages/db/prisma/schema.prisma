@@ -18,9 +18,17 @@ model User {
   issue         BountyIssues[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  walletAddress String?         @unique
+  wallet        Wallet?
 }
 
+model Wallet {
+  id        String   @id @default(cuid())
+  publicKey String
+  secretKey String
+  iv        String
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+}
 
 model BountyIssues {
   id           String          @id @default(cuid())

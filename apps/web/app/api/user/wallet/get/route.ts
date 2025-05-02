@@ -14,10 +14,14 @@ export async function GET(){
         const res = await prisma.user.findFirst({
             where: {
                 email: session.user.email
+            },
+            include: {
+                wallet: true
             }
         });
-
-        return NextResponse.json({message: "Wallet Address Found Successfully", walletAdd: res?.walletAddress}, {status: 200});
+        // console.log("res for wallet add", res);
+        const WalletAdd = res?.wallet?.publicKey;
+        return NextResponse.json({message: "Wallet Address Found Successfully", walletAdd: WalletAdd}, {status: 200});
     } catch(e){
         return NextResponse.json({message: "Error while fetching user wallet Address"}, {status: 500});
     }

@@ -1,19 +1,19 @@
 import GithubProvider from "next-auth/providers/github";
 import { NextAuthOptions } from "next-auth";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from '@repo/db/client';
+import { CustomPrismaAdapter } from "@/lib/customPrismaAdapter";
 
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  adapter: PrismaAdapter(prisma),
+  adapter: CustomPrismaAdapter(prisma),
   providers: [
     GithubProvider({
       clientId: process.env.AUTH_GITHUB_ID || "",
       clientSecret: process.env.AUTH_GITHUB_SECRET || "",
       authorization: {
-        params: {
+        params: { 
           scope: "read:user user:email public_repo"
         }
       }
@@ -31,26 +31,32 @@ export const authOptions: NextAuthOptions = {
   
       if (account) {
         token.accessToken = account.access_token;
+        token.tokenType = account.token_type;
+        token.scope = account.scope;
       }
   
       return token; 
     },
   
     async session({ session, token }) {
-      // console.log("Session callback - session:", session);
-      // console.log("Session callback - token:", token);
-  
-      if (!token) {
-        console.error("Token is undefined in session callback!");
-        return session;
-      }
-  
       if (token.user) {
         session.user = token.user;
       }
   
       if (token.accessToken) {
         session.accessToken = token.accessToken as string;
+        session.scope = token.scope as string;
+      }
+
+      if (session.user?.email) {
+        const user = await prisma.user.findUnique({
+          where: { email: session.user.email },
+          include: { wallet: true }
+        });
+        
+        if (user?.wallet) {
+          session.user.walletPublicKey = user.wallet.publicKey;
+        }
       }
 
       return session;

@@ -101,7 +101,6 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
       console.log("in context provider cancel bounty error"); 
     }
   }
-    // console.log(res);
 
   async function ApproveBounty(bountyAmt: any, issueId: any, issueLink: any, title: any){
     const res = await axios.post("/api/bounty/approve", {

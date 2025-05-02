@@ -74,5 +74,10 @@ https://chatgpt.com/c/6807de56-d908-800c-8112-ec1dca86fa9d
 ///ts issues
 
 issueList.tsx
+customPrismaAdapter.tsx
 
 
+
+///web3 bits
+--> add bounty with devnet money from one account to the parent account
+--> after approval and pr raised or merged. check if the user amount locked is there in db then make transaction call from parent wallet using its private key and move to the public key of the user if the user is not signed up keep the amount locked with its github id and let him request
