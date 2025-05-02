@@ -74,7 +74,7 @@ console.log("main", title, isAddingBounty, description, labels, repository, assi
       setIsLoading(true);
       // @ts-ignore
       const res = await addBounty(bountyAmt, issueId, issueLink, title, labels);
-      console.log("res after add bounty", res);
+      // console.log("res after add bounty", res);
     } finally {
       setIsLoading(false);
     }

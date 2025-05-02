@@ -46,7 +46,7 @@ export function UserDetailsProvider({ children }: { children: ReactNode }) {
 
     async function fetchUserwalletAdd(){
         const res = await axios.get("/api/user/wallet/get");
-        console.log("res", res);
+        // console.log("res", res);
         setWalletAdd(res.data.walletAdd);
     }
 

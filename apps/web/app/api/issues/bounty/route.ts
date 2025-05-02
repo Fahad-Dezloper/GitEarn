@@ -11,17 +11,10 @@ function safeJson(obj: any) {
   );
 }
 
-async function fetchGitHubIssueData(htmlUrl: string) {
-  const match = htmlUrl.match(/github\.com\/([^/]+)\/([^/]+)\/issues\/(\d+)/);
-  if (!match) {
-    return { title: "Invalid URL", repo: "", tags: [] };
-  }
-
-  const [_, owner, repo, issue_number] = match;
-
+async function fetchRepoLanguages(owner: string, repo: string) {
   try {
     const res = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/issues/${issue_number}`,
+      `https://api.github.com/repos/${owner}/${repo}/languages`,
       {
         headers: {
           Accept: "application/vnd.github.v3+json",
@@ -30,20 +23,54 @@ async function fetchGitHubIssueData(htmlUrl: string) {
       }
     );
 
-    if (!res.ok) throw new Error("GitHub fetch failed");
+    if (!res.ok) throw new Error("Failed to fetch repo languages");
 
     const data = await res.json();
+    return Object.keys(data);
+  } catch (err) {
+    console.error("GitHub languages fetch error", err);
+    return [];
+  }
+}
+
+async function fetchGitHubIssueData(htmlUrl: string) {
+  const match = htmlUrl.match(/github\.com\/([^/]+)\/([^/]+)\/issues\/(\d+)/);
+  if (!match) {
+    return { title: "Invalid URL", repo: "", tags: [], languages: [] };
+  }
+
+  const [_, owner, repo, issue_number] = match;
+
+  try {
+    const [issueRes, languages] = await Promise.all([
+      fetch(
+        `https://api.github.com/repos/${owner}/${repo}/issues/${issue_number}`,
+        {
+          headers: {
+            Accept: "application/vnd.github.v3+json",
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+          },
+        }
+      ),
+      fetchRepoLanguages(owner, repo),
+    ]);
+
+    if (!issueRes.ok) throw new Error("GitHub issue fetch failed");
+
+    const data = await issueRes.json();
 
     return {
       title: data.title,
       repo: `${owner}/${repo}`,
       tags: data.labels.map((label: any) => label.name),
+      languages,
     };
   } catch (err) {
     console.error("GitHub issue fetch error", err);
-    return { title: "Unavailable", repo: `${owner}/${repo}`, tags: [] };
+    return { title: "Unavailable", repo: `${owner}/${repo}`, tags: [], languages: [] };
   }
 }
+
 
 export async function GET() {
   const session = await getServerSession();
@@ -67,10 +94,12 @@ export async function GET() {
           title: meta.title,
           repo: meta.repo,
           tags: meta.tags,
+          technologies: meta.languages,
           posted: new Date(issue.createdAt).toLocaleDateString(),
         };
       })
     );
+
 
     return NextResponse.json(
       {

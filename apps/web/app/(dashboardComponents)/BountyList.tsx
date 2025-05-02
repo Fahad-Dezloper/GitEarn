@@ -13,10 +13,10 @@ interface Bounty {
   amount: number;
   tags: string[];
   posted: string;
+  technologies: string[];
 }
 
 const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
-  // console.log("bounties are here", bounties)
     return (
     <div className="w-full grid grid-cols-3 gap-4">
         {bounties.map((bounty: Bounty, index: number) => (
@@ -42,14 +42,13 @@ const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
           </div>
         </div>
       
-        {/* Tags */}
         <div className="flex flex-wrap gap-2 mb-4">
-          {bounty.tags.map((tag: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<unknown>> | Iterable<React.ReactNode> | null | undefined> | null | undefined, i: React.Key | null | undefined) => (
+          {bounty.technologies.map((tech: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<unknown>> | Iterable<React.ReactNode> | null | undefined> | null | undefined, i: React.Key | null | undefined) => (
             <span
               key={i}
               className="text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 px-2 py-0.5 rounded-full"
             >
-              {tag}
+              {tech}
             </span>
           ))}
         </div>

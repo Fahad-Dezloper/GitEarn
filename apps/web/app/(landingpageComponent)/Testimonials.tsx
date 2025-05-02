@@ -4,7 +4,7 @@ import { Marquee } from "@/components/magicui/marquee";
 import { reviews } from "@/lib/testimonials";
 import Link from "next/link";
 
-console.log("reviews fetched", reviews);
+// console.log("reviews fetched", reviews);
 
 const firstRow = reviews.slice(0, reviews.length / 2);
 const secondRow = reviews.slice(reviews.length / 2);
