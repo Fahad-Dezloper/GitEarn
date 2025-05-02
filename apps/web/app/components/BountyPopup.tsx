@@ -55,7 +55,7 @@ interface BountyPopupProps {
 
 const BountyPopup = ({title, isAddingBounty, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId}: BountyPopupProps) => {
   
-console.log("main", title, isAddingBounty, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId)
+// console.log("main", title, isAddingBounty, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId)
   const largeViewport = useClientMediaQuery("(min-width: 800px)");
   const [newLabel, setNewLabel] = useState("");
   const [showLabelInput, setShowLabelInput] = useState(false);
@@ -121,44 +121,15 @@ console.log("main", title, isAddingBounty, description, labels, repository, assi
 
 
 
-  function hexToRGBA(hex: string, alpha = 0.2) {
-    hex = hex.replace(/^#/, '');
-  
-    if (hex.length === 3) {
-      hex = hex.split('').map(x => x + x).join('');
-    }
-  
-    const num = parseInt(hex, 16);
-    const r = (num >> 16) & 255;
-    const g = (num >> 8) & 255;
-    const b = num & 255;
-  
+  function hexToRgba(hex: string, alpha: number) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
-  
-  // function isColorDark(hex: string) {
-  //   console.log("hex", hex);
-  //   hex = hex.replace(/^#/, '');
-  
-  //   if (hex.length === 3) {
-  //     hex = hex.split('').map(x => x + x).join('');
-  //   }
-  
-  //   const num = parseInt(hex, 16);
-  //   const r = (num >> 16) & 255;
-  //   const g = (num >> 8) & 255;
-  //   const b = num & 255;
-  
-  //   const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    
-  //   return brightness < 128;
-  // }
-
-  // console.log("final labels", labels);
 
   return (
     <div className="h-full bg-white z-50 relative dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden flex flex-col shadow-lg">
-      {/* Header */}
       <div className="flex justify-between items-center p-4 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
         <Sheet.Trigger 
           action="dismiss" 
@@ -172,12 +143,10 @@ console.log("main", title, isAddingBounty, description, labels, repository, assi
         </button>
       </div>
 
-      {/* Scrollable Content */}
       <Scroll.Root asChild className="flex-grow">
         <Scroll.View className="ExampleSheetWithKeyboard-scrollView"
               scrollGestureTrap={{ yEnd: !largeViewport }}>
           <Scroll.Content className="p-6 max-h-[38vw] flex flex-col overflow-y-auto gap-8">
-            {/* Bounty Section */}
             <div className="space-y-4">
               <div className="text-center space-y-2">
                 <h2 className="text-xl font-bold text-zinc-900 dark:text-white">Add Bounty to Issue</h2>
@@ -224,13 +193,11 @@ console.log("main", title, isAddingBounty, description, labels, repository, assi
             <div className="border-t border-zinc-200 dark:border-zinc-800 pt-6">
               <h3 className="text-lg font-semibold mb-4">Issue Details</h3>
               
-              {/* Title and Description */}
               <div className="space-y-2 mb-6">
                 <h2 className="text-xl font-bold text-zinc-900 dark:text-white">{title}</h2>
                 <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed">{description}</p>
               </div>
 
-              {/* Metadata */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg p-4 border border-zinc-200 dark:border-zinc-700 mb-6">
                 <div className="space-y-1">
                   <p className="text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-medium">Created</p>
@@ -260,15 +227,11 @@ console.log("main", title, isAddingBounty, description, labels, repository, assi
                 <div className="flex flex-wrap gap-2">
                   {labels != null && labels.map((label, i) => (
                     (() => {
-                      // const textColor = isColorDark(label.color) ? "#ffffff" : `#${label.color}`;
                       return (
                         <span
                           key={i}
                           className="px-2.5 py-1 rounded-full text-sm font-medium flex items-center gap-1"
-                          // style={{
-                          //   backgroundColor: hexToRGBA(label.color, 0.2),
-                          //   color: textColor,
-                          // }}
+                          style={{backgroundColor:  hexToRgba(`#${label.color}`, 0.4)}}
                         >
                           {label.name}
                         </span>

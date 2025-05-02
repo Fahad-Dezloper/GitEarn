@@ -80,36 +80,11 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
     }
   };
 
-  function hexToRGBA(hex: string, alpha = 0.2) {
-    hex = hex.replace(/^#/, '');
-  
-    if (hex.length === 3) {
-      hex = hex.split('').map(x => x + x).join('');
-    }
-  
-    const num = parseInt(hex, 16);
-    const r = (num >> 16) & 255;
-    const g = (num >> 8) & 255;
-    const b = num & 255;
-  
+  function hexToRgba(hex: string, alpha: number) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  }
-  
-  function isColorDark(hex: string) {
-    hex = hex.replace(/^#/, '');
-  
-    if (hex.length === 3) {
-      hex = hex.split('').map(x => x + x).join('');
-    }
-  
-    const num = parseInt(hex, 16);
-    const r = (num >> 16) & 255;
-    const g = (num >> 8) & 255;
-    const b = num & 255;
-  
-    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    
-    return brightness < 128;
   }
 
   const handleApprove = () => {
@@ -136,7 +111,6 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
   };
 
   async function confirmCancel() {
-    // alert(`details required to cancel ${issueId} ${issueLink}`)
     try{
       setLoading(true);
       // @ts-ignore
@@ -147,16 +121,12 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
       setLoading(false);
       setShowCancelDialog(false);
     }
-    // Handle the actual cancellation
-    // Add API call or state updates here
-    // const res = await RemoveBounty(bountyAmt, issueId, issueLink, title, labels);
   };
 
   function confirmAddFunds(event: MouseEvent<HTMLButtonElement>): void {
     throw new Error("Function not implemented.");
   }
 
-  // console.log("final labels", labels);
 
   return (
     <div className="h-full bg-white z-50 relative dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden flex flex-col shadow-lg">
@@ -224,14 +194,12 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                 <div className="flex flex-wrap gap-2">
                   {labels != null && labels.map((label, i) => (
                     (() => {
-                      const textColor = isColorDark(label.color) ? "#ffffff" : `#${label.color}`;
                       return (
                         <span
                           key={i}
                           className="px-2.5 py-1 rounded-full text-sm font-medium flex items-center gap-1"
                           style={{
-                            backgroundColor: hexToRGBA(label.color, 0.2),
-                            color: textColor,
+                            backgroundColor: hexToRgba(`#${label.color}`, 0.4),
                           }}
                         >
                           {label.name}

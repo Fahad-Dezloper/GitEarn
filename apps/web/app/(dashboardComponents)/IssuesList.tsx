@@ -20,10 +20,15 @@ function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | M
     const commonRepo = isAddBountyIssue(issue) ? issue.repositoryFullName : issue.repository;
     const commonDate = isAddBountyIssue(issue) ? new Date(issue.created_at) : issue.createdAtDate;
     const commonLabels = isAddBountyIssue(issue) ? issue.labelNames : issue.labelNames;
-    // console.log("common labels", issue.labelNames);
-    // console.log("issues here", issue);
 
     const formattedDate = formatDistanceToNow(commonDate, { addSuffix: true });
+
+    function hexToRgba(hex: string, alpha: number) {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
 
     return (
 
@@ -44,7 +49,7 @@ function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | M
               isAddingBounty={isAddingBounty} 
               title={commonTitle} 
               description={isAddBountyIssue(issue) ? issue.body : ''} 
-              labels={commonLabels} 
+              labels={issue.labels} 
               repository={commonRepo} 
               assignees={issue.assignees} 
               prRaise={issue.prRaised} 
@@ -59,7 +64,7 @@ function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | M
               bounty={!isAddBountyIssue(issue) ? issue.bounty : 0} 
               isAddingBounty={isAddingBounty} 
               title={commonTitle} 
-              labels={commonLabels} 
+              labels={issue.labels} 
               repository={commonRepo} 
               assignees={issue.assignees} 
               prRaise={issue.prRaised} 
@@ -75,18 +80,19 @@ function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | M
         </div>
       
         <div className="flex flex-wrap gap-2 mb-4">
-          {commonLabels != null && commonLabels.map((label: string) => (
+          {issue.labels != null && issue.labels.map((label: string, i: number) => (
             <span
-              key={label}
-              className="text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 px-2 py-0.5 rounded-full"
+              key={i}
+              style={{backgroundColor:  hexToRgba(`#${label.color}`, 0.4)}}
+              className="text-xs font-medium  px-2 py-0.5 rounded-full"
             >
-              {label}
+              {label.name}
             </span>
           ))}
         </div>
       
         <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-          <span>#{isAddBountyIssue(issue) && `${issue.number}`} opened on{" "} <span className="underline">{isAddBountyIssue(issue) ? `opened ${formattedDate}` : `bounty added ${formattedDate}`}</span></span>
+          <span>#{isAddBountyIssue(issue) && `${issue.number}`} Bounty added {" "} <span className="underline">{isAddBountyIssue(issue) ? `opened ${formattedDate}` : `${formattedDate}`}</span></span>
           <div className="flex items-center gap-3">
             <Link
               href={commonUrl}

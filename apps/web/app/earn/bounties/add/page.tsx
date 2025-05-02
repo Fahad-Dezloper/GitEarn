@@ -3,8 +3,8 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import { GithubIcon } from "@/components/ui/github";
-import IssueFilter from "@/app/(dashboardComponents)/IssueFilter"; // Assuming this exists
-import IssuesList from "@/app/(dashboardComponents)/IssuesList"; // Assuming this exists
+import IssueFilter from "@/app/(dashboardComponents)/IssueFilter"; 
+import IssuesList from "@/app/(dashboardComponents)/IssuesList"; 
 import { useBountyDetails } from "@/app/context/BountyContextProvider";
 import { Button } from "@/components/ui/button";
 
@@ -12,7 +12,9 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const { issuesRepo, userBountyIssue } = useBountyDetails();
 
-  const [isAddingBounty, setIsAddingBounty] = useState(false);
+  // console.log("issues repo", issuesRepo);
+
+  const [isAddingBounty, setIsAddingBounty] = useState(true);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLabels, setSelectedLabels] = useState<string[]>([]);
