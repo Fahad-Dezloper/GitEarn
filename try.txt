@@ -64,11 +64,9 @@ https://chatgpt.com/c/6807de56-d908-800c-8112-ec1dca86fa9d
 -- heading section
 -- landing page responsive
 -- work on /earn page
--- show labels in add and explore page and show technology label in explore page
--- clean up the code
 
 
---cancel bounty -- done
+
 --add more money to the bounty
 
 
@@ -77,8 +75,4 @@ https://chatgpt.com/c/6807de56-d908-800c-8112-ec1dca86fa9d
 
 issueList.tsx
 
-
-explore page bounty filter
-
-labels in add and manage bounty problem
 

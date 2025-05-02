@@ -83,7 +83,7 @@ function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | M
           {issue.labels != null && issue.labels.map((label: string, i: number) => (
             <span
               key={i}
-              style={{backgroundColor:  hexToRgba(`#${label.color}`, 0.4)}}
+              style={{backgroundColor: hexToRgba(`#${label.color}`, 0.4)}}
               className="text-xs font-medium  px-2 py-0.5 rounded-full"
             >
               {label.name}
