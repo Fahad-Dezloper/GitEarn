@@ -17,6 +17,15 @@ interface Bounty {
 }
 
 const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
+
+  function hexToRgba(hex, alpha) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+
+  
     return (
     <div className="w-full grid grid-cols-3 gap-4">
         {bounties.map((bounty: Bounty, index: number) => (
@@ -43,12 +52,13 @@ const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
         </div>
       
         <div className="flex flex-wrap gap-2 mb-4">
-          {bounty.technologies.map((tech: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<unknown>> | Iterable<React.ReactNode> | null | undefined> | null | undefined, i: React.Key | null | undefined) => (
+          {bounty.technologies.map((tech: string , i: React.Key) => (
             <span
               key={i}
-              className="text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 px-2 py-0.5 rounded-full"
+              style={{backgroundColor:  hexToRgba(tech.color, 0.4)}}
+              className={`text-xs font-medium   px-2 py-0.5 rounded-full`}
             >
-              {tech}
+              {tech.name}
             </span>
           ))}
         </div>

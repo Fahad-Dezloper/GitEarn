@@ -18,15 +18,15 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command"
-import { CalendarIcon, X } from "lucide-react"
+import { CalendarIcon } from "lucide-react"
 import { useEffect, useState } from "react"
-import { XIcon } from "@/components/ui/x"
+import { XIcon } from "@/components/ui/x" 
 
 type Bounty = {
   bounty: number
   createdAt: string
   repo: string
-  technologies: string[]
+  technologies: { name: string; color: string }[]
   title: string
 }
 
@@ -38,11 +38,15 @@ export default function BountyFilter({
   onFilterChange: (filtered: Bounty[]) => void
 }) {
   const allTechs = Array.from(
-    new Set(originalBounties.flatMap((b) => b.technologies))
+    new Map(
+      originalBounties
+        .flatMap((b) => b.technologies)
+        .map((t) => [t.name, t])
+    ).values()
   )
 
   const [minAmount, setMinAmount] = useState(0)
-  const [selectedTechs, setSelectedTechs] = useState<string[]>([])
+  const [selectedTechs, setSelectedTechs] = useState<{ name: string; color: string }[]>([])
   const [search, setSearch] = useState("")
   const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({})
   const [open, setOpen] = useState(false);
@@ -56,7 +60,9 @@ export default function BountyFilter({
 
     if (selectedTechs.length > 0) {
       filtered = filtered.filter((b) =>
-        selectedTechs.every((t) => b.technologies.includes(t))
+        selectedTechs.every((t) =>
+          b.technologies.some((bt) => bt.name === t.name)
+        )
       )
     }
 
@@ -135,43 +141,44 @@ export default function BountyFilter({
       <CommandInput placeholder="Search techs..." />
       <CommandEmpty>No match found.</CommandEmpty>
       <CommandGroup>
-        {allTechs.map((tech) => (
+        {allTechs.map((tech, i) => (
           <CommandItem
-            key={tech}
-            value={tech}
-            onSelect={() => {
-              setSelectedTechs((prev) =>
-                prev.includes(tech)
-                  ? prev.filter((t) => t !== tech)
-                  : [...prev, tech]
-              );
-              setOpen(false);
-            }}
-          >
-            {tech}
-          </CommandItem>
+          key={i}
+          value={tech.name}
+          onSelect={() => {
+            setSelectedTechs((prev) =>
+              prev.some((t) => t.name === tech.name)
+                ? prev.filter((t) => t.name !== tech.name)
+                : [...prev, { name: tech.name, color: tech.color }]
+            );
+            setOpen(false);
+          }}
+        >
+          {tech.name}
+        </CommandItem>
         ))}
       </CommandGroup>
     </Command>
   </PopoverContent>
 </Popover>
           <div className="flex gap-1 max-w-[10vw] overflow-x-auto scrolll">
-            {selectedTechs.map((tech) => (
+            {selectedTechs.map((tech, i) => (
               <Badge
-                key={tech}
-                variant="default"
-                className="flex items-center gap-1"
-              >
-                {tech}
-                <XIcon
+              key={tech.name}
+              variant="default"
+              className="flex items-center gap-1"
+              style={{ backgroundColor: tech.color }}
+            >
+              {tech.name}
+              <XIcon
                 size={13}
                 className="cursor-pointer hover:bg-transparent"
                 onClick={(e) => {
-                  e.stopPropagation(); // prevent parent handlers from firing
-                  Managetech(tech);
+                  e.stopPropagation();
+                  setSelectedTechs((prev) => prev.filter((t) => t.name !== tech.name));
                 }}
               />
-              </Badge>
+            </Badge>
             ))}
           </div>
         </div>

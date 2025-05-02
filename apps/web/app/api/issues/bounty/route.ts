@@ -25,8 +25,22 @@ async function fetchRepoLanguages(owner: string, repo: string) {
 
     if (!res.ok) throw new Error("Failed to fetch repo languages");
 
-    const data = await res.json();
-    return Object.keys(data);
+    const languages  = await res.json();
+
+    const colorRes = await fetch(
+      "https://raw.githubusercontent.com/ozh/github-colors/master/colors.json"
+    );
+
+    if (!colorRes.ok) throw new Error("Failed to fetch language colors");
+
+    const colorData = await colorRes.json();
+
+    const result = Object.keys(languages).map((lang) => ({
+      name: lang,
+      color: colorData[lang]?.color || "#000000",
+    }));
+    
+    return result;
   } catch (err) {
     console.error("GitHub languages fetch error", err);
     return [];
