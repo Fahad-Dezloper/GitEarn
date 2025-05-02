@@ -51,6 +51,13 @@ export default function BountyFilter({
   const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({})
   const [open, setOpen] = useState(false);
 
+  function hexToRgba(hex: string, alpha: number) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+
   useEffect(() => {
     let filtered = [...originalBounties]
 
@@ -166,8 +173,8 @@ export default function BountyFilter({
               <Badge
               key={tech.name}
               variant="default"
-              className="flex items-center gap-1"
-              style={{ backgroundColor: tech.color }}
+              className="flex items-center gap-1 text-white"
+              style={{backgroundColor:  hexToRgba(tech.color, 0.4)}}
             >
               {tech.name}
               <XIcon

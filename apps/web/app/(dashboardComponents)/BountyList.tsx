@@ -13,18 +13,39 @@ interface Bounty {
   amount: number;
   tags: string[];
   posted: string;
-  technologies: string[];
+  technologies: {name: string, color: string}[];
 }
 
 const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
+  console.log("bounties here", bounties);
 
-  function hexToRgba(hex, alpha) {
+  function hexToRgba(hex: string, alpha: number) {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
 
+  function formatDate(dateStr) {
+    const [day, month, year] = dateStr.split("/").map(Number);
+  
+    const daySuffix = (d) => {
+      if (d > 3 && d < 21) return "th";
+      switch (d % 10) {
+        case 1: return "st";
+        case 2: return "nd";
+        case 3: return "rd";
+        default: return "th";
+      }
+    };
+  
+    const monthNames = [
+      "", "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+  
+    return `${day}${daySuffix(day)} ${monthNames[month]} ${year}`;
+  }
   
     return (
     <div className="w-full grid grid-cols-3 gap-4">
@@ -52,7 +73,7 @@ const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
         </div>
       
         <div className="flex flex-wrap gap-2 mb-4">
-          {bounty.technologies.map((tech: string , i: React.Key) => (
+          {bounty.technologies.map((tech, i: React.Key) => (
             <span
               key={i}
               style={{backgroundColor:  hexToRgba(tech.color, 0.4)}}
@@ -63,9 +84,8 @@ const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
           ))}
         </div>
       
-        {/* Footer Meta */}
         <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-          <span>{bounty.posted}</span>
+          <span>{formatDate(bounty.posted)}</span>
           <div className="flex items-center gap-3">
             <Link
               href={bounty.htmlUrl}
