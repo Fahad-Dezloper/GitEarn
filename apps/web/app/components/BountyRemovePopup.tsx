@@ -10,6 +10,8 @@ import { useBountyDetails } from "../context/BountyContextProvider";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CircleHelpIcon } from "@/components/ui/circle-help";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleString(undefined, {
@@ -101,6 +103,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
     if (selectedAssignee) {
       console.log("Approving payment to:", selectedAssignee);
       // Call your API, function, whatever you want with selectedAssignee
+      
     } else {
       console.error("No assignee selected");
     }
@@ -398,20 +401,32 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                       <Card>
                         <CardHeader>
                           <CardTitle>
+                            <div className="w-full flex justify-between items-center">
                             <div className="flex gap-2 items-center">
                               <img src={selectedAssignee.avatar_url} alt="user avatar" className="w-6 h-6 rounded-full" />
-                              {selectedAssignee?.login}</div>
+                              {selectedAssignee?.login}
+                              </div>
+                              {selectedAssignee.walletAddress ? <></> : <div className="relative group">
+                                    <CircleHelpIcon
+                                      size={20}
+                                      className=" cursor-pointer"
+                                    />
+                                    <div className="absolute bottom-full right-[-182%] transform mb-2 px-2 py-1 bg-gray-800 text-white text-[10px] rounded shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                                      This user isn’t on our platform. Invite them to register to confirm their bounty.
+                                    </div>
+                                  </div>}
+                              </div>
                           </CardTitle>
                         </CardHeader>
                         <CardContent>
                           <div>GitHub Id: {selectedAssignee?.githubId}</div>
-                          <div>Wallet: {selectedAssignee?.walletAddress}</div>
+                          <div>Wallet: {selectedAssignee.walletAddress ? selectedAssignee.walletAddress : "User doesn't exist"}</div>
                         </CardContent>
                       </Card>
                     )}
                   </div>
                   
-                  <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 flex justify-end gap-3">
+                  <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 flex justify-end items-center gap-3">
                     <Button 
                       variant="outline" 
                       onClick={() => setShowApproveDialog(false)}
@@ -419,8 +434,9 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                       Cancel
                     </Button>
                     <Button
-                      className="bg-green-600 hover:bg-green-700 text-white"
+                      className={`bg-green-600 hover:bg-green-700 text-white ${selectedAssignee?.walletAddress === null ? `cursor-not-allowed` : `cursor-pointer`}`}
                       onClick={confirmApproval}
+                      disabled={selectedAssignee?.walletAddress === null}
                     >
                       Approve Payment
                     </Button>

@@ -4,8 +4,10 @@
 "use client";
 import { Scroll, Sheet, useClientMediaQuery } from "@silk-hq/components";
 import { Calendar, ExternalLink, GitPullRequest, MessageSquare, RefreshCw, Tag } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useBountyDetails } from "../context/BountyContextProvider";
+import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleString(undefined, {
@@ -65,16 +67,59 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
   const [activityView, setActivityView] = useState<"latest" | "all">("all");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
+  const [solPrice, setSolPrice] = useState<number | null>(null);
+  const { publicKey, sendTransaction } = useWallet();
+  const { connection } = useConnection();
 
+  useEffect(() => {
+
+    let intervalId: NodeJS.Timeout;
+
+    const fetchSolPriceFromJupiter = async () => {
+      try {
+        const response = await fetch(
+          "https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&amount=1000000000&slippageBps=50"
+        );
+        const data = await response.json();
+        const outAmount = parseFloat(data.outAmount); 
+        const usdc = outAmount / 1e6; 
+        setSolPrice(usdc);
+      } catch (err) {
+        console.error("Error fetching SOL price from Jupiter:", err);
+      }
+    };
+  
+    fetchSolPriceFromJupiter();
+
+    intervalId = setInterval(fetchSolPriceFromJupiter, 2500);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+const usdToSol = (usdAmount: number) => {
+  if (!solPrice) return "...";
+  return (usdAmount / solPrice).toFixed(4); // $ / ($/SOL) = SOL
+};
+  
   const { addBounty } = useBountyDetails();
 
   async function AddBountyToTheIssue(bountyAmt: number){
-    alert("happeing")
+    // alert(usdToSol(bountyAmt));
+    if (!publicKey) {
+      console.error("Wallet not connected");
+      return;
+    }
+
+    alert(bountyAmt);
+
     try {
       setIsLoading(true);
-      // @ts-ignore
-      const res = await addBounty(bountyAmt, issueId, issueLink, title, labels);
-      // console.log("res after add bounty", res);
+      const lamports = Math.round(Number(usdToSol(bountyAmt)) * LAMPORTS_PER_SOL);
+
+      const res = await addBounty(bountyAmt, issueId, issueLink, title, lamports);
+
+    } catch (error) {
+      console.error("Transaction failed", error);
     } finally {
       setIsLoading(false);
     }
@@ -98,10 +143,12 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
     
     setCustomAmount(value);
     const numericValue = parseFloat(value);
+    // console.log("number", numericValue);
 
     if (isNaN(numericValue) || numericValue <= 0) {
       setSelectedAmount(null);
     } else {
+      setBountyAmount(numericValue);
       setSelectedAmount(numericValue);
     }
   };
@@ -154,7 +201,7 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
               </div>
               
               <div className="grid grid-cols-4 gap-2 mt-4">
-                {[10, 50, 100, "custom"].map((amount) => (
+              {[10, 50, 100, "custom"].map((amount) => (
                   <button
                     key={amount}
                     onClick={() => handleBountySelect(amount)}
@@ -164,14 +211,23 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
                         : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
                     }`}
                   >
-                    {amount === "custom" ? "Custom" : `$${amount}`}
+                    {amount === "custom" ? (
+                      "Custom"
+                    ) : (
+                      <>
+                        ${amount}
+                        <div className="text-xs text-zinc-500">≈ {usdToSol(amount)} SOL</div>
+                      </>
+                    )}
                   </button>
                 ))}
+
               </div>
               
               {showCustomAmount && (
                 <div className="mt-3 flex items-center">
                   <div className="relative flex-grow">
+                    <div className="flex items-center relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">$</span>
                     <input
                       type="text"
@@ -181,6 +237,12 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
                       placeholder="Enter amount"
                       inputMode="decimal"
                     />
+                    </div>
+                    {customAmount && !isNaN(customAmount) && (
+                      <div className="mt-2 text-sm text-zinc-500">
+                        ≈ {usdToSol(parseFloat(customAmount))} SOL
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -378,7 +440,7 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
             : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
         }`}
       >
-        {isLoading ? "Adding Bounty..." : "Addd Bounty"}
+        {isLoading ? "Adding Bounty..." : "Add Bounty"}
         </button>
       </div>
     </div>

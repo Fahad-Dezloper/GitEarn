@@ -84,3 +84,8 @@ move to approve bounty show wallet address of assignee if doesn't exist dont let
 
 --> add bounty with devnet money from one account to the parent account
 --> after approval and pr raised or merged. check if the user amount locked is there in db then make transaction call from parent wallet using its private key and move to the public key of the user if the user is not signed up keep the amount locked with its github id and let him request
+
+
+/////make it better
+use privy to generate wallets
+https://docs.privy.io/wallets/wallets/create/pregenerate-wallets

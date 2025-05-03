@@ -2,6 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
 import axios from 'axios';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
@@ -21,6 +23,8 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   const [issuesRepo, setIssuesRepo] = useState([]);
   const [bountyIssues, setBountyIssues] = useState<any[]>([]);
   const [userBountyIssue, setUserBountyIssue] = useState<any[]>([]);
+  const { publicKey, sendTransaction } = useWallet();
+  const { connection } = useConnection();
 
   async function getIssues() {
     try {
@@ -63,21 +67,37 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     return () => clearInterval(interval);
   }, []);
 
-  async function addBounty(bountyAmt: any, issueId: any, issueLink: any, title: any) {
-
-    // make solana transaction here before db call
+  async function addBounty(bountyAmt: any, issueId: any, issueLink: any, title: any, lamports: any) {
+    alert(lamports);
 
     try {
-      const res = await axios.post("/api/bounty/add", {
-      bountyAmt,
-      issueId,
-      issueLink,  
-      title,
-    });
+      if (!publicKey) {
+        console.error("Wallet not connected");
+        return;
+      }
+      
+      const transaction = new Transaction();
+      const sendSolInstruction = SystemProgram.transfer({
+        fromPubkey: publicKey,
+        toPubkey: new PublicKey('6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz'),
+        lamports: lamports,
+      });
 
-    setBountyIssues(res.data.bountyIssues);
-    getIssues();
-    getUserBountyIssues();
+      transaction.add(sendSolInstruction);
+  
+      const signature = await sendTransaction(transaction, connection);
+      console.log(`Transaction signature: ${signature}`);
+
+    //   const res = await axios.post("/api/bounty/add", {
+    //   bountyAmt,
+    //   issueId,
+    //   issueLink,  
+    //   title,
+    // });
+
+    // setBountyIssues(res.data.bountyIssues);
+    // getIssues();
+    // getUserBountyIssues();
   } catch(e){
     console.log("Error adding bounty to the issue");
   }
