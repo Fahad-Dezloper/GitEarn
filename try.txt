@@ -79,5 +79,8 @@ customPrismaAdapter.tsx
 
 
 ///web3 bits
+wallet creation done
+move to approve bounty show wallet address of assignee if doesn't exist dont let the user select that assignee
+
 --> add bounty with devnet money from one account to the parent account
 --> after approval and pr raised or merged. check if the user amount locked is there in db then make transaction call from parent wallet using its private key and move to the public key of the user if the user is not signed up keep the amount locked with its github id and let him request

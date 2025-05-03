@@ -404,8 +404,8 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                           </CardTitle>
                         </CardHeader>
                         <CardContent>
-                          <div>GitHub Id: {selectedAssignee?.id}</div>
-                          <div>Wallet: SNDFKSNADFKNASKDF</div>
+                          <div>GitHub Id: {selectedAssignee?.githubId}</div>
+                          <div>Wallet: {selectedAssignee?.walletAddress}</div>
                         </CardContent>
                       </Card>
                     )}

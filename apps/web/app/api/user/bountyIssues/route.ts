@@ -13,6 +13,32 @@ function safeJson(obj: any) {
   );
 }
 
+async function getUserByGitHubId(githubId: string){
+  // console.log("github id", githubId);
+  const res = await prisma.account.findUnique({
+    where: {
+      provider_providerAccountId: {
+        provider: 'github',
+        providerAccountId: githubId
+      }
+    },
+    include: {
+      user: {
+        include: {
+          wallet: true
+        }
+      }
+    }
+  });
+
+
+  if(!res){
+    return;
+  }
+
+  return res?.user?.wallet?.publicKey;
+}
+
 async function fetchGitHubIssueData(htmlUrl: string) {
   const match = htmlUrl.match(/github\.com\/([^/]+)\/([^/]+)\/issues\/(\d+)/);
   if (!match) {
@@ -82,6 +108,24 @@ async function fetchGitHubIssueData(htmlUrl: string) {
       };
     }
 
+    // console.log("issue data", issueData.assignees);
+    const enrichedAssignees = await Promise.all(
+      (issueData.assignees || []).map(async (assignee: any) => {
+        const githubId = assignee.id.toString();
+
+        const userFromDb = await getUserByGitHubId(githubId);
+
+        return {
+          ...assignee,
+          githubId,
+          walletAddress: userFromDb || null,
+          exists: !!userFromDb,
+        };
+      })
+    );
+
+    // console.log("enrichedAssigness",  enrichedAssignees);
+
     return {
       id: issueData.id,
       title: issueData.title,
@@ -97,7 +141,7 @@ async function fetchGitHubIssueData(htmlUrl: string) {
         description: typeof label === 'string' ? null : label.description,
       })),
       repository: repo,
-      assignees: issueData.assignees || [],
+      assignees: enrichedAssignees || [],
       prRaised,
       issueLink: issueData.html_url,
       latestComment,
