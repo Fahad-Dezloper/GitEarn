@@ -36,6 +36,8 @@ model BountyIssues {
   githubId     BigInt          @unique
   htmlUrl      String          @unique
   bounty       Int
+  state        Status
+  txn          String?
   user         User @relation(fields: [userId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -70,5 +72,10 @@ model Session {
  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum Status {
+  pending
+  confirmed
 }
  

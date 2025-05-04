@@ -98,7 +98,7 @@ const BountyPopup = ({title, isAddingBounty, description, labels, repository, as
 
 const usdToSol = (usdAmount: number) => {
   if (!solPrice) return "...";
-  return (usdAmount / solPrice).toFixed(4); // $ / ($/SOL) = SOL
+  return (usdAmount / solPrice).toFixed(8);
 };
   
   const { addBounty } = useBountyDetails();

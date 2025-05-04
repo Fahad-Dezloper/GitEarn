@@ -68,13 +68,20 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   }, []);
 
   async function addBounty(bountyAmt: any, issueId: any, issueLink: any, title: any, lamports: any) {
-    alert(lamports);
+    // alert(lamports);
 
     try {
       if (!publicKey) {
         console.error("Wallet not connected");
         return;
       }
+
+      const add = await axios.post("/api/bounty/add", {
+        bountyAmt,
+        issueId,
+        issueLink,  
+        title,
+      });
       
       const transaction = new Transaction();
       const sendSolInstruction = SystemProgram.transfer({
@@ -84,20 +91,28 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
       });
 
       transaction.add(sendSolInstruction);
-  
+      
       const signature = await sendTransaction(transaction, connection);
       console.log(`Transaction signature: ${signature}`);
+      await connection.confirmTransaction(signature, "confirmed");
+      console.log("from", publicKey);
+      console.log("t0", '6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz');
+      console.log("lamports", lamports);
 
-    //   const res = await axios.post("/api/bounty/add", {
-    //   bountyAmt,
-    //   issueId,
-    //   issueLink,  
-    //   title,
-    // });
+      const confirm = await axios.post("/api/bounty/confirm", {
+      bountyAmt,
+      issueId,
+      issueLink,  
+      title,
+      signature,
+      from: publicKey,
+      to: '6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz',
+      lamports
+    });
 
-    // setBountyIssues(res.data.bountyIssues);
-    // getIssues();
-    // getUserBountyIssues();
+    setBountyIssues(confirm.data.bountyIssues);
+    getIssues();
+    getUserBountyIssues();
   } catch(e){
     console.log("Error adding bounty to the issue");
   }
