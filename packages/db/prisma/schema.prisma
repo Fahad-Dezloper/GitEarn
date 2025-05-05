@@ -35,11 +35,48 @@ model BountyIssues {
   userId       String
   githubId     BigInt          @unique
   htmlUrl      String          @unique
-  bounty       Int
+  status       BountyStatus    @default(PENDING)
+  bountyAmount        Int
+  bountyAmountInLamports  Int
   transactions  Transaction[]
   user         User @relation(fields: [userId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model Transaction {
+  id            String   @id @default(cuid())
+  bountyIssueId String
+  type          TransactionType
+  status        TransactionStatus
+  txnHash           String?
+  bountyAmount        Int
+  bountyAmountInLamports  Int
+  createdAt     DateTime @default(now())
+
+  bountyIssue   BountyIssues @relation(fields: [bountyIssueId], references: [id])
+}
+
+enum BountyStatus {
+  PENDING      
+  ACTIVE       
+  CLAIMED      
+  PAID         
+  CANCELLING   
+  CANCELED
+  FAILED
+}
+
+enum TransactionType {
+  DEPOSIT      
+  WITHDRAWAL   
+  PAYOUT       
+}
+
+enum TransactionStatus {
+  PENDING      
+  CONFIRMED    
+  FAILED       
 }
 
 model Account {
@@ -73,20 +110,5 @@ model Session {
   updatedAt DateTime @updatedAt
 }
 
-model Transaction {
-  id            String   @id @default(cuid())
-  bountyIssueId String
-  status        Status
-  txn           String?
-  createdAt     DateTime @default(now())
 
-  bountyIssue   BountyIssues @relation(fields: [bountyIssueId], references: [id])
-}
-
-enum Status {
-  pending
-  confirmed
-  canceled_pending
-  canceled_confirmed
-}
  

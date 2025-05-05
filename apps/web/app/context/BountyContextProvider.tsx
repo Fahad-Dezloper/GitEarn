@@ -3,10 +3,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
+import { Keypair, LAMPORTS_PER_SOL, PublicKey, sendAndConfirmTransaction, SystemProgram, Transaction } from '@solana/web3.js';
 import axios from 'axios';
 import { error } from 'console';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import bs58 from 'bs58'
 
 interface BountyContextType {
   issuesRepo: any[];
@@ -50,6 +51,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     try {
       const res = await axios.get(`${window.location.origin}/api/issues/bounty`);
       setBountyIssues(res.data.BountyIssues);
+      console.log("here user bounty issue", res.data.BountyIssues);
     } catch (e) {
       console.log("Error fetching Bounty Issues", e);
     }
@@ -70,6 +72,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
 
   async function addBounty(bountyAmt: any, issueId: any, issueLink: any, title: any, lamports: any) {
     // alert(lamports);
+    // console.log("reached here");
 
     try {
       if (!publicKey) {
@@ -80,9 +83,14 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
       const add = await axios.post("/api/bounty/add", {
         bountyAmt,
         issueId,
-        issueLink,  
-        title,
+        issueLink,
+        lamports
       });
+
+      // console.log("add pending", add);
+
+      console.log(add.data.transaction.id)
+      const transactionId = add.data.transaction.id;
       
       const transaction = new Transaction();
       const sendSolInstruction = SystemProgram.transfer({
@@ -108,8 +116,11 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
       title,
       signature,
       from: publicKey,
-      lamports
+      lamports,
+      transactionId
     });
+
+    console.log("confirm is here", confirm);
 
     setBountyIssues(confirm.data.bountyIssues);
     getIssues();
@@ -119,37 +130,66 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   }
   }
 
-  async function removeBounty({issueId, issueLink}: {issueId: string, issueLink: string}){
+
+  // check vulnerablity here
+  async function removeBounty({issueId, issueLink, lamports}: {issueId: string, issueLink: string, lamports: any}){
     alert(process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD);
+    alert(process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY);
+    alert(`now here ${lamports}`);
+
     if(!process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD){
       return console.error("PRIMARY_WALLET_ADD public key not available");
     }
-    // wallet call
+    if(!process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY){
+      return console.error("PRIMARY_WALLET_ADD private key not available");
+    }
     try {
       const remove = await axios.post('/api/bounty/remove/pending', {
         issueId,
-        issueLink
+        issueLink,
+        lamports
       });
+      
+      console.log("remove log", remove);
+      
+      const transactionIdd = remove.data.transaction.id;
 
-      // const res = await axios.delete("/api/bounty/remove", {
-      //   headers: { 'Content-Type': 'application/json' },
-      //   data: {
-      //     issueId: issueId,
-      //     issueLink: issueLink,
-      //   }
-      // });
-      const signature = '64meaM7AdoMZzFWRJ6nPgPpNrZfV84PGnn7NpRCdf1UqJb7xMMHs9vPphpMzWGSo2Mass9uNjedU6mwPBii2hETS';
+      if(!publicKey){
+        console.error("Wallet not connected");
+        return;
+      }
+
+        const keypair = Keypair.fromSecretKey(bs58.decode(process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY));
+
+        const transaction = new Transaction().add(
+          SystemProgram.transfer({
+            fromPubkey: keypair.publicKey,
+            toPubkey: publicKey,
+            lamports: lamports,
+          })
+        );
+
+        const signature = await sendAndConfirmTransaction(
+          connection,
+          transaction,
+          [keypair]
+        );
+
+        console.log("Transaction Signature:", signature);
 
       const removeConfirm = await axios.post('/api/bounty/remove', {
         issueId,
         issueLink,
-        signature
+        signature,
+        lamports,
+        to: publicKey,
+        transactionId: transactionIdd
       })
 
       getIssues();
       getUserBountyIssues();
     } catch (error) {
-      console.log("in context provider cancel bounty error"); 
+      console.log("in context provider cancel bounty error", error); 
     }
   }
 
@@ -177,3 +217,7 @@ export function useBountyDetails() {
   }
   return context;
 }
+function decode(NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY: string | undefined): Uint8Array<ArrayBufferLike> {
+  throw new Error('Function not implemented.');
+}
+

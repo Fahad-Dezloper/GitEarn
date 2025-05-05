@@ -69,6 +69,8 @@ export async function GET(_request: Request) {
       include: { accounts: true },
     });
 
+    // console.log("user found here", user);
+
     const token = user?.accounts[0]?.access_token;
 
     if (!token) {

@@ -25,7 +25,7 @@ function extractGitHubIssueInfo(url: string) {
 }
 
 async function ConfirmTxt(signature: any, from: any, to: string, lamports: number) {
-  // console.log("lamports", lamports);
+  console.log("lamports", lamports, signature, from, to);
   const res = await axios.post(
     "https://solana-devnet.g.alchemy.com/v2/8liAO-lmQabNLQ0We92gFQy_cJYOULew",
     {
@@ -40,9 +40,9 @@ async function ConfirmTxt(signature: any, from: any, to: string, lamports: numbe
       ],
     }
   );
-
+  console.log("main res", res);
   const tx = res.data.result;
-  // console.log("main transaction", tx);
+  console.log("main transaction", tx);
   if (!tx) {
     console.log("Transaction not found or not confirmed.");
     return false;
@@ -78,7 +78,7 @@ async function ConfirmTxt(signature: any, from: any, to: string, lamports: numbe
   } else {
     isValid = false;
   }
-
+  console.log(total, totalSent, lamports);
   console.log(`Valid: ${isValid}`);
   return isValid;
 }
@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession();
     const body = await req.json();
-    const { bountyAmt, issueId, issueLink, title, signature, from, lamports} = body;
+    const { bountyAmt, issueId, issueLink, title, signature, from, lamports, transactionId} = body;
     const to = process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD;
     // console.log("feilds", signature, from, to, lamports);
 
@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
 
     const confirmTransaction = await ConfirmTxt(signature, from, to, lamports);
 
-    console.log(confirmTransaction);
+    console.log("confirming", confirmTransaction);
     if(!confirmTransaction){
       return NextResponse.json({message: "Transaction mismatch"}, {status: 401});
     }
@@ -134,21 +134,29 @@ export async function POST(req: NextRequest) {
     if(!bountyIssueId?.id){
       return NextResponse.json({message: "Bounty Doesn't exist"}, {status: 500});
     }
-    // console.log("bountyIssueId", bountyIssueId);
 
-    await prisma.bountyIssues.update({
-        where: {
-          id: bountyIssueId.id,
-        },
+    await prisma.$transaction(async (tx) => {
+      const transaction = await tx.transaction.update({
+        where: {id: transactionId},
         data: {
-          transactions: {
-            create: {
-              status: "confirmed",
-              txn: signature
-            }
-          }
+          status: 'CONFIRMED',
+          txnHash: signature,
+          bountyAmountInLamports: lamports
         },
+        include: {
+          bountyIssue: true
+        }
       });
+
+      await tx.bountyIssues.update({
+        where: {id: transaction.bountyIssueId},
+        data: {status: 'ACTIVE', bountyAmountInLamports: lamports}
+      });
+
+      console.log('transaction form confirm', transaction);
+      return transaction;
+    })
+
 
     const { owner, repo, issue_number } = extractGitHubIssueInfo(issueLink);
     const baseUrl = req.headers.get('origin') || 'http://localhost:3000';
@@ -201,7 +209,7 @@ Thank you for contributing! 🚀
 
     return NextResponse.json({
       message: 'Bounty added successfully',
-      bountyIssues: safeJson(allBounties)
+      bountyIssues: safeJson(allBounties),
     }, { status: 200 });
 
   } catch (e) {

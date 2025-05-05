@@ -165,29 +165,39 @@ export async function GET() {
       return NextResponse.json({ message: "No user email found" }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
-      include: { 
-        issue: {
-          where: {
-            transactions: {
-              some: {
-                status: {
-                  in: ['confirmed', 'canceled_pending']
-                }
-              },
-              none: {
-                status: {
-                  in: ['canceled_confirmed', 'pending']
-                }
-              }
-            }
-          }
-        } 
+    const userid = await prisma.user.findUnique({
+      where: { 
+        email: session.user.email 
       },
     });
 
-    if (!user || !user.issue) {
+    if(!userid){
+      return NextResponse.json({message: "Unauthorized request"}, {status: 500})
+    }
+
+    const issues = await prisma.bountyIssues.findMany({
+      where: {
+        userId: userid.id
+      }, include: {
+        transactions: true
+      }
+    })
+
+    console.log("raw user issues", JSON.stringify(issues, (key, value) =>
+      typeof value === 'bigint' ? value.toString() : value, 2));
+
+    // const issues = Rawissues.filter(issue => {
+    //   const statuses = issue.transactions.map(tx => tx.status);
+    
+    //   const hasAllowedStatus = statuses.includes('confirmed') || statuses.includes('canceled_pending');
+    //   const hasDisallowedStatus = statuses.includes('pending') || statuses.includes('canceled_confirmed');
+    
+    //   return hasAllowedStatus && !hasDisallowedStatus;
+    // });
+    
+    console.log("filtered issues", issues);
+
+    if (!issues) {
       return NextResponse.json({ 
         message: "No issues found", 
         UsersBountyIssues: [] 
@@ -195,7 +205,7 @@ export async function GET() {
     }
 
     const enrichedIssues = await Promise.all(
-      user.issue.map(async (issue) => {
+      issues.map(async (issue) => {
         const enrichedData = await fetchGitHubIssueData(issue.htmlUrl);
         if (!enrichedData) {
           return null;

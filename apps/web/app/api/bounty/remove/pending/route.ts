@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession();
     const body = await req.json();
-    const { issueId, issueLink } = body;
+    const { issueId, issueLink, lamports } = body;
 
     const user = await prisma.user.findFirst({
       where: {
@@ -42,8 +42,6 @@ export async function POST(req: NextRequest) {
     const bountyIssueId = await prisma.bountyIssues.findUnique({
       where: {
         id: bounty.id,
-      }, include: {
-        transactions: true
       }
     });
 
@@ -51,20 +49,50 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({message: "Bounty Doesn't exist"}, {status: 500});
     }
 
-    await prisma.bountyIssues.update({
+    const {bountyIssueRemove, transaction} = await prisma.$transaction(async(tx) => {
+    const bountyIssueRemove = await tx.bountyIssues.update({
         where: {
             id: bountyIssueId.id
         },
         data: {
-            transactions: {
-                create: {
-                    status: "canceled_pending"
-                }
-            }
+            status: 'CANCELLING'
         }
     })
 
-    return NextResponse.json({ message: 'Bounty added to pending successfully' }, { status: 200 });
+    const transaction = await tx.transaction.create({
+       data: {
+        bountyIssueId: bountyIssueId.id,
+        type: 'WITHDRAWAL',
+        status: 'PENDING',
+        bountyAmount: bountyIssueId.bountyAmount,
+        bountyAmountInLamports: lamports
+       }
+    })
+
+    return {bountyIssueRemove, transaction};
+
+  })
+
+  console.log("transaction", transaction);
+    console.log("bountyIssue while cancelling", bountyIssueRemove);
+
+    function replacer(key: string, value: any) {
+      return typeof value === 'bigint' ? value.toString() : value;
+    }
+
+    return new NextResponse(
+      JSON.stringify({
+        message: 'Bounty added with CANCELLING/WITHDRAW status successfully',
+        bountyIssueRemove,
+        transaction
+      }, replacer),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
 
   } catch (e) {
     console.log("Error while removing the bounty or updating GitHub:", e);

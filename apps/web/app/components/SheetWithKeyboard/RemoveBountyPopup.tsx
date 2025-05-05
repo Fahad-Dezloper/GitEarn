@@ -23,9 +23,11 @@ interface RemoveBountyPopupProps {
   status: string;
   latestComment: string;
   issueId: string;
+  lamports: any;
 }
 
-const RemoveBountyPopup = ({isAddingBounty, title, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId}: RemoveBountyPopupProps) => {
+const RemoveBountyPopup = ({isAddingBounty, title, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId, lamports}: RemoveBountyPopupProps) => {
+  console.log("again la", lamports);
   return (
     <SheetWithKeyboard
       presentTrigger={<Sheet.Trigger className="realtive cursor-pointer w-full h-full">
@@ -34,7 +36,7 @@ const RemoveBountyPopup = ({isAddingBounty, title, labels, repository, assignees
       </Sheet.Trigger>}
       sheetContent={
         <div className="w-full h-full !z-50">
-          <BountyRemovePopup title={title} labels={labels} repository={repository} assignees={assignees} prRaise={prRaise} issueLink={issueLink} created={created} updated={updated} status={status} latestComment={latestComment} issueId={issueId} isAddingBounty={undefined} bounty={undefined} />
+          <BountyRemovePopup title={title} labels={labels} repository={repository} assignees={assignees} prRaise={prRaise} issueLink={issueLink} created={created} updated={updated} status={status} latestComment={latestComment} issueId={issueId} isAddingBounty={undefined} bounty={undefined} lamports={lamports} />
         </div>
       }
     />

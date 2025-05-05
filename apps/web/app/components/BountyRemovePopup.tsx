@@ -44,7 +44,7 @@ interface Label {
   color: string;
 }
 
-const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId, bounty}: {
+const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId, bounty, lamports}: {
   title: string;
   isAddingBounty: boolean;
   labels: Label[];
@@ -58,6 +58,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
   latestComment: any[];
   issueId: string;
   bounty: string;
+  lamports: any;
 }) => {
   const largeViewport = useClientMediaQuery("(min-width: 800px)");
   const [activityView, setActivityView] = useState<"latest" | "all">("all");
@@ -117,12 +118,15 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
     setShowCancelDialog(true);
   };
 
+  console.log("lamports", lamports);
+
   async function confirmCancel() {
-    alert("happening")
     try{
       setLoading(true);
       // @ts-ignore
-      const res = await removeBounty({issueId, issueLink});
+      console.log("lamports here", lamports)
+      alert(`from here ${lamports}`)
+      const res = await removeBounty({issueId, issueLink, lamports});
     } catch(e){
       console.log("error occured while cancelling the bounty");
     }finally{

@@ -7,7 +7,7 @@ import Mainbounties from "./(/bounties/etc)/mainbounties";
 export function UpgradeGithubAccess() {
   const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
-  console.log("session here", session);
+  // console.log("session here", session);
   const hasRepoAccess = session?.scope?.includes("public_repo");
   
   const handleUpgradeAccess = async () => {
