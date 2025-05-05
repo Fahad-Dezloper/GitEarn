@@ -24,8 +24,8 @@ function extractGitHubIssueInfo(url: string) {
   return { owner, repo, issue_number: Number(issue_number) };   
 }
 
-async function ConfirmTxt(signature, from, to, lamports) {
-  console.log("lamports", lamports);
+async function ConfirmTxt(signature: any, from: any, to: string, lamports: number) {
+  // console.log("lamports", lamports);
   const res = await axios.post(
     "https://solana-devnet.g.alchemy.com/v2/8liAO-lmQabNLQ0We92gFQy_cJYOULew",
     {
@@ -42,6 +42,7 @@ async function ConfirmTxt(signature, from, to, lamports) {
   );
 
   const tx = res.data.result;
+  // console.log("main transaction", tx);
   if (!tx) {
     console.log("Transaction not found or not confirmed.");
     return false;
@@ -55,7 +56,7 @@ async function ConfirmTxt(signature, from, to, lamports) {
   const fromIndex = tx.transaction.message.accountKeys[0];
   const toIndex = tx.transaction.message.accountKeys[1];
 
-  console.log("fromkey", fromIndex, toIndex);
+  // console.log("fromkey", fromIndex, toIndex);
 
   if (!fromIndex || !toIndex) {
     console.log("From or To address are not there.");
@@ -67,9 +68,9 @@ async function ConfirmTxt(signature, from, to, lamports) {
     return false;
   }
 
-  const balanceChanges = preBalances.map((pre, i) => postBalances[i] - pre);
-  const totalReceived = balanceChanges.filter(change => change > 0).reduce((a, b) => a + b, 0);
-  const totalSent = -balanceChanges.filter(change => change < 0).reduce((a, b) => a + b, 0);
+  const balanceChanges = preBalances.map((pre: number, i: string | number) => postBalances[i] - pre);
+  const totalReceived = balanceChanges.filter((change: number) => change > 0).reduce((a: any, b: any) => a + b, 0);
+  const totalSent = -balanceChanges.filter((change: number) => change < 0).reduce((a: any, b: any) => a + b, 0);
   const total = totalSent - fee;
   let isValid;
   if(total === lamports){
@@ -84,19 +85,21 @@ async function ConfirmTxt(signature, from, to, lamports) {
 
 
 export async function POST(req: NextRequest) {
+  // console.log("inside backend now")
   try {
-    
     const session = await getServerSession();
     const body = await req.json();
-    const { bountyAmt, issueId, issueLink, title, signature, from, to, lamports} = body;
-    console.log("feilds", signature, from, to, lamports);
+    const { bountyAmt, issueId, issueLink, title, signature, from, lamports} = body;
+    const to = process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD;
+    // console.log("feilds", signature, from, to, lamports);
 
     if (!signature || !from || !to || !lamports) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     const confirmTransaction = await ConfirmTxt(signature, from, to, lamports);
-    console.log("txt confirmed", confirmTransaction);
+
+    console.log(confirmTransaction);
     if(!confirmTransaction){
       return NextResponse.json({message: "Transaction mismatch"}, {status: 401});
     }
@@ -120,13 +123,30 @@ export async function POST(req: NextRequest) {
 
     const octokit = new Octokit({ auth: token });
 
+    const bountyIssueId = await prisma.bountyIssues.findUnique({
+      where: {
+        githubId: issueId
+      }, include: {
+        transactions: true
+      }
+    })
+
+    if(!bountyIssueId?.id){
+      return NextResponse.json({message: "Bounty Doesn't exist"}, {status: 500});
+    }
+    // console.log("bountyIssueId", bountyIssueId);
+
     await prisma.bountyIssues.update({
         where: {
-          githubId: issueId,
+          id: bountyIssueId.id,
         },
         data: {
-          state: "confirmed",
-          txn: signature
+          transactions: {
+            create: {
+              status: "confirmed",
+              txn: signature
+            }
+          }
         },
       });
 

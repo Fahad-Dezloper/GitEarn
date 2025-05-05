@@ -14,16 +14,32 @@ export default function Mainbounties() {
   const { issuesRepo, userBountyIssue } = useBountyDetails();
   const { publicKey, signMessage } = useWallet();
 
-  async function signAndSend(){
-    const message = new TextEncoder().encode("Sign into GitEarn");
-    const signature = await signMessage?.(message);
-    console.log(message);
-  }
-
+  
   useEffect(() => {
-    signAndSend();
-  }, [publicKey])
+    const signAndSend = async () => {
+      if (!publicKey || !signMessage) return;
 
+      const storageKey = `gitEarn-signature-${publicKey.toBase58()}`;
+
+      // Check if signature is already stored
+      const existingSignature = localStorage.getItem(storageKey);
+      if (existingSignature) return;
+
+      try {
+        const message = new TextEncoder().encode("Sign into GitEarn");
+        const signature = await signMessage(message);
+        
+        // Store signature
+        localStorage.setItem(storageKey, JSON.stringify([...signature]));
+        console.log("Signature stored:", signature);
+      } catch (err) {
+        console.error("Signature failed:", err);
+      }
+    };
+
+    signAndSend();
+  }, [publicKey, signMessage]);
+  
   const [isAddingBounty, setIsAddingBounty] = useState(true);
 
   const [searchTerm, setSearchTerm] = useState("");

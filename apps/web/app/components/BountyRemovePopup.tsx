@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CircleHelpIcon } from "@/components/ui/circle-help";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import axios from "axios";
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleString(undefined, {
@@ -99,10 +100,13 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
     // }
   };
 
-  const confirmApproval = () => {
+  const confirmApproval = async () => {
     if (selectedAssignee) {
       console.log("Approving payment to:", selectedAssignee);
       // Call your API, function, whatever you want with selectedAssignee
+      // const res = await axios.post('/api/contributor/approve', {
+
+      // })
       
     } else {
       console.error("No assignee selected");
@@ -114,6 +118,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
   };
 
   async function confirmCancel() {
+    alert("happening")
     try{
       setLoading(true);
       // @ts-ignore

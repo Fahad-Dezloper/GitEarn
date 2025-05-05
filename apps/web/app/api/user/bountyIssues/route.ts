@@ -167,7 +167,24 @@ export async function GET() {
 
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
-      include: { issue: true },
+      include: { 
+        issue: {
+          where: {
+            transactions: {
+              some: {
+                status: {
+                  in: ['confirmed', 'canceled_pending']
+                }
+              },
+              none: {
+                status: {
+                  in: ['canceled_confirmed', 'pending']
+                }
+              }
+            }
+          }
+        } 
+      },
     });
 
     if (!user || !user.issue) {

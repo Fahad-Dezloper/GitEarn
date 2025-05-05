@@ -5,6 +5,7 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction } from '@solana/web3.js';
 import axios from 'axios';
+import { error } from 'console';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface BountyContextType {
@@ -93,20 +94,20 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
       transaction.add(sendSolInstruction);
       
       const signature = await sendTransaction(transaction, connection);
-      console.log(`Transaction signature: ${signature}`);
-      await connection.confirmTransaction(signature, "confirmed");
-      console.log("from", publicKey);
-      console.log("t0", '6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz');
-      console.log("lamports", lamports);
+      // console.log("signature", signature);
+      // console.log("from", publicKey);
+      // console.log("t0", '6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz');
+      // console.log("lamports", lamports);
 
-      const confirm = await axios.post("/api/bounty/confirm", {
+      // console.log("reached here moving to confirm");
+
+    const confirm = await axios.post("/api/bounty/confirm", {
       bountyAmt,
       issueId,
       issueLink,  
       title,
       signature,
       from: publicKey,
-      to: '6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz',
       lamports
     });
 
@@ -114,21 +115,36 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     getIssues();
     getUserBountyIssues();
   } catch(e){
-    console.log("Error adding bounty to the issue");
+    console.log("Error adding bounty to the issue", e);
   }
   }
 
   async function removeBounty({issueId, issueLink}: {issueId: string, issueLink: string}){
-    
+    alert(process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD);
+    if(!process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD){
+      return console.error("PRIMARY_WALLET_ADD public key not available");
+    }
     // wallet call
     try {
-      const res = await axios.delete("/api/bounty/remove", {
-        headers: { 'Content-Type': 'application/json' },
-        data: {
-          issueId: issueId,
-          issueLink: issueLink,
-        }
+      const remove = await axios.post('/api/bounty/remove/pending', {
+        issueId,
+        issueLink
       });
+
+      // const res = await axios.delete("/api/bounty/remove", {
+      //   headers: { 'Content-Type': 'application/json' },
+      //   data: {
+      //     issueId: issueId,
+      //     issueLink: issueLink,
+      //   }
+      // });
+      const signature = '64meaM7AdoMZzFWRJ6nPgPpNrZfV84PGnn7NpRCdf1UqJb7xMMHs9vPphpMzWGSo2Mass9uNjedU6mwPBii2hETS';
+
+      const removeConfirm = await axios.post('/api/bounty/remove', {
+        issueId,
+        issueLink,
+        signature
+      })
 
       getIssues();
       getUserBountyIssues();

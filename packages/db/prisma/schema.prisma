@@ -36,8 +36,7 @@ model BountyIssues {
   githubId     BigInt          @unique
   htmlUrl      String          @unique
   bounty       Int
-  state        Status
-  txn          String?
+  transactions  Transaction[]
   user         User @relation(fields: [userId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -74,8 +73,20 @@ model Session {
   updatedAt DateTime @updatedAt
 }
 
+model Transaction {
+  id            String   @id @default(cuid())
+  bountyIssueId String
+  status        Status
+  txn           String?
+  createdAt     DateTime @default(now())
+
+  bountyIssue   BountyIssues @relation(fields: [bountyIssueId], references: [id])
+}
+
 enum Status {
   pending
   confirmed
+  canceled_pending
+  canceled_confirmed
 }
  

@@ -28,7 +28,11 @@ export async function POST(req: NextRequest) {
         githubId: issueId,
         htmlUrl: issueLink,
         bounty: bountyAmt,
-        state: "pending"
+        transactions: {
+          create: {
+            status: "pending"
+          }
+        }
       }
     });
 

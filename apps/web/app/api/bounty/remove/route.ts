@@ -11,11 +11,11 @@ function extractGitHubIssueInfo(url: string) {
   return { owner, repo, issue_number: Number(issue_number) };   
 }
 
-export async function DELETE(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession();
     const body = await req.json();
-    const { issueId, issueLink } = body;
+    const { issueId, issueLink, signature } = body;
 
     const user = await prisma.user.findFirst({
       where: {
@@ -49,10 +49,17 @@ export async function DELETE(req: NextRequest) {
     }
 
 
-    await prisma.bountyIssues.delete({
+    await prisma.bountyIssues.update({
       where: {
         id: bounty.id,
-      },
+      }, data: {
+        transactions: {
+          create: {
+            status: "canceled_confirmed",
+            txn: signature
+          }
+        }
+      }
     });
 
     const { owner, repo, issue_number } = extractGitHubIssueInfo(issueLink);
