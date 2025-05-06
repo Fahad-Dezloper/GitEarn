@@ -36,6 +36,7 @@ model BountyIssues {
   githubId     BigInt          @unique
   htmlUrl      String          @unique
   status       BountyStatus    @default(PENDING)
+  contributorId   String?
   bountyAmount        Int
   bountyAmountInLamports  Int
   transactions  Transaction[]
@@ -61,7 +62,8 @@ enum BountyStatus {
   PENDING      
   ACTIVE       
   CLAIMED      
-  PAID         
+  APPROVING
+  APPROVED         
   CANCELLING   
   CANCELED
   FAILED

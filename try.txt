@@ -102,4 +102,7 @@ https://www.heroui.com/
 //next
 --> update manage bounty to include only issues which are confirmed status
 --> approve bounty functionality
---> once the bounty of issue is been cancelled and it exist in transaction or bountyIssue. its not letting me readding that issue
+--> once the bounty of issue is been cancelled and it exist in transaction or bountyIssue. its not letting me readding thatw issue
+
+
+appproving bounty state to pending move to approved also. do you want to add claim functionality for contributor to take there money. if yes make it better
