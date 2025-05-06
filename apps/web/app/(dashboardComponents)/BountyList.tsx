@@ -7,7 +7,7 @@ import React from 'react'
 
 interface Bounty {
   htmlUrl: any;
-  bounty: any;
+  bountyAmount: any;
   title: string;
   repo: string;
   amount: number;
@@ -64,10 +64,10 @@ const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
           </div>
           <div className="relative group">
             <span
-              title={`This GitHub issue has a bounty of $${bounty.bounty}`}
+              title={`This GitHub issue has a bounty of $${bounty.bountyAmount}`}
               className="bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 px-3 py-1 rounded-md text-sm font-medium"
             >
-              ${bounty.bounty}
+              ${bounty.bountyAmount}
             </span>
           </div>
         </div>

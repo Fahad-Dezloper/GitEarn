@@ -177,7 +177,10 @@ export async function GET() {
 
     const issues = await prisma.bountyIssues.findMany({
       where: {
-        userId: userid.id
+        userId: userid.id,
+        status: {
+          in: ['ACTIVE', 'CANCELLING']
+        }
       }, include: {
         transactions: true
       }

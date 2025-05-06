@@ -95,6 +95,11 @@ export async function GET() {
 
   try {
     const issues = await prisma.bountyIssues.findMany({
+      where: {
+        status : {
+          in: ['ACTIVE', 'CANCELLING'],
+        }
+      },
       orderBy: {
         createdAt: "desc",
       },

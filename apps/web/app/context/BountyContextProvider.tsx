@@ -63,7 +63,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     getBountyIssues();
 
     const interval = setInterval(() => {
-      // console.log("calling again and again")
+      console.log("calling again and again")
       getBountyIssues();
     }, 15000);
 

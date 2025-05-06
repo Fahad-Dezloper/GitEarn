@@ -97,3 +97,9 @@ https://chatgpt.com/c/681629b3-0f00-800c-81c0-c599989241d9
 
 
 https://www.heroui.com/
+
+
+//next
+--> update manage bounty to include only issues which are confirmed status
+--> approve bounty functionality
+--> once the bounty of issue is been cancelled and it exist in transaction or bountyIssue. its not letting me readding that issue
