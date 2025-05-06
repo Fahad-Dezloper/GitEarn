@@ -68,8 +68,11 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
   const [showAddFundsDialog, setShowAddFundsDialog] = useState(false);
   const [additionalFunds, setAdditionalFunds] = useState("");
   const [loading, setLoading] = useState(false);
+  const [approveLoading, setApproveLoading] = useState(false);
 
-  const {  removeBounty } = useBountyDetails();
+  const {  removeBounty, approveBounty } = useBountyDetails();
+
+  // console.log("assignees", asis)
 
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -92,6 +95,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
   }
 
   const handleApprove = () => {
+
     setShowApproveDialog(true);
     // console.log("assignees here", assignees); 
     // if(assignees != null){
@@ -102,8 +106,15 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
   };
 
   const confirmApproval = async () => {
+    setApproveLoading(true);
     if (selectedAssignee) {
-      console.log("Approving payment to:", selectedAssignee);
+      console.log("Approving payment to:", selectedAssignee.id);
+      const contributorId = selectedAssignee.id;
+      try{
+        const res = await approveBounty(issueId, issueLink, contributorId );
+      } catch(e){
+        console.error("Error while approving the bounty to the user");
+      }
       // Call your API, function, whatever you want with selectedAssignee
       // const res = await axios.post('/api/contributor/approve', {
 

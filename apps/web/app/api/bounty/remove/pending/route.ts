@@ -73,8 +73,8 @@ export async function POST(req: NextRequest) {
 
   })
 
-  console.log("transaction", transaction);
-    console.log("bountyIssue while cancelling", bountyIssueRemove);
+  // console.log("transaction", transaction);
+  //   console.log("bountyIssue while cancelling", bountyIssueRemove);
 
     function replacer(key: string, value: any) {
       return typeof value === 'bigint' ? value.toString() : value;

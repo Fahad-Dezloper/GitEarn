@@ -193,18 +193,42 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     }
   }
 
-  async function ApproveBounty(bountyAmt: any, issueId: any, issueLink: any, title: any){
-    const res = await axios.post("/api/bounty/approve", {
-      bountyAmt,
-      issueId,
-      issueLink,
-      title,
-    });
+
+  // check vulnerablity its happening on client side
+  async function approveBounty( issueId: any, issueLink: any, contributorId: any){
+    console.log("here reached here", issueId, issueLink, contributorId);
+    try{
+      const res = await axios.post("/api/bounty/approve/pending", {
+        issueId,
+        issueLink,
+        contributorId
+      });
+      console.log(res)
+      const transactionIdd = res.data.trasaction.id;
+  
+      // wallet call
+  
+  
+  
+      //confirm call
+  
+      // const signature = 'lsjdflasjdfljasldfjlasdjfljasldfjlasjd'
+      // const approveConfirm = await axios.post('/api/bounty/approve', {
+      //   issueId,
+      //   issueLink,
+      //   signature,
+      //   to: publicKey,
+      //   transactionId: transactionIdd
+      // });
+
+    } catch(e){
+      console.log("Error while approving the transaction");
+    }
   }
 
   return (
     // @ts-ignore
-    <BountyDetailsContext.Provider value={{ issuesRepo, setIssuesRepo, addBounty, bountyIssues, setBountyIssues, userBountyIssue, removeBounty}}>
+    <BountyDetailsContext.Provider value={{ issuesRepo, setIssuesRepo, addBounty, bountyIssues, setBountyIssues, userBountyIssue, removeBounty, approveBounty}}>
       {children}
     </BountyDetailsContext.Provider>
   );
