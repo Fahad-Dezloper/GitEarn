@@ -8,6 +8,7 @@ import axios from 'axios';
 import { error } from 'console';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import bs58 from 'bs58'
+import { useUserDetails } from './UserDetailsProvider';
 
 interface BountyContextType {
   issuesRepo: any[];
@@ -27,6 +28,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   const [userBountyIssue, setUserBountyIssue] = useState<any[]>([]);
   const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
+  const { fetchUserMoneyClaimed } = useUserDetails();
 
   async function getIssues() {
     try {
@@ -206,17 +208,80 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
       });
 
       console.log("after approving", res);
-      const transactionIdd = res.data.trasaction.id;
-      console.log("transaction id", transactionIdd);
 
+      getIssues();
+      getUserBountyIssues();
     } catch(e){
       console.log("Error while approving the transaction");
     }
   }
 
+
+  // user claiming money
+  async function claimMoney(contributorId, walletAdd, bountyAmountInLamports, githubId, htmlUrl){
+    console.log("reached here for approving", contributorId, walletAdd, bountyAmountInLamports, githubId, htmlUrl);
+
+      try {
+
+            
+    if(!process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD){
+      return console.error("PRIMARY_WALLET_ADD public key not available");
+    }
+    if(!process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY){
+      return console.error("PRIMARY_WALLET_ADD private key not available");
+    }
+
+    const claiming = await axios.post("/api/user/claim/pending", {
+        contributorId,
+        walletAdd,
+        bountyAmountInLamports,
+        githubId,
+        htmlUrl
+    });
+    
+    console.log("claiming bounty to pending", claiming);
+
+    const transactionIdd = claiming.data.transaction.id;
+
+    const keypair = Keypair.fromSecretKey(bs58.decode(process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY));
+    
+    const transaction = new Transaction().add(
+      SystemProgram.transfer({
+        fromPubkey: keypair.publicKey,
+        toPubkey: walletAdd,
+        lamports: bountyAmountInLamports,
+      })
+    );
+
+    const signature = await sendAndConfirmTransaction(
+      connection,
+      transaction,
+      [keypair]
+    );
+
+    console.log("Transaction Signature:", signature);
+
+    const claimConfirm = await axios.post("/api/user/claim/approve", {
+      transactionId: transactionIdd,
+      to: walletAdd,
+      signature: signature,
+      lamports: bountyAmountInLamports,
+      issueLink: htmlUrl,
+      issueId: githubId
+    });
+
+
+    fetchUserMoneyClaimed();
+        
+      } catch (error) {
+        console.log("Claiming bounty error", error);
+      }
+          
+      }
+
   return (
     // @ts-ignore
-    <BountyDetailsContext.Provider value={{ issuesRepo, setIssuesRepo, addBounty, bountyIssues, setBountyIssues, userBountyIssue, removeBounty, approveBounty}}>
+    <BountyDetailsContext.Provider value={{ issuesRepo, setIssuesRepo, addBounty, bountyIssues, setBountyIssues, userBountyIssue, removeBounty, approveBounty, claimMoney}}>
       {children}
     </BountyDetailsContext.Provider>
   );

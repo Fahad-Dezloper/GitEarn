@@ -10,6 +10,7 @@ import {
   LifeBuoy,
   Map,
   PieChart,
+  PiggyBank,
   Scroll,
   Send,
   Settings2,
@@ -79,6 +80,11 @@ const data = {
       title: "Leaderboard",
       url: "/earn/leaderboard",
       icon: Trophy,
+    },
+    {
+      title: "Claim",
+      url: "/earn/claim",
+      icon: PiggyBank
     },
     {
       title: "Profile",

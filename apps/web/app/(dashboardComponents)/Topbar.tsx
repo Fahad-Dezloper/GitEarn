@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import React from "react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import WalletMoney from "./WalletMoney";
 
 const Topbar = () => {
   const router = useRouter();
@@ -60,6 +61,7 @@ const Topbar = () => {
       <div className="flex items-center gap-2">
       <SignIn />
       <ModeToggle />
+      <WalletMoney />
       <WalletMultiButton />
       </div>
     </header>
