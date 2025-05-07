@@ -197,29 +197,17 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   // check vulnerablity its happening on client side
   async function approveBounty( issueId: any, issueLink: any, contributorId: any){
     console.log("here reached here", issueId, issueLink, contributorId);
+    // approved
     try{
-      const res = await axios.post("/api/bounty/approve/pending", {
+      const res = await axios.post("/api/bounty/approve", {
         issueId,
         issueLink,
         contributorId
       });
-      console.log(res)
+
+      console.log("after approving", res);
       const transactionIdd = res.data.trasaction.id;
-  
-      // wallet call
-  
-  
-  
-      //confirm call
-  
-      // const signature = 'lsjdflasjdfljasldfjlasdjfljasldfjlasjd'
-      // const approveConfirm = await axios.post('/api/bounty/approve', {
-      //   issueId,
-      //   issueLink,
-      //   signature,
-      //   to: publicKey,
-      //   transactionId: transactionIdd
-      // });
+      console.log("transaction id", transactionIdd);
 
     } catch(e){
       console.log("Error while approving the transaction");
