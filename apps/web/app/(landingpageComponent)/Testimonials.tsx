@@ -26,7 +26,7 @@ const ReviewCard = ({
   return (
     <figure
       className={cn(
-        "relative min-h-[15vh] flex flex-col justify-between max-w-[25vw] cursor-pointer overflow-hidden rounded-xl border p-4",
+        "relative  flex flex-col gap-4 h-fit justify-between max-w-[25vw] cursor-pointer overflow-hidden rounded-xl border p-4",
         // light styles
         "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
         // dark styles
@@ -45,14 +45,14 @@ const ReviewCard = ({
         </div>
         <Link href={link} className="font-sora text-xl">𝕏</Link>
       </div>
-      <blockquote className="mt-2 text-sm">{body}</blockquote>
+      <blockquote className="text-sm">{body}</blockquote>
     </figure>
   );
 };
 
-export function MarqueeDemoVertical() {
+export function Testimonials() {
   return (
-    <div className="relative flex h-[700px] w-full  flex-row items-center justify-center overflow-hidden">
+    <div className="relative flex gap-6 h-[700px] w-full flex-row items-center justify-center overflow-hidden">
       <Marquee pauseOnHover vertical className="[--duration:20s]">
         {firstRow.map((review) => (
           <ReviewCard key={review.username} {...review} />

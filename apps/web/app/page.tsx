@@ -1,11 +1,11 @@
 "use client"
 import { BoxesIcon } from "@/components/ui/boxes";
-import { Button } from "@/components/ui/button";
 import { GithubIcon } from "@/components/ui/github";
 import Link from "next/link";
 import { AnimatedBeamMultipleOutputDemo } from "./(dashboardComponents)/AnimatedGihub";
 import RightSideLanding from "./(landingpageComponent)/RightSideLanding";
-import { ArrowRight, BadgeCheck, Boxes, ChartNoAxesColumn, CircleDot, Code2, Wallet } from "lucide-react";
+import { BadgeCheck, Boxes, ChartNoAxesColumn, Code2, Wallet } from "lucide-react";
+import { ArrowRight, CircleDot } from "lucide-react";
 import { ArrowRightIcon } from "@/components/ui/arrow-right";
 import { Card, CardContent } from "@/components/ui/card";
 import Marquee from "react-fast-marquee";
@@ -13,9 +13,12 @@ import { useState } from "react";
 import { Tabs } from "@/components/ui/tabs";
 import { HowItWorks } from "./(landingpageComponent)/HowItWorks";
 import FeaturesSectionDemo from "@/components/features-section-demo-2";
-import { MarqueeDemoVertical } from "./(landingpageComponent)/Testimonials";
+import { Testimonials } from "./(landingpageComponent)/Testimonials";
 import ExploreButton from "@/components/fancyComponents/page";
 import GitEarnFooter from "./(landingpageComponent)/GitEarnFooter";
+import Navbar from "@/components/ui/Navbar";
+import PoweredBy from "@/components/ui/PoweredBy";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const [hovered, setHovered] = useState(false);
@@ -38,55 +41,35 @@ export default function Home() {
   ]
 
   return (
-    <div className='flex flex-col gap-3 w-full min-h-screen overflow-x-hidden'>
+    <div className='flex flex-col gap-12 w-full min-h-screen overflow-x-hidden'>
       {/* navbar */}
-      <header className="container py-4 flex h-16 items-center justify-between px-4 md:px-48 md:pt-8">
-        <div className="flex items-center gap-2">
-          <GithubIcon size={28} className="" />
-          <span className="text-3xl font-bold font-sora">GitEarn</span>
-        </div>
-        <nav className="flex items-center gap-4">
-          <Link href="#how" className="text-sm font-medium text-muted-foreground hover:text-foreground">
-            How it works
-          </Link>
-          <Link href="#projects" className="text-sm font-medium text-muted-foreground hover:text-foreground">
-            Projects
-          </Link>
-          <Link href="#faq" className="text-sm font-medium text-muted-foreground hover:text-foreground">
-            FAQ
-          </Link>
-          <Button variant="outline" size="sm">
-            Connect Wallet
-          </Button>
-        </nav>
-      </header>
+      <div className="flex flex-col">
+      <Navbar />
 
-
-{/* landing */}
-      <div className="w-full flex h-fit relative overflow-x-hidden pt-4">
-        <div className="px-18">
-        <div className="w-full h-full flex  items-center mainGrad p-6 rounded-t-2xl ">      
+      {/* landing */}
+      <div className="w-full flex h-fit mainGrad relative overflow-x-hidden ">
+        <div className="pl-18">
+        <div className="w-full h-full flex items-center gap-9 p-6 ">      
           {/* left */}
-          <div className="flex w-full h-full flex-col pt-18 gap-3">
-          <div className="px-2 group border rounded-full text-sm w-fit backdrop-blur-md flex items-center bg-gradient-to-r from-[#d0f1ff] via-[#e3f5ff] to-[#d0f1ff] text-slate-800 font-semibold">
-            <BoxesIcon size={20} className="hover:!bg-transparent rounded-full" />On-Chain Rewards for Dev Contributions
+        <div className="flex w-full h-full flex-col pt-18 gap-3">
+          <div className="px-2 group border rounded-full text-xs w-fit backdrop-blur-md flex items-center bg-gradient-to-r from-[#d0f1ff] via-[#e3f5ff] to-[#d0f1ff] text-slate-800 font-semibold">
+            <BoxesIcon size={18} className="hover:!bg-transparent rounded-full" />On-Chain Rewards for Dev Contributions
             </div>
-            <h1 className="text-[5.7rem] leading-none font-semibold font-sora"><span className="relative z-10 bg-clip-text text-transparent bg-gradient-to-b to-neutral-200 from-neutral-800 ">Earn Crypto</span> by Solving Open Source</h1>
+            <h1 className="text-[5.7rem]  max-w-7xl leading-none font-semibold font-sora"><span className="relative z-10 bg-clip-text text-transparent bg-gradient-to-b to-neutral-200 from-neutral-800">Earn Crypto</span> by Solving Open Source</h1>
 
             <div className="font-roboto text-lg mt-6 text-neutral-300">
             Contribute to open source, claim bounties, and build your on-chain reputation.
             </div>
-
         <div className="flex w-full gap-6 mt-6">
           <Button
-            className="text-xl px-8 py-4 flex gap-2 items-center font-semibold bg-green-600 hover:bg-green-700 transition-all duration-200 text-white  backdrop-blur-md  cursor-pointer  shadow-md"
+            className="text-xl flex gap-2 items-center font-semibold bg-green-600 hover:bg-green-700 transition-all duration-200 text-white  backdrop-blur-md  cursor-pointer  shadow-md"
           >
             Start Earning
             {/* border-sky-400 text-sky-300 hover:bg-sky-900/10 bg-[#1B1E25] */}
           </Button>
           <Button
             variant="outline"
-            className="text-xl px-8 py-4 cursor-pointer font-semibold"
+            className="text-xl cursor-pointer font-semibold"
           >
             Add Bounties
           </Button>
@@ -97,8 +80,12 @@ export default function Home() {
         <div className="w-full h-full">
           <RightSideLanding />
         </div>
+
+        
         </div>  
         </div>
+
+        
         <div onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)} className="w-full h-fit absolute top-[88%]">
         <Marquee 
@@ -131,29 +118,41 @@ export default function Home() {
         </Marquee>
         </div>
       </div>
+      </div>
 
 
 {/* section 2 */}
-      <div className="w-full h-full px-34 py-4 flex flex-col gap-3">
+      <div id="howitworks" className="w-full h-full px-34 py-4 flex flex-col gap-3">
       <h1 className="text-[4rem] font-sora text-white font-semibold">How it Works</h1>
       <HowItWorks />
         </div>
 
 
 {/* section 3 */}
-      <div className="w-full h-full px-34 py-4">
+      <div id="features" className="w-full h-full px-34 py-4">
       <h1 className="text-[4rem] w-full text-left font-sora text-white font-semibold">Features</h1>
       <FeaturesSectionDemo />
         </div>
 
 
-        {/* Powered By
-        <div>
-          
-        </div> */}
+        {/* Powered By */}
+        <PoweredBy />
+
+
         {/* testimonials By */}
-        <div className="w-full h-full px-18">
-          <MarqueeDemoVertical />
+        <div id="customers" className="w-full h-full px-18">
+          <div className="flex flex-col items-center gap-6">
+            <Testimonials />
+            <button
+              onClick={() => {
+                const tweetText = encodeURIComponent("I'm using GitEarn to earn crypto by contributing to open source! Check it out at gitearn.com ");
+                window.open(`https://twitter.com/intent/tweet?text=${tweetText}`, '_blank');
+              }}
+              className=""
+            >
+                <ExploreButton text="Get Featured" link="https://twitter.com/intent/tweet?text=${tweetText}" />
+            </button>
+          </div>
         </div>
 
         {/* footer */}

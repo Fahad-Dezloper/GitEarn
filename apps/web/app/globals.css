@@ -3,6 +3,14 @@
 @import "tw-animate-css";
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Sora:wght@100..800&display=swap');
 
+html {
+  scroll-behavior: smooth;
+}
+
+html, body, #__next {
+  height: 100%;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {
@@ -494,7 +502,7 @@ textarea {
 
 .mainGrad2{
   background: radial-gradient(
-    ellipse 80% 80% at center center,
+    ellipse 130% 130% at top left,
     #3b82f6 -80%,    
     #1e1e2f 60%,   
     #000000 110% 

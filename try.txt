@@ -106,3 +106,16 @@ https://www.heroui.com/
 
 
 appproving bounty state to pending move to approved also. do you want to add claim functionality for contributor to take there money. if yes make it better
+
+
+
+--> withdraw to diffrent account improve top bar side bar use civic or better auth.
+--> Show user transactions/payment history
+--> Improve overall UX/UI
+--> minimal access in starting github then later move to configure github access according to the issues addeding
+--> claim bounty not refreshing nicely after being approved
+--> on github after approving bounty show the name or tag the person
+
+--> add civic auth and make it ready for v1 launch
+
+--> move to github application for /bounty /tip
