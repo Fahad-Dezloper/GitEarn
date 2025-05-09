@@ -121,5 +121,14 @@ appproving bounty state to pending move to approved also. do you want to add cla
 --> move to github application for /bounty /tip
 
 --//--
-create auth page
-clean ui with hero ui design.
+create auth page -- done
+clean ui with hero ui design. -- done landing page
+
+Dashboaord sidebar UI improve for launch
+UI improve /main page
+UI improve /explore page
+UI improve /add page
+UI improve /payment history page
+UI improve /deposit page
+UI improve /claim page
+UI improve /profil page

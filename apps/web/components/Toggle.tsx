@@ -38,7 +38,7 @@ export function ModeToggle() {
     //   </DropdownMenuContent>
     // </DropdownMenu>
 
-<Tabs defaultValue="System" className="w-fit rounded-full">
+<Tabs defaultValue="System" className="w-fit !z-0 rounded-full">
 <TabsList className="rounded-full">
   <TabsTrigger onClick={() => setTheme("light")} value="Sun"><Sun size={18} /></TabsTrigger>
   <TabsTrigger onClick={() => setTheme("dark")} value="Moon"><Moon size={18} /></TabsTrigger>

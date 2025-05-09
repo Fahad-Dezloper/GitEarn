@@ -16,12 +16,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <UserDetailsProvider>
     <BountyContextProvder>
     <SessionProvider>
-     <SidebarProvider>
+    <SidebarProvider>
     <AppSidebar />
-    <div className="flex flex-col w-full overflow-x-hidden px-12">
-    <Topbar />
-    {children}
-    </div>
+          <div className="flex flex-col w-full overflow-x-hidden px-12">
+          <Topbar />
+          {children}  
+          </div>
     </SidebarProvider>
     </SessionProvider>
     </BountyContextProvder>

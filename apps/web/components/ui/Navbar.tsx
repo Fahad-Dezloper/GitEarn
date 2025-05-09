@@ -35,7 +35,7 @@ export default function NavbarDemo() {
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
           {session?.user ? <><NavbarButton href="/earn" variant="primary" className="flex items-center">Earn <ArrowRightIcon className="hover:bg-transparent !py-0" size={20} /></NavbarButton></> : <>
-            <NavbarButton href="/auth/signup" variant="primary">Sign Up</NavbarButton>
+            <NavbarButton href="/auth/signin" variant="primary">Sign Up</NavbarButton>
             </>}
           </div>
         </NavBody>

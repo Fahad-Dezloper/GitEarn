@@ -33,7 +33,7 @@ const AddBountyPopup = ({title, isAddingBounty, description, labels, repository,
            <CursorClickIcon />
       </Sheet.Trigger>}
       sheetContent={
-        <div className="w-full h-full !z-50">
+        <div className="w-full h-full">
           <BountyPopup isAddingBounty={isAddingBounty} title={title} description={description} labels={labels} repository={repository} assignees={assignees} prRaise={prRaise} issueLink={issueLink} created={created} updated={updated} status={status} latestComment={latestComment} issueId={issueId} />
         </div>
       }
