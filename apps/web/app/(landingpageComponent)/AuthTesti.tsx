@@ -130,7 +130,7 @@ const ReviewCard = (data: CardData) => {
 
 export function AuthTesti() {
   return (
-    <div className="relative flex gap-6 h-[700px] w-full flex-row items-center justify-center overflow-hidden">
+    <div className="relative flex gap-6 h-full w-full flex-row items-center justify-center overflow-hidden">
       <Marquee pauseOnHover vertical className="[--duration:35s]">
         {firstRow.map((review, i) => (
           <ReviewCard key={i} {...review} />

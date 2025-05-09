@@ -26,7 +26,7 @@ const ReviewCard = ({
   return (
     <figure
       className={cn(
-        "relative  flex flex-col gap-4 h-fit justify-between max-w-[25vw] cursor-pointer overflow-hidden rounded-xl border p-4",
+        "relative  flex flex-col gap-4 h-fit justify-between md:max-w-[25vw] w-full cursor-pointer overflow-hidden rounded-xl border p-4",
         // light styles
         "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
         // dark styles
@@ -53,19 +53,19 @@ const ReviewCard = ({
 export function Testimonials() {
   return (
     <div className="relative flex gap-6 h-[700px] w-full flex-row items-center justify-center overflow-hidden">
-      <Marquee pauseOnHover vertical className="[--duration:20s]">
-        {firstRow.map((review) => (
-          <ReviewCard key={review.username} {...review} />
+      <Marquee pauseOnHover vertical className="[--duration:20s] flex flex-col gap-4">
+        {firstRow.map((review, i) => (
+          <ReviewCard key={i} {...review} />
         ))}
       </Marquee>
-      <Marquee pauseOnHover vertical className="[--duration:25s]">
-        {secondRow.map((review) => (
-          <ReviewCard key={review.username} {...review} />
+      <Marquee pauseOnHover vertical className="[--duration:25s] hidden md:flex flex-col gap-4">
+        {secondRow.map((review, i) => (
+          <ReviewCard key={i} {...review} />
         ))}
       </Marquee>
-      <Marquee pauseOnHover vertical className="[--duration:20s] ">
-        {thirdRow.map((review) => (
-          <ReviewCard key={review.username} {...review} />
+      <Marquee pauseOnHover vertical className="[--duration:20s] hidden md:flex flex-col gap-4">
+        {thirdRow.map((review, i) => (
+          <ReviewCard key={i} {...review} />
         ))}
       </Marquee>
       <div className="pointer-events-none absolute inset-x-0 top-0 h-1/4 bg-gradient-to-b from-background"></div>

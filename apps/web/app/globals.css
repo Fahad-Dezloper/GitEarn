@@ -500,6 +500,18 @@ textarea {
   overflow: hidden;
 }
 
+@media (max-width: 1024px) {
+  .mainGrad {
+    height: 80vh;
+  }
+}
+
+@media (max-width: 640px) {
+  .mainGrad {
+    height: 74vh;
+  }
+}
+
 .mainGrad2{
   background: radial-gradient(
     ellipse 130% 130% at top left,
@@ -533,7 +545,34 @@ textarea {
   pointer-events: none;
 }
 
-/* .mainGrad2::before{
+.mainGradAuth{
+  background: radial-gradient(
+    ellipse 80% 160% at bottom right,
+    #3b82f6 -80%,    
+    #1e1e2f 60%,   
+    #000000 110% 
+  );
+  height: 100vh;
+  margin: 0;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  .mainGradAuth {
+    height: 80vh;
+  }
+}
+
+@media (max-width: 640px) {
+  .mainGradAuth {
+    height: 100%;
+    overflow-y: hidden;
+  }
+}
+
+/* .mainGradAuth::before{
   content: "";
   position: absolute;
   bottom: -10%;

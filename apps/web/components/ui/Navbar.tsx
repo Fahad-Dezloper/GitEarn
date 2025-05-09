@@ -10,7 +10,9 @@ import {
   MobileNavToggle,
   MobileNavMenu,
 } from "@/app/(landingpageComponent)/resizable-navbar";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { ArrowRightIcon } from "./arrow-right";
  
 export default function NavbarDemo() {
   const navItems = [
@@ -20,6 +22,8 @@ export default function NavbarDemo() {
     { name: "Customers", link: "#customers" },
   ];
  
+  const {data: session} = useSession();
+  console.log("session from navbar", session?.user);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
  
   return (
@@ -30,8 +34,9 @@ export default function NavbarDemo() {
           <NavbarLogo />
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
-            <NavbarButton href="/auth/signin" variant="secondary">Login</NavbarButton>
+          {session?.user ? <><NavbarButton href="/earn" variant="primary" className="flex items-center">Earn <ArrowRightIcon className="hover:bg-transparent !py-0" size={20} /></NavbarButton></> : <>
             <NavbarButton href="/auth/signup" variant="primary">Sign Up</NavbarButton>
+            </>}
           </div>
         </NavBody>
  
@@ -60,20 +65,15 @@ export default function NavbarDemo() {
               </a>
             ))}
             <div className="flex w-full flex-col gap-4">
+              {session?.user ? <></> : <>
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
                 className="w-full"
               >
-                Login
+                Sign Up
               </NavbarButton>
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
-              >
-                Book a call
-              </NavbarButton>
+              </>}
             </div>
           </MobileNavMenu>
         </MobileNav>
