@@ -11,6 +11,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import React from "react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import WalletMoney from "./WalletMoney";
+import Notification from "./Notification";
 
 const Topbar = () => {
   const router = useRouter();
@@ -24,9 +25,9 @@ const Topbar = () => {
   };
 
   return (
-    <header className="flex justify-between mt-4 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+    <header className="flex border-b pb-4 justify-between mt-4 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
       <div className="flex items-center gap-2">
-        <SidebarTrigger className="-ml-1" />
+        <SidebarTrigger className="-ml-1 md:hidden flex" />
         <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
         
         <Breadcrumb>
@@ -59,9 +60,9 @@ const Topbar = () => {
         </Breadcrumb>
       </div>
       <div className="flex items-center gap-2">
-      <SignIn />
       <ModeToggle />
       <WalletMoney />
+      <Notification />
       <WalletMultiButton />
       </div>
     </header>

@@ -45,16 +45,16 @@ export default function WalletMoney() {
   // Show loading or placeholder while waiting for wallet address
   if (!walletAdd) {
     return (
-      <div className="flex px-4 bg-gray-700 py-2 cursor-pointer border rounded-full items-center gap-2">
-        <Wallet size={20} />
+      <div className="flex px-4 bg-[#F5F5F5] dark:bg-[#262626] py-2 cursor-pointer rounded-full items-center gap-2">
+        <Wallet size={18} className="text-[#737373]" />
         Connecting...
       </div>
     );
   }
 
   return (
-    <div className="flex px-4 bg-gray-700 py-2 cursor-pointer border rounded-full items-center gap-2">
-      <Wallet size={20} />
+    <div className="flex px-4 bg-[#F5F5F5] font-sora dark:bg-[#262626] py-2 cursor-pointer rounded-full items-center gap-2">
+      <Wallet size={18} className="text-[#737373]" />
       {loading
         ? 'Loading...'
         : error

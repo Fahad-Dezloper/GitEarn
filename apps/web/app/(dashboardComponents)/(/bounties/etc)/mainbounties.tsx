@@ -13,7 +13,7 @@ export default function Mainbounties() {
   const [loading, setLoading] = useState(false);
   const { issuesRepo, userBountyIssue } = useBountyDetails();
   const { publicKey, signMessage } = useWallet();
-
+console.log("main bounty here", issuesRepo);
   
   useEffect(() => {
     const signAndSend = async () => {

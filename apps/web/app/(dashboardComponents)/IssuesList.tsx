@@ -15,7 +15,7 @@ interface IssuesListProps {
 
 
 function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | ManageBountyIssue, isAddingBounty: boolean, index: number }) {
-    console.log("here too", issue.bountyAmountInLamports)
+    console.log("here too", issue)
     const commonTitle = issue.title;
     const commonUrl = isAddBountyIssue(issue) ? issue.html_url : issue.htmlUrl;
     const commonRepo = isAddBountyIssue(issue) ? issue.repositoryFullName : issue.repository;
@@ -111,6 +111,7 @@ function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | M
 
 
 export default function IssuesList({ issues, isAddingBounty }: IssuesListProps) {
+  // console.log("here are issues", issues);
   if (issues.length === 0) {
     return (
       <div className="text-center text-muted-foreground py-10">

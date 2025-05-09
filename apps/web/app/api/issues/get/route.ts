@@ -18,6 +18,7 @@ type Label = {
 type ActivityLogEntry = {
   type: "comment" | "status" | "commit";
   user: string;
+  userAvatar: string;
   content?: string;
   from?: string;
   to?: string;
@@ -135,10 +136,12 @@ export async function GET(_request: Request) {
           });
 
           const comments = commentsRes.data;
+          // console.log("comments here", comments[comments.length - 1].user?.avatar_url);
           const latestComment = comments.length
             ? {
                 user: comments[comments.length - 1].user,
                 comment: comments[comments.length - 1].body || "",
+                userAvatar: comments[comments.length - 1].user?.avatar_url || "",
                 date: comments[comments.length - 1].created_at,
               }
             : null;
@@ -161,12 +164,15 @@ export async function GET(_request: Request) {
           const activityLog: ActivityLogEntry[] = [];
 
           for (const comment of comments) {
+            // console.log("found" , comment.user.avatar_url)
             activityLog.push({
               type: "comment",
               user: comment.user?.login || 'unknown',
+              userAvatar: comment.user.avatar_url,
               content: comment.body || "",
               date: comment.created_at,
             });
+            // console.log("added" , activityLog)
           }
 
           for (const event of events) {
@@ -189,6 +195,7 @@ export async function GET(_request: Request) {
             }
           }
 
+          // console.log("final issue here", activityLog);
 
           return {
             id: issue.id,

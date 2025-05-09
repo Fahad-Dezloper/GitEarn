@@ -320,7 +320,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                       <div className="bg-zinc-50 dark:bg-zinc-800 px-4 py-2 flex justify-between items-center border-b border-zinc-200 dark:border-zinc-700">
                         <div className="flex items-center gap-2">
                           <div className="w-6 h-6 rounded-full overflow-hidden bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white text-xs font-bold">
-                            <img src={activity.user.avatar_url} alt="user_avatar" className="w-full h-full object-cover" />
+                            <img src={activity.userAvatar} alt="user_avatar" className="w-full h-full object-cover" />
                           </div>
                           <span className="font-medium text-sm">{activity.user.login}</span>
                           <span className="text-xs text-zinc-500 dark:text-zinc-400 flex items-center gap-1">
