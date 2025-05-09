@@ -119,3 +119,7 @@ appproving bounty state to pending move to approved also. do you want to add cla
 --> add civic auth and make it ready for v1 launch
 
 --> move to github application for /bounty /tip
+
+--//--
+create auth page
+clean ui with hero ui design.
