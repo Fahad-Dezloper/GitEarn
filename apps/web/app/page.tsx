@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const [hovered, setHovered] = useState(false);
+  console.log("home page");
 
   return (
     <div className="flex flex-col md:gap-12 gap-4 w-full min-h-screen  overflow-x-hidden">

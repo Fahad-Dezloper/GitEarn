@@ -10,6 +10,7 @@ interface SignInButtonsProps {
 }
 
 export default function SignInButtons({ providers }: SignInButtonsProps) {
+  console.log("signin buttons");
   if (!providers) return <div>No providers found</div>;
 
   return (
