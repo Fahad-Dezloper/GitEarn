@@ -8,6 +8,10 @@ if (!process.env.AUTH_GITHUB_ID) throw new Error("Missing AUTH_GITHUB_ID env var
 if (!process.env.AUTH_GITHUB_SECRET) throw new Error("Missing AUTH_GITHUB_SECRET env variable");
 if (!process.env.AUTH_SECRET) throw new Error("Missing AUTH_SECRET env variable");
 
+console.log("process.env.AUTH_SECRET", process.env.AUTH_SECRET);
+console.log("process.env.AUTH_GITHUB_ID", process.env.AUTH_GITHUB_ID);
+console.log("process.env.AUTH_GITHUB_SECRET", process.env.AUTH_GITHUB_SECRET);
+
 export const authOptions: NextAuthOptions = {
   secret: process.env.AUTH_SECRET || "",
   session: {
