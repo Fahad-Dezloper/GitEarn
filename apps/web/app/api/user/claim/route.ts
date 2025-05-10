@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import prisma from "@repo/db/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
@@ -32,9 +33,9 @@ export async function GET(){
             }
         })
 
-        console.log("this money i have found", money);
+        // console.log("this money i have found", money);
 
-        const serializedMoney = money.map(entry => ({
+        const serializedMoney = money.map((entry: any) => ({
             ...entry,
             githubId: entry.githubId.toString(),
           }));
