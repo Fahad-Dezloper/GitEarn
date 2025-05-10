@@ -12,6 +12,7 @@ import React from "react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import WalletMoney from "./WalletMoney";
 import Notification from "./Notification";
+import UserAvatarCircle from "./UserAvatarCircle";
 
 const Topbar = () => {
   const router = useRouter();
@@ -59,11 +60,11 @@ const Topbar = () => {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-4">
       <ModeToggle />
       <WalletMoney />
       <Notification />
-      <WalletMultiButton />
+      <UserAvatarCircle />
       </div>
     </header>
   );

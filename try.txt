@@ -131,4 +131,7 @@ UI improve /add page
 UI improve /payment history page
 UI improve /deposit page
 UI improve /claim page
-UI improve /profil page
+UI improve /profile page
+
+
+//instead of Hi there. add avatar logo on click show waleet add also show a icon green if its connected else yellow. keep it clean and simple

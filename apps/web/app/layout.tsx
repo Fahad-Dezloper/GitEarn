@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import AppWalletProvider from "./components/AppWalletProvider";
 import Provider from "@/provider/Provider";
+import { Toaster } from "@/components/ui/sonner"
 
 
 const sora = Sora({
@@ -41,6 +42,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
         {children}
+        <Toaster />
         </ThemeProvider>
         </AppWalletProvider>
         </Provider>

@@ -34,7 +34,7 @@ export default function Notification() {
       onMouseEnter={() => setShowPopup(true)}
       onMouseLeave={() => setShowPopup(false)}
     >
-      <BellIcon />
+      <BellIcon size={24} />
       <AnimatePresence>
         {showPopup && (
           <motion.div
