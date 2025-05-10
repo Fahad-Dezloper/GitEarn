@@ -32,6 +32,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { useSession } from "next-auth/react"
+import AnnouncementFooter from "@/app/(dashboardComponents)/AnnouncementFooter"
+import { SupportSheet } from "@/app/components/DetachedSheet/ExampleDetachedSheet"
 
 const data = {
   user: {
@@ -125,10 +127,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        {session?.user ? <NavUser user={session?.user} /> : <div></div>}
+        {/* {session?.user ? <NavUser user={session?.user} /> : <div></div>} */}
+        <AnnouncementFooter />
+        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
+        <SupportSheet items={data.navSecondary} />
       </SidebarFooter>
     </Sidebar>
   )

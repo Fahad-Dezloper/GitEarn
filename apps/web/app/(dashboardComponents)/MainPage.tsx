@@ -6,7 +6,6 @@ import HowitWorks from './HowitWorks';
 import BountyEarners from './BountyEarners';
 import AddBounty from './AddBounty';
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
 
 const MainPage = () => {
     const { data: session } = useSession()
@@ -14,7 +13,7 @@ const MainPage = () => {
     const token = session?.accessToken
     
     if(!token){
-        return <div>Your GitHub Access Token is not set. Please relogin <Link href="/api/auth/signin" className='text-blue-500'>Relogin</Link>.</div>
+        return <div>Loading...</div>
     }
 
     return (

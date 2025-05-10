@@ -8,6 +8,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { SheetTriggerCard } from "@/app/components/app/SheetTriggerCard/SheetTriggerCard"
+import { Sheet } from "@silk-hq/components";
 
 export function NavSecondary({
   items,
@@ -19,12 +21,14 @@ export function NavSecondary({
     icon: LucideIcon
   }[]
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+  console.log("items here",items);
   return (
     <SidebarGroup {...props}>
-      <SidebarGroupContent>
-        <SidebarMenu>
+      <SidebarGroupContent className="flex">
+        <SidebarMenu className="flex flex-row justify-between">
           {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
+            <Sheet.Trigger key={item.title}>
+            <SidebarMenuItem className="w-full">
               <SidebarMenuButton asChild size="sm">
                 <a href={item.url}>
                   <item.icon />
@@ -32,6 +36,7 @@ export function NavSecondary({
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
+            </Sheet.Trigger>
           ))}
         </SidebarMenu>
       </SidebarGroupContent>
