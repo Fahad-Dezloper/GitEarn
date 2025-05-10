@@ -5,7 +5,21 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": [
+        "AUTH_SECRET",
+        "AUTH_GITHUB_ID",
+        "AUTH_GITHUB_SECRET",
+        "NEXTAUTH_URL",
+        "WAKATIME_API_KEY",
+        "ENCRYPTION_SECRET_KEY",
+        "GITHUB_TOKEN",
+        "NEXT_PUBLIC_PRIMARY_WALLET_ADD",
+        "PRIMARY_WALLET_PRIVATE_KEY",
+        "NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY",
+        "NEXT_PUBLIC_PRIVY_APP_ID",
+        "PRIVY_CLIENT_SECRET"
+      ]
     },
     "lint": {
       "dependsOn": ["^lint"]
@@ -15,7 +29,21 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": [
+        "AUTH_SECRET",
+        "AUTH_GITHUB_ID",
+        "AUTH_GITHUB_SECRET",
+        "NEXTAUTH_URL",
+        "WAKATIME_API_KEY",
+        "ENCRYPTION_SECRET_KEY",
+        "GITHUB_TOKEN",
+        "NEXT_PUBLIC_PRIMARY_WALLET_ADD",
+        "PRIMARY_WALLET_PRIVATE_KEY",
+        "NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY",
+        "NEXT_PUBLIC_PRIVY_APP_ID",
+        "PRIVY_CLIENT_SECRET"
+      ]
     }
   }
 }
