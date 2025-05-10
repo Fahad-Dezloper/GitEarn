@@ -13,7 +13,7 @@ export function CustomPrismaAdapter(prisma: PrismaClient): Adapter {
       const wallet = generateWalletKeypair();
       const { encryptedData, iv } = encrypt(wallet.secretKey);
 
-      const userWithWallet = await prisma.$transaction(async (tx) => {
+      const userWithWallet = await prisma.$transaction(async (tx: any) => {
         const user = await tx.user.create({ data: userData });
 
         await tx.wallet.create({
