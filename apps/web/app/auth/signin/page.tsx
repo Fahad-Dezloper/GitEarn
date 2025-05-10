@@ -4,6 +4,7 @@ import SignInButtons from "@/app/(landingpageComponent)/SignInButtons";
 
 export default async function SignInPage() {
   const providers = await getProviders();
+  console.log("provider here", providers );
 
   return (
     <div className='flex overflow-x-hidden mainGradAuth w-full h-full md:px-24'>
@@ -18,7 +19,7 @@ export default async function SignInPage() {
   <p className="text-gray-500 dark:text-gray-400 max-w-md">
     Access your dashboard and start earning by contributing to open source.
   </p>
-  <SignInButtons providers={providers} />
+    <SignInButtons providers={providers} />
   <div className="w-full border-t border-gray-300 dark:border-gray-700 my-4"></div>
 
   <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm">
