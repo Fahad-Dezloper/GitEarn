@@ -62,7 +62,7 @@ export async function POST(req: NextRequest){
     return NextResponse.json({message: "Bounty Doesn't exist"}, {status: 500});
 }
 
-    const {bountyIssueApprove, transaction} = await prisma.$transaction(async(tx) => {
+    const {bountyIssueApprove, transaction} = await prisma.$transaction(async(tx: any) => {
         const bountyIssueApprove = await tx.bountyIssues.update({
             where: {
                 id: bountyIssueId.id
