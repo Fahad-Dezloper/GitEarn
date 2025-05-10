@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 
 // Make sure you have these in your .env file
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
+const ENCRYPTION_KEY = process.env.ENCRYPTION_SECRET_KEY;
 const ENCRYPTION_ALGORITHM = 'aes-256-cbc';
 
 // Add validation to ensure encryption key exists
