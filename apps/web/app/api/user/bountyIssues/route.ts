@@ -208,7 +208,7 @@ export async function GET() {
     }
 
     const enrichedIssues = await Promise.all(
-      issues.map(async (issue) => {
+      issues.map(async (issue: any) => {
         const enrichedData = await fetchGitHubIssueData(issue.htmlUrl);
         if (!enrichedData) {
           return null;
