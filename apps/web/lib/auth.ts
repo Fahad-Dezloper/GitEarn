@@ -4,12 +4,16 @@ import { NextAuthOptions } from "next-auth";
 import prisma from '@repo/db/client';
 import { CustomPrismaAdapter } from "@/lib/customPrismaAdapter";
 
+if (!process.env.AUTH_GITHUB_ID) throw new Error("Missing AUTH_GITHUB_ID env variable");
+if (!process.env.AUTH_GITHUB_SECRET) throw new Error("Missing AUTH_GITHUB_SECRET env variable");
+if (!process.env.AUTH_SECRET) throw new Error("Missing AUTH_SECRET env variable");
+
 export const authOptions: NextAuthOptions = {
+  secret: process.env.AUTH_SECRET || "",
   session: {
     strategy: "jwt",
   },
   adapter: CustomPrismaAdapter(prisma),
-  secret: process.env.AUTH_SECRET,
   providers: [
     GithubProvider({
       clientId: process.env.AUTH_GITHUB_ID || "",
