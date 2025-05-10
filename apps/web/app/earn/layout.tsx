@@ -18,7 +18,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <SessionProvider>
     <SidebarProvider>
     <AppSidebar />
-          <div className="flex flex-col w-full overflow-x-hidden px-12">
+          <div className="flex flex-col w-full overflow-x-hidden px-4 md:px-12">
           <Topbar />
           {children}  
           </div>

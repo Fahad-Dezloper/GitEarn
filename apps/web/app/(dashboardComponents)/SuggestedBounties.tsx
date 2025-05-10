@@ -189,7 +189,7 @@ const SuggestedBounties = () => {
     const suggestedBounties = githubIssues.slice(0, 3);
   return (
     <div className='flex flex-col gap-3'>
-                    <div className='flex items-center justify-between'>
+                    <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0'>
                         <div className='flex items-center gap-2'>
                             <Sparkles className='w-5 h-5 text-[#007AFF] dark:text-[#00D1FF]' />
                             <h2 className='text-xl font-semibold text-gray-800 dark:text-gray-100'>Suggested for You</h2>
@@ -203,32 +203,32 @@ const SuggestedBounties = () => {
                         {suggestedBounties.map((issue, i) => (
                             <div 
                                 key={i} 
-                                className='relative flex w-full flex-col p-4 rounded-xl 
+                                className='relative flex w-full flex-col p-3 sm:p-4 rounded-xl 
                                     bg-white dark:bg-transparent border border-gray-200 dark:hover:bg-blue-100/20 dark:border-gray-800 
                                     hover:shadow-md hover:border-[#007AFF]/20 dark:hover:border-[#00D1FF]/20
                                     transition-all duration-300 cursor-pointer group'
                             >
-                                <div className='flex items-start justify-between gap-4'>
-                                    <div className='flex gap-4'>
+                                <div className='flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4'>
+                                    <div className='flex gap-3 sm:gap-4'>
                                         <div className='relative'>
                                             <img 
                                                 src={issue.orgLogo} 
                                                 alt="" 
-                                                className='w-14 h-14 rounded-full border-2 border-gray-200 dark:border-gray-700 
+                                                className='w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-gray-200 dark:border-gray-700 
                                                     group-hover:border-[#007AFF] dark:group-hover:border-[#00D1FF] transition-colors' 
                                             />
                                         </div>
-                                        <div className='flex flex-col gap-2'>
-                                            <div className='text-gray-800 dark:text-gray-100 text-lg font-semibold 
+                                        <div className='flex flex-col gap-1 sm:gap-2'>
+                                            <div className='text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-100 
                                                 group-hover:text-[#007AFF] dark:group-hover:text-[#00D1FF] transition-colors'>
                                                 {issue.title}
                                             </div>
-                                            <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+                                            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                                                 <span className='font-medium'>{issue.repoName}</span>
-                                                <span className='w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600' />
+                                                <span className='hidden sm:inline w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600' />
                                                 <span>{getTimeAgo(issue.postedDate)}</span>
-                                                <span className='w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600' />
-                                                <div className='flex items-center gap-2'>
+                                                <span className='hidden sm:inline w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600' />
+                                                <div className='flex items-center gap-1 sm:gap-2'>
                                                 {issue.techStack.slice(0, 2).map((item, i) => (
                                                     <Badge 
                                                         variant="outline" 
@@ -236,7 +236,7 @@ const SuggestedBounties = () => {
                                                         className='text-[#007AFF] dark:text-[#00D1FF] 
                                                             border-[#007AFF]/20 dark:border-[#00D1FF]/20
                                                             bg-[#007AFF]/5 dark:bg-[#00D1FF]/5
-                                                            text-xs px-2 py-0.5 rounded-full
+                                                            text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full
                                                             group-hover:bg-[#007AFF]/10 dark:group-hover:bg-[#00D1FF]/10
                                                             transition-colors'
                                                     >
@@ -247,11 +247,11 @@ const SuggestedBounties = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className='flex flex-col items-end gap-2'>
-                                        <div className='text-[#14F195] font-sora dark:text-[#14F195] text-xl font-bold'>
-                                            {issue.bountyAmount} <span className="font-normal text-gray-400 text-sm">USDC</span>
+                                    <div className='flex flex-row sm:flex-col items-center sm:items-end gap-2'>
+                                        <div className='text-[#14F195] font-sora dark:text-[#14F195] text-lg sm:text-xl font-bold'>
+                                            {issue.bountyAmount} <span className="font-normal text-gray-400 text-xs sm:text-sm">USDC</span>
                                         </div>
-                                        <div className='text-xs text-gray-500 dark:text-gray-400'>
+                                        <div className='text-[10px] sm:text-xs text-gray-500 dark:text-gray-400'>
                                             Bounty
                                         </div>
                                     </div>

@@ -17,9 +17,9 @@ const MainPage = () => {
     }
 
     return (
-        <div className='w-full h-full flex gap-8 py-6'>
+        <div className='w-full h-full flex md:flex-row flex-col gap-8 py-6'>
             {/* left sidebar */}
-            <div className="w-[140vw] flex flex-col gap-8">
+            <div className="md:w-[140vw] w-full flex flex-col gap-8">
                 <div className='w-full bggrad px-5 py-4 rounded-xl relative overflow-hidden bg-gradient-to-r from-[#2A2F3E] to-[#1A1F2E]'>
                     <div className="absolute -top-[40%] -left-[10%] w-[60%] h-[100%] bg-blue-500/20 blur-[100px] rounded-full" />
                     <div className="absolute -bottom-[40%] -right-[10%] w-[60%] h-[100%] bg-purple-500/20 blur-[100px] rounded-full" />
@@ -40,7 +40,7 @@ const MainPage = () => {
             </div>
 
             {/* right sidebar */}
-            <div className="max-w-[25vw] flex flex-col gap-3">
+            <div className="max-w-[25vw] hidden md:flex flex-col gap-3">
                 <TotalEarning />
                 <HowitWorks />
                 <BountyEarners />

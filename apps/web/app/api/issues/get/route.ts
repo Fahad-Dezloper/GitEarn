@@ -73,6 +73,8 @@ export async function GET(_request: Request) {
     // console.log("user found here", user);
 
     const token = user?.accounts[0]?.access_token;
+    // console.log("token for verify", token);
+    // const token = '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';
 
     if (!token) {
       return NextResponse.json({ error: 'GitHub token is required' }, { status: 401 });

@@ -61,7 +61,9 @@ const Topbar = () => {
         </Breadcrumb>
       </div>
       <div className="flex items-center gap-4">
+      <div className="hidden md:flex">
       <ModeToggle />
+      </div>
       <WalletMoney />
       <Notification />
       <UserAvatarCircle />

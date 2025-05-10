@@ -11,8 +11,8 @@ export function ModeToggle() {
 
   return (
 
-<Tabs defaultValue="System" className="w-fit !z-0 rounded-full">
-<TabsList className="rounded-full">
+<Tabs defaultValue="System" className="w-full !z-0 rounded-full">
+<TabsList className="rounded-full w-full flex justify-between">
   <TabsTrigger onClick={() => setTheme("light")} value="Sun"><Sun size={18} /></TabsTrigger>
   <TabsTrigger onClick={() => setTheme("dark")} value="Moon"><Moon size={18} /></TabsTrigger>
   <TabsTrigger onClick={() => setTheme("system")} value="System"><LaptopMinimal size={18} /></TabsTrigger>

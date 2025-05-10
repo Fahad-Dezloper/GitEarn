@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { useConnection } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { toast } from "sonner";
+import { ModeToggle } from "@/components/Toggle";
 
 export default function UserAvatarCircle(){
     const {data: session} = useSession();
@@ -90,13 +91,13 @@ export default function UserAvatarCircle(){
                 <AvatarImage src={user.image || undefined} alt={user.name || 'User'} />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
+              <div className="md:grid flex-1 text-left hidden text-sm leading-tight">
                 <span className="truncate font-semibold">{githubName || user.name}</span>
                 <span className="truncate text-xs">{user.email}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${connected ? 'bg-green-500' : 'bg-gray-400'}`} />
-                <ChevronsUpDown className="ml-auto size-4" />
+                <div className={`w-2 h-2 md:block hidden rounded-full ${connected ? 'bg-green-500' : 'bg-gray-400'}`} />
+                <ChevronsUpDown className="ml-auto size-4 hidden md:flex" />
               </div>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -162,6 +163,10 @@ export default function UserAvatarCircle(){
                   {connected ? 'Disconnect Wallet' : 'Connect Wallet'}
                 </Button>
               </div>
+            </div>
+            <DropdownMenuSeparator />
+            <div className="md:hidden flex">
+            <ModeToggle />
             </div>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer" onClick={() => signOut()}>

@@ -175,36 +175,37 @@ const usdToSol = (usdAmount: number) => {
   }
 
   return (
-    <div className="h-full bg-white relative dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden flex flex-col shadow-lg">
-      <div className="flex justify-between items-center p-4 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+    <div className="h-full bg-white  relative dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100 rounded-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden flex flex-col shadow-lg">
+      <div className="flex justify-between items-center p-3 sm:p-4 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
         <Sheet.Trigger 
           action="dismiss" 
           className="text-sm font-medium text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors"
         >
           Close
         </Sheet.Trigger>
-        <Sheet.Title className="text-lg font-semibold">Add Bounty</Sheet.Title>
+        <Sheet.Title className="text-base sm:text-lg font-semibold">Add Bounty</Sheet.Title>
         <button className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors p-1 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800">
           <RefreshCw size={16} />
         </button>
       </div>
 
-      <Scroll.Root asChild className="flex-grow">
+    <div className="max-h-[76vh] md:max-h-[38vw]">
+      <Scroll.Root asChild className="flex-grow h-full">
         <Scroll.View className="ExampleSheetWithKeyboard-scrollView"
               scrollGestureTrap={{ yEnd: !largeViewport }}>
-          <Scroll.Content className="p-6 max-h-[38vw] flex flex-col overflow-y-auto gap-8">
-            <div className="space-y-4">
+          <Scroll.Content className="p-4 sm:p-6 flex flex-col overflow-y-auto gap-6 sm:gap-8">
+            <div className="space-y-3 sm:space-y-4">
               <div className="text-center space-y-2">
-                <h2 className="text-xl font-bold text-zinc-900 dark:text-white">Add Bounty to Issue</h2>
-                <p className="text-zinc-600 dark:text-zinc-300">Select a bounty amount to incentivize solving this issue.</p>
+                <h2 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-white">Add Bounty to Issue</h2>
+                <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-300">Select a bounty amount to incentivize solving this issue.</p>
               </div>
               
-              <div className="grid grid-cols-4 gap-2 mt-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4">
               {[10, 50, 100, "custom"].map((amount) => (
                   <button
                     key={amount}
                     onClick={() => handleBountySelect(amount)}
-                    className={`py-2.5 px-4 rounded-lg font-medium transition-all ${
+                    className={`py-2 sm:py-2.5 px-3 sm:px-4 rounded-lg font-medium transition-all text-sm sm:text-base ${
                       bountyAmount === amount 
                         ? "bg-blue-500 text-white ring-2 ring-blue-300 dark:ring-blue-500/50 ring-offset-2 dark:ring-offset-zinc-900" 
                         : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
@@ -215,12 +216,11 @@ const usdToSol = (usdAmount: number) => {
                     ) : (
                       <>
                         ${amount}
-                        <div className="text-xs text-zinc-500">≈ {usdToSol(Number(amount))} SOL</div>
+                        <div className="text-[10px] sm:text-xs text-zinc-500">≈ {usdToSol(Number(amount))} SOL</div>
                       </>
                     )}
                   </button>
                 ))}
-
               </div>
               
               {showCustomAmount && (
@@ -259,20 +259,20 @@ const usdToSol = (usdAmount: number) => {
                 <p className="text-zinc-600 dark:text-zinc-300 leading-relaxed">{description}</p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg p-4 border border-zinc-200 dark:border-zinc-700 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 bg-zinc-50 dark:bg-zinc-800/50 rounded-lg p-3 sm:p-4 border border-zinc-200 dark:border-zinc-700 mb-4 sm:mb-6">
                 <div className="space-y-1">
-                  <p className="text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-medium">Created</p>
-                  <p className="text-sm font-medium">{formatDate(created)}</p>
+                  <p className="text-[10px] sm:text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-medium">Created</p>
+                  <p className="text-xs sm:text-sm font-medium">{formatDate(created)}</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-medium">Last Updated</p>
-                  <p className="text-sm font-medium">{formatDate(updated)}</p>
+                  <p className="text-[10px] sm:text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-medium">Last Updated</p>
+                  <p className="text-xs sm:text-sm font-medium">{formatDate(updated)}</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-medium">Status</p>
+                  <p className="text-[10px] sm:text-xs uppercase tracking-wider text-zinc-500 dark:text-zinc-400 font-medium">Status</p>
                   <div className="flex items-center gap-1.5">
                     <span className={`inline-block w-2 h-2 rounded-full ${prRaise ? "bg-blue-500" : "bg-green-500"}`}></span>
-                    <p className="text-sm font-medium">{status}</p>
+                    <p className="text-xs sm:text-sm font-medium">{status}</p>
                   </div>
                 </div>
               </div>
@@ -303,17 +303,17 @@ const usdToSol = (usdAmount: number) => {
               </div>
 
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
                 <div className="space-y-2">
-                  <h3 className="font-semibold text-zinc-800 dark:text-zinc-100">Repository</h3>
-                  <div className="px-3 py-2 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm font-mono">
+                  <h3 className="text-sm sm:text-base font-semibold text-zinc-800 dark:text-zinc-100">Repository</h3>
+                  <div className="px-3 py-2 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-lg text-xs sm:text-sm font-mono">
                     {repository}
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="font-semibold text-zinc-800 dark:text-zinc-100">Pull Request</h3>
-                  <div className={`px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${
+                  <h3 className="text-sm sm:text-base font-semibold text-zinc-800 dark:text-zinc-100">Pull Request</h3>
+                  <div className={`px-3 py-2 rounded-lg text-xs sm:text-sm font-medium flex items-center gap-2 ${
                     prRaise 
                       ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800/50" 
                       : "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/50"
@@ -324,15 +324,15 @@ const usdToSol = (usdAmount: number) => {
                 </div>
               </div>
 
-              <div className="space-y-3 mb-6">
-                <h3 className="font-semibold text-zinc-800 dark:text-zinc-100">Assignees</h3>
-                <div className="flex gap-2">
+              <div className="space-y-3 mb-4 sm:mb-6">
+                <h3 className="text-sm sm:text-base font-semibold text-zinc-800 dark:text-zinc-100">Assignees</h3>
+                <div className="flex flex-wrap gap-2">
                   {assignees.length != null && assignees.map((user, i) => (
                     <div 
                       key={i} 
-                      className="flex items-center gap-2 text-sm p-2 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-md"
+                      className="flex items-center gap-2 text-xs sm:text-sm p-2 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-md"
                     >
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br overflow-hidden from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+                      <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br overflow-hidden from-blue-500 to-purple-600 flex items-center justify-center text-white text-[10px] sm:text-xs font-bold">
                         <img src={user.avatar_url} className="w-full h-full object-cover" alt="avatar url" />
                       </div>
                       <span className="font-medium">{user.login}</span>
@@ -356,13 +356,13 @@ const usdToSol = (usdAmount: number) => {
                 </a>
               </div>
 
-              <div className="space-y-4 border-t border-zinc-200 dark:border-zinc-800 pt-6">
+              <div className="space-y-4 border-t border-zinc-200 dark:border-zinc-800 pt-4 sm:pt-6">
                 <div className="flex justify-between items-center mb-2">
-                  <h3 className="font-semibold text-zinc-800 dark:text-zinc-100">Recent Activity</h3>
-                  <div className="flex gap-2">
+                  <h3 className="text-sm sm:text-base font-semibold text-zinc-800 dark:text-zinc-100">Recent Activity</h3>
+                  <div className="flex gap-1 sm:gap-2">
                     <button 
                       onClick={() => setActivityView("latest")}
-                      className={`text-xs px-2 py-1 rounded-md ${
+                      className={`text-[10px] sm:text-xs px-2 py-1 rounded-md ${
                         activityView === "latest" 
                           ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" 
                           : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
@@ -372,7 +372,7 @@ const usdToSol = (usdAmount: number) => {
                     </button>
                     <button 
                       onClick={() => setActivityView("all")}
-                      className={`text-xs px-2 py-1 rounded-md ${
+                      className={`text-[10px] sm:text-xs px-2 py-1 rounded-md ${
                         activityView === "all" 
                           ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" 
                           : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
@@ -424,15 +424,16 @@ const usdToSol = (usdAmount: number) => {
           </Scroll.Content>
         </Scroll.View>
       </Scroll.Root>
+      </div>
 
-      <div className="border-t flex w-full items-center  justify-center border-zinc-200 dark:border-zinc-800 p-2 bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur-sm">
+      <div className="border-t flex w-full items-center justify-center border-zinc-200 dark:border-zinc-800 p-2 bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur-sm">
         <button onClick={() => AddBountyToTheIssue(Number(bountyAmount))}
         disabled={
           bountyAmount === null ||
           (selectedAmount !== null && selectedAmount <= 0) ||
           bountyAmount === "custom" && (customAmount.trim() === "" || isNaN(Number(customAmount)))
         }
-        className={` w-full py-3 px-4 rounded-lg text-white font-semibold transition-all ${
+        className={`w-full py-2.5 sm:py-3 px-4 rounded-lg text-sm sm:text-base text-white font-semibold transition-all ${
           bountyAmount === null ||
           (bountyAmount === "custom" && (customAmount.trim() === "" || isNaN(Number(customAmount))))
             ? "bg-blue-600 cursor-not-allowed"

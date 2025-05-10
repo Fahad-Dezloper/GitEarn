@@ -155,20 +155,20 @@ console.log("main bounty here", issuesRepo);
   };
 
   return (
-    <div className="flex flex-col gap-6 py-4">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-4xl font-sora font-semibold flex gap-2 items-center">
+    <div className="flex flex-col gap-4 md:gap-6 py-3 md:py-4">
+      <div className="flex flex-col gap-1 md:gap-2">
+        <h1 className="text-2xl md:text-4xl font-sora font-semibold flex flex-wrap gap-2 items-center">
           {isAddingBounty ? "Add Bounty" : "Manage Bounty"} to your{" "}
-          <GithubIcon size={32} /> issues
+          <GithubIcon size={24} className="" /> issues
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-sm md:text-base text-muted-foreground">
           {isAddingBounty
             ? "Select GitHub issues to add a bounty and get them solved fast."
             : "View and manage the bounties you've placed on GitHub issues."}
         </p>
       </div>
 
-      <div className="flex gap-4 mb-2">
+      <div className="flex flex-col sm:flex-row gap-2 md:gap-4 mb-2">
         <Button
           onClick={() => {
               setIsAddingBounty(true);
@@ -176,6 +176,7 @@ console.log("main bounty here", issuesRepo);
           }}
           variant={isAddingBounty ? "default" : "outline"}
           size="sm"
+          className="w-full sm:w-auto"
         >
           Add Bounty
         </Button>
@@ -186,6 +187,7 @@ console.log("main bounty here", issuesRepo);
           }}
           variant={!isAddingBounty ? "default" : "outline"}
           size="sm"
+          className="w-full sm:w-auto"
         >
           Manage Bounty
         </Button>
