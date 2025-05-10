@@ -3,6 +3,7 @@ import { AuthTesti } from '@/app/(landingpageComponent)/AuthTesti';
 import SignInButtons from "@/app/(landingpageComponent)/SignInButtons";
 
 export default async function SignInPage() {
+  console.log("signin page");
   const providers = await getProviders();
   console.log("provider here", providers );
 
