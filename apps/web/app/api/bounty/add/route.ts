@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
 
-    const { bountyIssue, transaction } = await prisma.$transaction(async (tx) => {
+    const { bountyIssue, transaction } = await prisma.$transaction(async (tx: any) => {
       const bountyIssue = await tx.bountyIssues.create({
         data: {
           userId: user.id,
