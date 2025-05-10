@@ -4,9 +4,22 @@ import { DetachedSheet } from "./DetachedSheet";
 import "./ExampleDetachedSheet.css";
 import { SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { useState } from "react";
+import { LucideIcon } from "lucide-react";
 
-const SupportSheet = ({items}) => {
-  const [selectedItem, setSelectedItem] = useState(null);
+interface SupportItem {
+  title: string;
+  url: string;
+  icon: LucideIcon;
+  description?: string;
+}
+
+interface SupportSheetProps {
+  items: SupportItem[];
+}
+
+const SupportSheet = ({ items }: SupportSheetProps) => {
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+
   return (
     <DetachedSheet
       presentTrigger={
@@ -14,7 +27,7 @@ const SupportSheet = ({items}) => {
           <SidebarGroupContent className="flex">
             <SidebarMenu className="flex flex-row justify-between">
               {items.map((item: SupportItem) => (
-                <Sheet.Trigger key={item.title} onClick={() => setSelectedItem(item.title === "Feedback" ? "Feedback" : "Support")}>
+                <Sheet.Trigger key={item.title} onClick={() => setSelectedItem(item.title)}>
                   <SidebarMenuItem className="w-full">
                     <SidebarMenuButton asChild size="sm">
                       <a href={item.url}>
@@ -31,20 +44,19 @@ const SupportSheet = ({items}) => {
       }
       sheetContent={
         <div className={"ExampleDetachedSheet-root !z-[999]"}>
-          {selectedItem === "Feedback" ? (
-            <>
-            <Sheet.Handle
+          <Sheet.Handle
             className="ExampleDetachedSheet-handle"
             action="dismiss"
           />
           <div className="ExampleDetachedSheet-illustration" />
           <div className="ExampleDetachedSheet-information">
             <Sheet.Title className="ExampleDetachedSheet-title">
-              Your Meal is Coming Feedback
+              {selectedItem || items[0].title}
             </Sheet.Title>
             <Sheet.Description className="ExampleDetachedSheet-description">
-              Your food is on its way and will arrive soon! Sit back and get
-              ready to enjoy your meal.
+              {selectedItem === "Feedback" 
+                ? "We value your feedback! Please let us know how we can improve your experience."
+                : "Need help? Our support team is here to assist you with any questions or issues you may have."}
             </Sheet.Description>
           </div>
           <Sheet.Trigger
@@ -53,31 +65,6 @@ const SupportSheet = ({items}) => {
           >
             Got it
           </Sheet.Trigger>
-          </>
-          ) : (
-            <>
-            <Sheet.Handle
-            className="ExampleDetachedSheet-handle"
-            action="dismiss"
-          />
-          <div className="ExampleDetachedSheet-illustration" />
-          <div className="ExampleDetachedSheet-information">
-            <Sheet.Title className="ExampleDetachedSheet-title">
-              Your Meal is Coming Support
-            </Sheet.Title>
-            <Sheet.Description className="ExampleDetachedSheet-description">
-              Your food is on its way and will arrive soon! Sit back and get
-              ready to enjoy your meal.
-            </Sheet.Description>
-          </div>
-          <Sheet.Trigger
-            className="ExampleDetachedSheet-validateTrigger"
-            action="dismiss"
-          >
-            Got it
-          </Sheet.Trigger>
-          </>
-          )}
         </div>
       }
     />

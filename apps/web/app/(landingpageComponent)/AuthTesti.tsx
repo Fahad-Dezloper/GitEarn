@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @next/next/no-img-element */
+// @ts-nocheck
 import { cn } from "@/lib/utils";
 import { Marquee } from "@/components/magicui/marquee";
 import { reviews } from "@/lib/authTesti";

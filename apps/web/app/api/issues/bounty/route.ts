@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import prisma from "@repo/db/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";

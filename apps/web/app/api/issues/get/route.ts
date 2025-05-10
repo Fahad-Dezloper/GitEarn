@@ -168,7 +168,7 @@ export async function GET(_request: Request) {
             activityLog.push({
               type: "comment",
               user: comment.user?.login || 'unknown',
-              userAvatar: comment.user.avatar_url,
+              userAvatar: comment.user?.avatar_url || "",
               content: comment.body || "",
               date: comment.created_at,
             });
@@ -183,6 +183,7 @@ export async function GET(_request: Request) {
                 to: event.event === "closed" ? "Closed" : "Open",
                 user: 'actor' in event && event.actor ? `@${event.actor.login}` : 'unknown',
                 date: 'created_at' in event ? event.created_at : ('committer' in event && event.committer?.date) ? event.committer.date : new Date().toISOString(),
+                userAvatar: 'actor' in event && event.actor ? event.actor.avatar_url : ''
               });
             }
             if (event.event === "referenced" && 'commit_id' in event && event.commit_id) {
@@ -191,6 +192,7 @@ export async function GET(_request: Request) {
                 user: `@${('actor' in event && event.actor ? event.actor.login : 'unknown')}`,
                 content: `${event.commit_id.substring(0, 7)} referenced this issue.`,
                 date: ('created_at' in event ? event.created_at : new Date().toISOString()),
+                userAvatar: ('actor' in event && event.actor ? event.actor.avatar_url : '')
               });
             }
           }

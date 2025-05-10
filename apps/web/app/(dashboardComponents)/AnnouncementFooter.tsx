@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { RocketIcon } from "@/components/ui/rocket";
 
 export default function AnnouncementFooter() {

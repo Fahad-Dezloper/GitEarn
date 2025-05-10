@@ -5,7 +5,6 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Keypair, LAMPORTS_PER_SOL, PublicKey, sendAndConfirmTransaction, SystemProgram, Transaction } from '@solana/web3.js';
 import axios from 'axios';
-import { error } from 'console';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import bs58 from 'bs58'
 import { useUserDetails } from './UserDetailsProvider';
@@ -13,11 +12,13 @@ import { useUserDetails } from './UserDetailsProvider';
 interface BountyContextType {
   issuesRepo: any[];
   setIssuesRepo: React.Dispatch<React.SetStateAction<any[]>>;
-  addBounty: (bountyAmt: any, issueId: any, issueLink: any, title: any) => Promise<void>;
+  addBounty: (bountyAmt: any, issueId: any, issueLink: any, title: any, lamports: any) => Promise<void>;
+  approveBounty: (issueId: any, issueLink: any, contributorId: any) => Promise<void>;
   bountyIssues: any[];
   setBountyIssues: React.Dispatch<React.SetStateAction<any[]>>;
   userBountyIssue: any[];
-  removeBounty: ({ issueId, issueLink }: { issueId: string, issueLink: string }) => Promise<void>;
+  removeBounty: ({ issueId, issueLink, lamports }: { issueId: string, issueLink: string, lamports: any }) => Promise<void>;
+  claimMoney: (contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any) => Promise<void>;
 }
 
 const BountyDetailsContext = createContext<BountyContextType | undefined>(undefined);
@@ -28,7 +29,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   const [userBountyIssue, setUserBountyIssue] = useState<any[]>([]);
   const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
-  const { fetchUserMoneyClaimed } = useUserDetails();
+  // const { fetchUserMoneyClaimed } = useUserDetails();
 
   async function getIssues() {
     try {
@@ -220,7 +221,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
 
 
   // user claiming money
-  async function claimMoney(contributorId, walletAdd, bountyAmountInLamports, githubId, htmlUrl){
+  async function claimMoney(contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any){
     console.log("reached here for approving", contributorId, walletAdd, bountyAmountInLamports, githubId, htmlUrl);
 
       try {
@@ -273,7 +274,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     });
 
 
-    fetchUserMoneyClaimed();
+    // fetchUserMoneyClaimed();
         
       } catch (error) {
         console.log("Claiming bounty error", error);

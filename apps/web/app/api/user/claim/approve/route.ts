@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import prisma from "@repo/db/client";
 import { Connection } from "@solana/web3.js";
@@ -112,7 +113,7 @@ export async function POST(req: NextRequest){
         }
       })
 
-      if(!bountyIssueId.id){
+      if(!bountyIssueId?.id){
         return NextResponse.json({message: "Bounty Doesn't exist"}, {status: 500});
       }
 

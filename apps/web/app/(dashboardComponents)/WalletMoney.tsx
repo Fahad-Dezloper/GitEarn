@@ -10,6 +10,7 @@ export default function WalletMoney() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
 
   useEffect(() => {
@@ -40,7 +41,7 @@ export default function WalletMoney() {
     };
 
     fetchBalance();
-  }, [walletAdd]);
+  }, [walletAdd, connection]);
 
   // Show loading or placeholder while waiting for wallet address
   if (!walletAdd) {

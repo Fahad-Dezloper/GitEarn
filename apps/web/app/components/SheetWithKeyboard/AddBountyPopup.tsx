@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import {
   Sheet
@@ -13,15 +14,15 @@ interface AddBountyPopupProps {
   title: string;
   isAddingBounty: boolean;
   description: string;
-  labels: string[];
+  labels: any;
   repository: string;
-  assignees: string[];
+  assignees: any;
   prRaise: boolean;
   issueLink: string;
   created: string;
   updated: string;
   status: string;
-  latestComment: string;
+  latestComment: any;
   issueId: string;
 }
 

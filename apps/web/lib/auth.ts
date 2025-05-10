@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import GithubProvider from "next-auth/providers/github";
 import { NextAuthOptions } from "next-auth";
 import prisma from '@repo/db/client';
@@ -45,7 +46,6 @@ export const authOptions: NextAuthOptions = {
   
       if (token.accessToken) {
         session.accessToken = token.accessToken as string;
-        session.scope = token.scope as string;
       }
 
       if (session.user?.email) {
@@ -53,9 +53,8 @@ export const authOptions: NextAuthOptions = {
           where: { email: session.user.email },
           include: { wallet: true }
         });
-        
         if (user?.wallet) {
-          session.user.walletPublicKey = user.wallet.publicKey;
+          (session.user as any).walletPublicKey = user.wallet.publicKey;
         }
       }
 

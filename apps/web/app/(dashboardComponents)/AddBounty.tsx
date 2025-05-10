@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
-import { ArrowRight, Info, Plus, Sparkles } from 'lucide-react'
+import { ArrowRight, Info, Sparkles } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import {
     Tooltip,
@@ -12,7 +12,6 @@ import { Badge } from "@/components/ui/badge"
 import { fetchAndSortGitHubIssues } from '@/lib/getIssues'
 import Link from 'next/link'
 import AddBountyButton from './AddBountyButton'
-import { Button } from '@/components/ui/button'
 
 interface GitHubIssue {
   id: number;

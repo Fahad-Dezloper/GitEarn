@@ -8,7 +8,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { SheetTriggerCard } from "@/app/components/app/SheetTriggerCard/SheetTriggerCard"
 import { Sheet } from "@silk-hq/components";
 
 export function NavSecondary({

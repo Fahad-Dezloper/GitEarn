@@ -1,34 +1,26 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @next/next/no-img-element */
 "use client"
 
 import type * as React from "react"
 import {
-  CheckCircle,
-  Code,
-  Command,
-  Frame,
   Home,
   LifeBuoy,
-  Map,
-  PieChart,
   PiggyBank,
   Scroll,
   Send,
-  Settings2,
   SquareTerminal,
   Trophy,
   User,
 } from "lucide-react"
 
 import { NavMain } from "./nav-main"
-import { NavSecondary } from "./nav-secondary"
-import { NavUser } from "./nav-user"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { useSession } from "next-auth/react"

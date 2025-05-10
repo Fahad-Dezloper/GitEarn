@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import {
@@ -21,6 +22,7 @@ import {
 import { CalendarIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { XIcon } from "@/components/ui/x" 
+import { DateRange } from "react-day-picker"
 
 type Bounty = {
   bounty: number
@@ -94,8 +96,8 @@ export default function BountyFilter({
     onFilterChange(filtered)
   }, [minAmount, selectedTechs, search, dateRange, originalBounties, onFilterChange])
 
-  function Managetech(tech: string){
-    setSelectedTechs((prev) => prev.filter((t) => t !== tech))
+  function Managetech(tech: { name: string; color: string }) {
+    setSelectedTechs((prev) => prev.filter((t) => t.name !== tech.name))
   }
 
   const resetFilters = () => {
@@ -212,8 +214,8 @@ export default function BountyFilter({
               <Calendar
                 initialFocus
                 mode="range"
-                selected={dateRange}
-                onSelect={setDateRange}
+                selected={dateRange as DateRange}
+                onSelect={(range: DateRange | undefined) => setDateRange(range || {})}
                 numberOfMonths={1}
                 defaultMonth={new Date("2025-04-01")}
               />

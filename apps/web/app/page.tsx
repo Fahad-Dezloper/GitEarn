@@ -1,22 +1,15 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { BoxesIcon } from "@/components/ui/boxes";
-import { GithubIcon } from "@/components/ui/github";
 import Link from "next/link";
-import { AnimatedBeamMultipleOutputDemo } from "./(dashboardComponents)/AnimatedGihub";
 import RightSideLanding from "./(landingpageComponent)/RightSideLanding";
 import {
-  BadgeCheck,
   Boxes,
   ChartNoAxesColumn,
-  Code2,
-  Wallet,
 } from "lucide-react";
-import { ArrowRight, CircleDot } from "lucide-react";
-import { ArrowRightIcon } from "@/components/ui/arrow-right";
-import { Card, CardContent } from "@/components/ui/card";
 import Marquee from "react-fast-marquee";
 import { useState } from "react";
-import { Tabs } from "@/components/ui/tabs";
 import { HowItWorks } from "./(landingpageComponent)/HowItWorks";
 import FeaturesSectionDemo from "@/components/features-section-demo-2";
 import { Testimonials } from "./(landingpageComponent)/Testimonials";

@@ -1,5 +1,4 @@
 import prisma from "@repo/db/client";
-import axios from "axios";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 

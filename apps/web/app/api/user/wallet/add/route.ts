@@ -28,7 +28,7 @@ export async function POST(req: NextRequest){
                 email: session.user.email,
             },
             data: {
-                walletAddress: walletAddress,
+                wallet: walletAddress,
             },
         });
           

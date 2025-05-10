@@ -26,12 +26,18 @@ interface UserDetailssContextType {
 }
 
 const UserDetailsContext = createContext<UserDetailssContextType | undefined>(undefined);
-
 export function UserDetailsProvider({ children }: { children: ReactNode }) {
-    const [userDetailss, setUserDetailss] = useState<UserDetailss>({ avatar_url: undefined });
+    const [userDetailss, setUserDetailss] = useState<UserDetailss>({
+        followers: 0,
+        public_repos: 0,
+        location: '',
+        bio: <></>,
+        login: '',
+        avatar_url: undefined
+    });
     const [wakaTimeDetails, setWakaTimeDetails] = useState({});
-    const [walletAdd, setWalletAdd] = useState();
-    const [claimBounties, setClaimBounties] = useState([]);
+    const [walletAdd, setWalletAdd] = useState<string | undefined>();
+    const [claimBounties, setClaimBounties] = useState<any[]>([]);
 
     async function getUserDets(){
         const res = await axios.get("/api/user/details");
@@ -66,9 +72,8 @@ export function UserDetailsProvider({ children }: { children: ReactNode }) {
             console.log("error fetching user details", e);
         }
     }, []);
-
     return (
-        <UserDetailsContext.Provider value={{ userDetailss, setUserDetailss, wakaTimeDetails, setWakaTimeDetails, addWalletAdd, walletAdd, claimBounties }}>
+        <UserDetailsContext.Provider value={{ userDetailss, setUserDetailss, wakaTimeDetails, setWakaTimeDetails, addWalletAdd, walletAdd }}>
             {children}
         </UserDetailsContext.Provider>
     );

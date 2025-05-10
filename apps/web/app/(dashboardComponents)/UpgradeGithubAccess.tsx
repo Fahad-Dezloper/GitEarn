@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 import { signIn, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
@@ -8,17 +9,17 @@ export function UpgradeGithubAccess() {
   const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   // console.log("session here", session);
-  const hasRepoAccess = session?.scope?.includes("public_repo");
-  
-  const handleUpgradeAccess = async () => {
-    setIsLoading(true);
-    await signIn("github", { 
-      callbackUrl: "/earn/bounties/add", 
-      redirect: true,
-      scope: "read:user user:email public_repo",
-      prompt: "consent",
-    });
-  };
+  // const hasRepoAccess = session?.scope?.includes("public_repo");
+  const hasRepoAccess = true;
+  // const handleUpgradeAccess = async () => {
+  //   setIsLoading(true);
+  //   await signIn("github", { 
+  //     callbackUrl: "/earn/bounties/add", 
+  //     redirect: true,
+  //     scope: "read:user user:email public_repo",
+  //     prompt: "consent",
+  //   });
+  // };
   
   if (hasRepoAccess) {
     return (
@@ -35,8 +36,7 @@ export function UpgradeGithubAccess() {
       <p className="mb-3 text-blue-700">
         Grant access to your public repositories to unlock additional features.
       </p>
-      <Button 
-        onClick={handleUpgradeAccess}
+      <Button
         disabled={isLoading}
         variant="outline"
       >

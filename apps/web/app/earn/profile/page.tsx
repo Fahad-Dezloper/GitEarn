@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client"
 import { useUserDetails } from '@/app/context/UserDetailsProvider'
 import Image from 'next/image';

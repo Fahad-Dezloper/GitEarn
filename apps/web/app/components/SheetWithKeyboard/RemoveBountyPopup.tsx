@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+// @ts-nocheck
 "use client";
 import {
   Sheet
@@ -27,7 +30,7 @@ interface RemoveBountyPopupProps {
 }
 
 const RemoveBountyPopup = ({isAddingBounty, title, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId, lamports}: RemoveBountyPopupProps) => {
-  console.log("again la", lamports);
+  // console.log("again la", lamports);
   return (
     <SheetWithKeyboard
       presentTrigger={<Sheet.Trigger className="realtive cursor-pointer w-full h-full">

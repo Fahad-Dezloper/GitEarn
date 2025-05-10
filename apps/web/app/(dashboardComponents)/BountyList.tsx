@@ -26,10 +26,10 @@ const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
 
-  function formatDate(dateStr) {
+  function formatDate(dateStr: string) {
     const [day, month, year] = dateStr.split("/").map(Number);
   
-    const daySuffix = (d) => {
+    const daySuffix = (d: number) => {
       if (d > 3 && d < 21) return "th";
       switch (d % 10) {
         case 1: return "st";

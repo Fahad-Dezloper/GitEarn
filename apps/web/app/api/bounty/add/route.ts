@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import prisma from '@repo/db/client';
 import { getServerSession } from 'next-auth';
@@ -9,7 +8,7 @@ export async function POST(req: NextRequest) {
     const session = await getServerSession();
     const body = await req.json();
     const { bountyAmt, issueId, issueLink, lamports } = body;
-    console.log(bountyAmt, issueId, issueLink);
+    // console.log(bountyAmt, issueId, issueLink);
 
     const user = await prisma.user.findFirst({
       where: {

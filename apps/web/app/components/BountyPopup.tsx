@@ -1,12 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Scroll, Sheet, useClientMediaQuery } from "@silk-hq/components";
 import { Calendar, ExternalLink, GitPullRequest, MessageSquare, RefreshCw, Tag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useBountyDetails } from "../context/BountyContextProvider";
-import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 
 const formatDate = (iso: string) =>
@@ -89,6 +89,7 @@ console.log("main", latestComment);
   
     fetchSolPriceFromJupiter();
 
+    // eslint-disable-next-line prefer-const
     intervalId = setInterval(fetchSolPriceFromJupiter, 2500);
 
     return () => clearInterval(intervalId);
@@ -214,7 +215,7 @@ const usdToSol = (usdAmount: number) => {
                     ) : (
                       <>
                         ${amount}
-                        <div className="text-xs text-zinc-500">≈ {usdToSol(amount)} SOL</div>
+                        <div className="text-xs text-zinc-500">≈ {usdToSol(Number(amount))} SOL</div>
                       </>
                     )}
                   </button>
@@ -236,9 +237,9 @@ const usdToSol = (usdAmount: number) => {
                       inputMode="decimal"
                     />
                     </div>
-                    {customAmount && !isNaN(customAmount) && (
+                    {customAmount && !isNaN(Number(customAmount)) && (
                       <div className="mt-2 text-sm text-zinc-500">
-                        ≈ {usdToSol(parseFloat(customAmount))} SOL
+                        ≈ {usdToSol(Number(customAmount))} SOL
                       </div>
                     )}
                   </div>

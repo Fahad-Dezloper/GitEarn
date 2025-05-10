@@ -1,3 +1,5 @@
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import prisma from "@repo/db/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
@@ -24,7 +26,7 @@ export async function POST(req: NextRequest) {
     })
     
     console.log("user id", user);
-    const userIdd = user.id;
+    const userIdd = user?.id;
 
     console.log("user id", userIdd);
 

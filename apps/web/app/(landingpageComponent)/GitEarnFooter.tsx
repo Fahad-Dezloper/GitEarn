@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { GithubIcon } from "@/components/ui/github";
 import { TwitterIcon } from "@/components/ui/twitter";
 import Link from "next/link";
