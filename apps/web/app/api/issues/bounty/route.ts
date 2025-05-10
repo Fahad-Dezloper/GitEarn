@@ -107,7 +107,7 @@ export async function GET() {
     });
 
     const enrichedIssues = await Promise.all(
-      issues.map(async (issue) => {
+      issues.map(async (issue: any) => {
         const meta = await fetchGitHubIssueData(issue.htmlUrl);
         return {
           ...issue,
