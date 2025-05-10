@@ -9,6 +9,7 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   adapter: CustomPrismaAdapter(prisma),
+  secret: process.env.AUTH_SECRET,
   providers: [
     GithubProvider({
       clientId: process.env.AUTH_GITHUB_ID || "",
