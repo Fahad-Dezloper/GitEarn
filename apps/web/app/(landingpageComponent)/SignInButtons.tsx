@@ -10,7 +10,7 @@ interface SignInButtonsProps {
 }
 
 export default function SignInButtons({ providers }: SignInButtonsProps) {
-  if (!providers) return null;
+  if (!providers) return <div>No providers found</div>;
 
   return (
     <>

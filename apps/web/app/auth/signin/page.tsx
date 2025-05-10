@@ -19,7 +19,6 @@ export default async function SignInPage() {
     Access your dashboard and start earning by contributing to open source.
   </p>
   <SignInButtons providers={providers} />
-
   <div className="w-full border-t border-gray-300 dark:border-gray-700 my-4"></div>
 
   <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm">
