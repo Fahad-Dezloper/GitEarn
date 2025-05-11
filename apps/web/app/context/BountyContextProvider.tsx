@@ -31,6 +31,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
   const [bountiesCreated, setBountiesCreated] = useState<any[]>([]);
+  const [bountiesClaimed, setBountiesClaimed] = useState<any[]>([]);
   // const { fetchUserMoneyClaimed } = useUserDetails();
 
   // console.log("public key", publicKey);
@@ -289,14 +290,22 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
       }
 
 
+  // created bounties
   async function getBountiesCreated(){
     const res = await axios.get('/api/user/transaction/created');
     console.log("bounties createdd", res.data);
     setBountiesCreated(res.data.data);
   }
+
+  // claimed bounties
+  async function getBountiesClaimed(){
+    const res = await axios.get('/api/user/transaction/claimed');
+    console.log("bounties claimed", res.data);
+    setBountiesClaimed(res.data.data);
+  }
   return (
     // @ts-ignore
-    <BountyDetailsContext.Provider value={{ issuesRepo, setIssuesRepo, addBounty, bountyIssues, setBountyIssues, userBountyIssue, removeBounty, approveBounty, claimMoney, bountiesCreated}}>
+    <BountyDetailsContext.Provider value={{ issuesRepo, setIssuesRepo, addBounty, bountyIssues, setBountyIssues, userBountyIssue, removeBounty, approveBounty, claimMoney, bountiesCreated, bountiesClaimed}}>
       {children}
     </BountyDetailsContext.Provider>
   );

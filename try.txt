@@ -142,6 +142,9 @@ change the ngrok url in both github redirect uri and envs
 /earn/bounty/add -> manage done -> move to add bounty popup and ui. --> done
 
 
-
 then /profile --> done
-/payment /transactions/claim
+/payment /transactions/claim --> done
+
+
+
+///show data for transaction for claimed and created perfectly with buttons if pending to retry
