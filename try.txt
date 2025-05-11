@@ -138,7 +138,6 @@ UI improve /profile page
 
 change the ngrok url in both github redirect uri and envs
 
-
 ---? dashboard responsiveness
 /earn/bounty/add -> manage done -> move to add bounty popup and ui.
 then /profile

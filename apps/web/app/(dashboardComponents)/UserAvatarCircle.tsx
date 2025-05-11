@@ -42,7 +42,6 @@ export default function UserAvatarCircle({session}){
                 setGithubName(undefined);
             }
         }
-
         if (user?.email) {
             fetchGithubUsername(user.email);
         }

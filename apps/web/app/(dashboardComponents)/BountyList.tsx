@@ -48,7 +48,7 @@ const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
   }
   
     return (
-    <div className="w-full grid grid-cols-3 gap-4">
+    <div className="w-full grid md:grid-cols-3 grid-cols-1 gap-4">
         {bounties.map((bounty: Bounty, index: number) => (
         <motion.div
         key={bounty.title}
