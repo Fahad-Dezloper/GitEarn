@@ -76,22 +76,22 @@ export function BountiesClaimed() {
 
   return (
     <div className="space-y-4">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold">{totalClaimed}</div>
+      <div className="md:grid flex overflow-x-auto scrolllx gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <Card className="shrink-0">
+          <CardContent className="">
+            <div className="md:text-2xl text-lg font-sora  font-bold">{totalClaimed}</div>
             <p className="text-xs text-muted-foreground">Total Claimed Bounties</p>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold">{formatSol(lamportsToSol(totalEarned))} SOL</div>
+        <Card className="shrink-0">
+          <CardContent className="">
+            <div className="md:text-2xl text-lg font-sora  font-bold">{formatSol(lamportsToSol(totalEarned))} SOL</div>
             <p className="text-xs text-muted-foreground">Total Earned</p>
           </CardContent>
         </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold">{formatSol(lamportsToSol(pendingPayouts))} SOL</div>
+        <Card className="shrink-0">
+          <CardContent className="">
+            <div className="md:text-2xl text-lg font-sora  font-bold">{formatSol(lamportsToSol(pendingPayouts))} SOL</div>
             <p className="text-xs text-muted-foreground">Pending Payouts</p>
           </CardContent>
         </Card>
