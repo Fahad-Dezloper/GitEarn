@@ -134,11 +134,14 @@ UI improve /claim page
 UI improve /profile page
 
 
-//instead of Hi there. add avatar logo on click show waleet add also show a icon green if its connected else yellow. keep it clean and simple
+//instead of Hi there. add avatar logo on click show waleet add also show a icon green if its connected else yellow. keep it clean and simple - done
 
 change the ngrok url in both github redirect uri and envs
 
 ---? dashboard responsiveness
-/earn/bounty/add -> manage done -> move to add bounty popup and ui.
+/earn/bounty/add -> manage done -> move to add bounty popup and ui. --> done
+
+
+
 then /profile
 /payment /transactions/claim

@@ -22,16 +22,61 @@ const Topbar = () => {
   const user = session?.user;
   console.log("session here on toop bar", session, status);
 
+  const router = useRouter();
+  const pathname = usePathname();
+  const pathSegments = pathname.split("/").filter(Boolean); 
+
+  const formatSegment = (segment: any) => {
+    return segment
+      .replace(/-/g, " ") 
+      .replace(/\b\w/g, (char: any) => char.toUpperCase()); 
+  };
+
   return (
     <header className="flex border-b pb-4 justify-between mt-4 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-      <BreadcrumbsTop />
-      <div className="flex items-center gap-4">
-      <div className="hidden md:flex">
-      <ModeToggle />
+      <div className="flex items-center gap-2">
+        <SidebarTrigger className="-ml-1 md:hidden flex" />
+        <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+        
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <Link href="/" passHref legacyBehavior>
+                <BreadcrumbLink>Home</BreadcrumbLink>
+              </Link>
+            </BreadcrumbItem>
+
+            {pathSegments.map((segment, index) => {
+              const href = "/" + pathSegments.slice(0, index + 1).join("/");
+              const isLast = index === pathSegments.length - 1;
+              
+              return (
+                <React.Fragment key={href}>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    {isLast ? (
+                      <BreadcrumbPage>{formatSegment(segment)}</BreadcrumbPage>
+                    ) : (
+                      <Link href={href} passHref legacyBehavior>
+                        <BreadcrumbLink>
+                          {formatSegment(segment)}
+                        </BreadcrumbLink>
+                      </Link>
+                    )}
+                  </BreadcrumbItem>
+                </React.Fragment>
+              );
+            })}
+          </BreadcrumbList>
+        </Breadcrumb>
       </div>
-      <WalletMoney />
-      <Notification />
-      {status === "authenticated" && <UserAvatarCircle session={session} />}
+      <div className="flex items-center gap-4">
+        <div className="hidden md:flex">
+          <ModeToggle />
+        </div>
+        <WalletMoney />
+        <Notification />
+        {status === "authenticated" && <UserAvatarCircle session={session} />}
       </div>
     </header>
   );
