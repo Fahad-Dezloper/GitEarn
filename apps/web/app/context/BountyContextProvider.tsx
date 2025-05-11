@@ -7,7 +7,7 @@ import { Keypair, LAMPORTS_PER_SOL, PublicKey, sendAndConfirmTransaction, System
 import axios from 'axios';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import bs58 from 'bs58'
-import { useUserDetails } from './UserDetailsProvider';
+
 
 interface BountyContextType {
   issuesRepo: any[];
@@ -19,6 +19,7 @@ interface BountyContextType {
   userBountyIssue: any[];
   removeBounty: ({ issueId, issueLink, lamports }: { issueId: string, issueLink: string, lamports: any }) => Promise<void>;
   claimMoney: (contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any) => Promise<void>;
+  bountiesCreated: any[];
 }
 
 const BountyDetailsContext = createContext<BountyContextType | undefined>(undefined);
@@ -29,6 +30,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   const [userBountyIssue, setUserBountyIssue] = useState<any[]>([]);
   const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
+  const [bountiesCreated, setBountiesCreated] = useState<any[]>([]);
   // const { fetchUserMoneyClaimed } = useUserDetails();
 
   // console.log("public key", publicKey);
@@ -69,6 +71,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     getIssues();
     getUserBountyIssues();
     getBountyIssues();
+    getBountiesCreated();
 
     const interval = setInterval(() => {
       // console.log("calling again and again")
@@ -285,9 +288,15 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
           
       }
 
+
+  async function getBountiesCreated(){
+    const res = await axios.get('/api/user/transaction/created');
+    console.log("bounties createdd", res.data);
+    setBountiesCreated(res.data.data);
+  }
   return (
     // @ts-ignore
-    <BountyDetailsContext.Provider value={{ issuesRepo, setIssuesRepo, addBounty, bountyIssues, setBountyIssues, userBountyIssue, removeBounty, approveBounty, claimMoney}}>
+    <BountyDetailsContext.Provider value={{ issuesRepo, setIssuesRepo, addBounty, bountyIssues, setBountyIssues, userBountyIssue, removeBounty, approveBounty, claimMoney, bountiesCreated}}>
       {children}
     </BountyDetailsContext.Provider>
   );

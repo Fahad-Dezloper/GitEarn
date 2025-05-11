@@ -18,6 +18,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
 import { mockCreatedBounties } from "@/lib/mock-data"
+import { useBountyDetails } from "@/app/context/BountyContextProvider"
 
 // Convert lamports to SOL
 const lamportsToSol = (lamports: number) => {
@@ -40,6 +41,9 @@ export function BountiesCreated() {
     to: undefined,
   })
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([])
+  const { bountiesCreated } = useBountyDetails();
+
+  console.log("bounties created", bountiesCreated);
 
   const toggleRow = (id: string) => {
     setExpandedRows((prev) => ({
@@ -48,12 +52,12 @@ export function BountiesCreated() {
     }))
   }
 
-  const totalBounties = mockCreatedBounties.bounties.length
+  const totalBounties = bountiesCreated.length
   const totalFunded = mockCreatedBounties.bounties.reduce((sum, bounty) => sum + bounty.bountyAmount, 0)
   const totalPaidOut = mockCreatedBounties.bounties.reduce((sum, bounty) => sum + (bounty.claimedAmount || 0), 0)
   const remainingBalance = totalFunded - totalPaidOut
 
-  const filteredBounties = mockCreatedBounties.bounties.filter((bounty) => {
+  const filteredBounties = bountiesCreated.filter((bounty) => {
     const matchesSearch =
       searchQuery === "" ||
       bounty.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -73,25 +77,25 @@ export function BountiesCreated() {
   return (
     <div className="space-y-4">
       <div className="md:grid gap-4 w-full scrolllx flex overflow-y-auto md:grid-cols-2 lg:grid-cols-4">
-        <Card className="shrink-0 w-fit">
+        <Card className="shrink-0">
           <CardContent className="">
             <div className="md:text-2xl text-lg font-sora font-bold">{totalBounties}</div>
             <p className="text-xs text-muted-foreground">Total Bounties Created</p>
           </CardContent>
         </Card>
-        <Card className="shrink-0 w-fit">
+        <Card className="shrink-0">
           <CardContent className="">
             <div className="md:text-2xl text-lg font-sora font-bold">{formatSol(lamportsToSol(totalFunded))} SOL</div>
             <p className="text-xs text-muted-foreground">Total Amount Funded</p>
           </CardContent>
         </Card>
-        <Card className="shrink-0 w-fit">
+        <Card className="shrink-0">
           <CardContent className="">
             <div className="md:text-2xl text-lg font-sora font-bold">{formatSol(lamportsToSol(totalPaidOut))} SOL</div>
             <p className="text-xs text-muted-foreground">Total Paid Out</p>
           </CardContent>
         </Card>
-        <Card className="shrink-0 w-fit">
+        <Card className="shrink-0">
           <CardContent className="">
             <div className="md:text-2xl text-lg font-sora font-bold">{formatSol(lamportsToSol(remainingBalance))} SOL</div>
             <p className="text-xs text-muted-foreground">Remaining Balance</p>
@@ -214,11 +218,13 @@ export function BountiesCreated() {
                     <TableCell>
                       <StatusBadge status={bounty.status} />
                     </TableCell>
-                    <TableCell className="text-right">{formatSol(lamportsToSol(bounty.bountyAmount))} SOL</TableCell>
+                    {/* for lamports to sol */}
+                    <TableCell className="text-right">{bounty.bountyAmountInLamports} SOL</TableCell>
                     <TableCell className="text-right">
-                      {bounty.claimedAmount ? `${formatSol(lamportsToSol(bounty.claimedAmount))} SOL` : "-"}
+                      {bounty.claimedAmount ? `${bounty.bountyAmountInLamports} SOL` : "-"}
                     </TableCell>
-                    <TableCell>{format(new Date(bounty.createdAt), "MMM dd, yyyy")}</TableCell>
+                    <TableCell>2nd April</TableCell>
+                    {/* <TableCell>{bounty.createdAt}</TableCell> */}
                     <TableCell>
                       <Button variant="ghost" size="sm" onClick={() => toggleRow(bounty.title)}>
                         {expandedRows[bounty.title] ? (
@@ -245,20 +251,23 @@ export function BountiesCreated() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {bounty.transactions.map((transaction, index) => (
+                              {bounty.transactions.map((txn, index) => (
                                 <TableRow key={index}>
-                                  <TableCell>{format(new Date(bounty.createdAt), "MMM dd, yyyy")}</TableCell>
-                                  <TableCell>{transaction.type}</TableCell>
+                                  {/* // {txn.createdAt} */}
+                                  <TableCell>2nd April</TableCell>
+                                  <TableCell>{txn.type}</TableCell>
                                   <TableCell>
-                                    <StatusBadge status={transaction.status} />
+                                    <StatusBadge status={txn.status} />
                                   </TableCell>
                                   <TableCell className="text-right">
-                                    {formatSol(lamportsToSol(transaction.amount))} SOL
+                                    {/* convert lamports to sol and then in dollars */}
+                                    {txn.bountyAmountInLamports} SOL
                                   </TableCell>
                                   <TableCell>
-                                    <div className="flex space-x-2">
+                                    {/* {txn.type === "PENDING"} */}
+                                    {/* <div className="flex space-x-2">
                                       <a
-                                        href={`https://explorer.solana.com/tx/${transaction.txnHash}`}
+                                        href={`https://explorer.solana.com/tx/${txn.txnHash}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-xs text-primary hover:underline"
@@ -267,14 +276,14 @@ export function BountiesCreated() {
                                       </a>
                                       <span className="text-xs text-muted-foreground">|</span>
                                       <a
-                                        href={`https://solscan.io/tx/${transaction.txnHash}`}
+                                        href={`https://solscan.io/tx/${txn.txnHash}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-xs text-primary hover:underline"
                                       >
                                         Solscan
                                       </a>
-                                    </div>
+                                    </div> */}
                                   </TableCell>
                                 </TableRow>
                               ))}
