@@ -17,7 +17,7 @@ interface Bounty {
 }
 
 const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
-  console.log("bounties here", bounties);
+  // console.log("bounties here", bounties);
 
   function hexToRgba(hex: string, alpha: number) {
     const r = parseInt(hex.slice(1, 3), 16);

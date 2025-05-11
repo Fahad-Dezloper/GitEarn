@@ -13,7 +13,7 @@ export default function Mainbounties() {
   const [loading, setLoading] = useState(false);
   const { issuesRepo, userBountyIssue } = useBountyDetails();
   const { publicKey, signMessage } = useWallet();
-console.log("main bounty here", issuesRepo);
+// console.log("main bounty here page add");
   
   useEffect(() => {
     const signAndSend = async () => {
@@ -31,7 +31,7 @@ console.log("main bounty here", issuesRepo);
         
         // Store signature
         localStorage.setItem(storageKey, JSON.stringify([...signature]));
-        console.log("Signature stored:", signature);
+        // console.log("Signature stored:", signature);
       } catch (err) {
         console.error("Signature failed:", err);
       }

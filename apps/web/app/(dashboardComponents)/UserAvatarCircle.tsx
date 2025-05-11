@@ -21,9 +21,10 @@ import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { toast } from "sonner";
 import { ModeToggle } from "@/components/Toggle";
 
-export default function UserAvatarCircle(){
-    const {data: session} = useSession();
-    const user = session?.user;
+export default function UserAvatarCircle({session}){
+  console.log("here tooo on useravatar circle", session);
+  const user = session?.user;
+
     const [githubName, setGithubName] = useState<string | undefined>(undefined);
     const { isMobile } = useSidebar();
     const { publicKey, connected, disconnect } = useWallet();
@@ -58,7 +59,7 @@ export default function UserAvatarCircle(){
     }, [publicKey, connection]);
 
     if(!user){
-        return <div>We are coming</div>
+      toast("Event has been created.")
     }
 
     const copyToClipboard = (text: string) => {
@@ -79,6 +80,7 @@ export default function UserAvatarCircle(){
 
     return (
         <>
+        
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
@@ -110,7 +112,7 @@ export default function UserAvatarCircle(){
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="rounded-lg">
-                  <AvatarImage src={user.image || undefined} alt={user.name || 'User'} />
+                  <AvatarImage src={user.image} alt={user.name || 'User'} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">

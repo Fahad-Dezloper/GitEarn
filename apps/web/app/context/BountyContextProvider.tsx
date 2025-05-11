@@ -31,6 +31,9 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   const { connection } = useConnection();
   // const { fetchUserMoneyClaimed } = useUserDetails();
 
+  // console.log("public key", publicKey);
+  // console.log("connection", connection);
+
   async function getIssues() {
     try {
       const res = await axios.get(`/api/issues/get`);
@@ -68,7 +71,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     getBountyIssues();
 
     const interval = setInterval(() => {
-      console.log("calling again and again")
+      // console.log("calling again and again")
       getBountyIssues();
     }, 15000);
 
@@ -125,7 +128,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
       transactionId
     });
 
-    console.log("confirm is here", confirm);
+    // console.log("confirm is here", confirm);
 
     setBountyIssues(confirm.data.bountyIssues);
     getIssues();

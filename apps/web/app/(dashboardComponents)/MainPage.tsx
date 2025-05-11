@@ -8,7 +8,8 @@ import AddBounty from './AddBounty';
 import { useSession } from 'next-auth/react';
 
 const MainPage = () => {
-    const { data: session } = useSession()
+    const {data: session, status} = useSession();
+    console.log("session here with status", session, status);
 
     const token = session?.accessToken
     
@@ -34,12 +35,10 @@ const MainPage = () => {
                     </p>
                 </div>
 
-                {/* Suggested Part */}
                 <SuggestedBounties />
                 <AddBounty token={token} />
             </div>
 
-            {/* right sidebar */}
             <div className="max-w-[25vw] hidden md:flex flex-col gap-3">
                 <TotalEarning />
                 <HowitWorks />

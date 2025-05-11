@@ -25,7 +25,7 @@ function extractGitHubIssueInfo(url: string) {
 }
 
 async function ConfirmTxt(signature: any, from: any, to: string, lamports: number) {
-  console.log("lamports", lamports, signature, from, to);
+  // console.log("lamports", lamports, signature, from, to);
   const res = await axios.post(
     "https://solana-devnet.g.alchemy.com/v2/8liAO-lmQabNLQ0We92gFQy_cJYOULew",
     {
@@ -40,9 +40,9 @@ async function ConfirmTxt(signature: any, from: any, to: string, lamports: numbe
       ],
     }
   );
-  console.log("main res", res);
+  // console.log("main res", res);
   const tx = res.data.result;
-  console.log("main transaction", tx);
+  // console.log("main transaction", tx);
   if (!tx) {
     console.log("Transaction not found or not confirmed.");
     return false;

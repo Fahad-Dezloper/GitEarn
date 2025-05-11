@@ -4,10 +4,12 @@ import { signIn, useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import Mainbounties from "./(/bounties/etc)/mainbounties";
+import Topbar from "./Topbar";
 
 export function UpgradeGithubAccess() {
   const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
+  console.log("session here", session);
   // console.log("session here", session);
   // const hasRepoAccess = session?.scope?.includes("public_repo");
   const hasRepoAccess = true;
@@ -24,6 +26,7 @@ export function UpgradeGithubAccess() {
   if (hasRepoAccess) {
     return (
       <div className="">
+        <Topbar />
         {/* <p className="text-green-800">You've granted repository access. You can now use all features.</p> */}
         <Mainbounties />
       </div>

@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Sora, Roboto } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import AppWalletProvider from "./components/AppWalletProvider";
-import Provider from "@/provider/Provider";
 import { Toaster } from "@/components/ui/sonner"
+import { Providers } from "@/provider/Provider";
 
 
 const sora = Sora({
@@ -23,29 +22,28 @@ export const metadata: Metadata = {
   description: "Make money by contributing to open source projects",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${sora.variable} ${roboto.variable} font-roboto antialiased relative`}
       >
-        <Provider>
-        <AppWalletProvider>
-        <ThemeProvider 
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-        {children}
-        <Toaster />
-        </ThemeProvider>
-        </AppWalletProvider>
-        </Provider>
+        <Providers>
+          <ThemeProvider 
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+          {children}
+          <Toaster />
+          </ThemeProvider>
+          </Providers>
       </body>
     </html>
   );

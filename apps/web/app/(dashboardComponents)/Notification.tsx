@@ -1,3 +1,4 @@
+"use client"
 import { BellIcon } from "@/components/ui/bell";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";

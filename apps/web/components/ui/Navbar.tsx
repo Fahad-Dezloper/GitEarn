@@ -22,7 +22,7 @@ export default function NavbarDemo() {
     { name: "Customers", link: "#customers" },
   ];
  
-  const {data: session} = useSession();
+  const {data: session, status} = useSession();
   console.log("session from navbar", session?.user);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
  
@@ -34,7 +34,7 @@ export default function NavbarDemo() {
           <NavbarLogo />
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
-          {session?.user ? <><NavbarButton href="/earn" variant="primary" className="flex items-center">Earn <ArrowRightIcon className="hover:bg-transparent !py-0" size={20} /></NavbarButton></> : <>
+          {status === "authenticated" ? <><NavbarButton href="/earn" variant="primary" className="flex items-center">Earn <ArrowRightIcon className="hover:bg-transparent !py-0" size={20} /></NavbarButton></> : <>
             <NavbarButton href="/auth/signin" variant="primary">Sign Up</NavbarButton>
             </>}
           </div>
