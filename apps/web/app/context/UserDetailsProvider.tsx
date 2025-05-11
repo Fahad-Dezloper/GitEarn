@@ -73,7 +73,7 @@ export function UserDetailsProvider({ children }: { children: ReactNode }) {
         }
     }, []);
     return (
-        <UserDetailsContext.Provider value={{ userDetailss, setUserDetailss, wakaTimeDetails, setWakaTimeDetails, addWalletAdd, walletAdd }}>
+        <UserDetailsContext.Provider value={{ userDetailss, setUserDetailss, wakaTimeDetails, setWakaTimeDetails, addWalletAdd, walletAdd, claimBounties }}>
             {children}
         </UserDetailsContext.Provider>
     );

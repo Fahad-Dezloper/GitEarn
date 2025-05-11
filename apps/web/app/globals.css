@@ -198,6 +198,14 @@ html, body, #__next {
   display: none;
 }
 
+.scrolllx{
+  overflow-x: scroll;
+}
+
+.scrolllx::-webkit-scrollbar{
+  display: none;
+}
+
 .BottomSheet-view {
   height: var(--silk-100-lvh-dvh-pct);
 }

@@ -143,5 +143,5 @@ change the ngrok url in both github redirect uri and envs
 
 
 
-then /profile
+then /profile --> done
 /payment /transactions/claim

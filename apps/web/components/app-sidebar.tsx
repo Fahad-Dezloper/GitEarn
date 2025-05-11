@@ -59,16 +59,6 @@ const data = {
       title: "Transactions",
       url: "/earn/transactions",
       icon: Scroll,
-      items: [
-        {
-          title: "Payment History",
-          url: "/earn/transactions/history",
-        },
-        {
-          title: "Deposits & Withdrawals",
-          url: "/earn/transactions/wallet",
-        },
-      ],
     },
     {
       title: "Leaderboard",
