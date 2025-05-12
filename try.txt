@@ -154,3 +154,10 @@ then /profile --> done
 /// make the refresh button work on popup
 
 /// show claimed contributor address in transactions page
+
+
+/earn page
+
+
+--later--
+/// move to leader board page 

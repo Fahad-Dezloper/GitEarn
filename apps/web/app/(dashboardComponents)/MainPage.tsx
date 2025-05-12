@@ -5,17 +5,9 @@ import TotalEarning from './TotalEarning';
 import HowitWorks from './HowitWorks';
 import BountyEarners from './BountyEarners';
 import AddBounty from './AddBounty';
-import { useSession } from 'next-auth/react';
 
 const MainPage = () => {
-    const {data: session, status} = useSession();
-    // console.log("session here with status", session, status);
-
-    const token = session?.accessToken
-    
-    if(!token){
-        return <div>Loading...</div>
-    }
+    // const {data: session, status} = useSession();
 
     return (
         <div className='w-full h-full flex md:flex-row flex-col gap-8 py-6'>
@@ -36,7 +28,7 @@ const MainPage = () => {
                 </div>
 
                 <SuggestedBounties />
-                <AddBounty token={token} />
+                <AddBounty />
             </div>
 
             <div className="max-w-[25vw] hidden md:flex flex-col gap-3">

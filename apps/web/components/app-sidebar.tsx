@@ -60,11 +60,11 @@ const data = {
       url: "/earn/transactions",
       icon: Scroll,
     },
-    {
-      title: "Leaderboard",
-      url: "/earn/leaderboard",
-      icon: Trophy,
-    },
+    // {
+    //   title: "Leaderboard",
+    //   url: "/earn/leaderboard",
+    //   icon: Trophy,
+    // },
     {
       title: "Claim",
       url: "/earn/claim",
