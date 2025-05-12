@@ -2,7 +2,7 @@ import react from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Topbar from '@/app/(dashboardComponents)/Topbar'
 import {BountiesCreated} from '@/app/(dashboardComponents)/(transaction)/BountiesCreated'
-import {BountiesClaimed} from '@/app/(dashboardComponents)/(transaction)/BountiesClaimed'
+import { BountiesClaimedPage} from '@/app/(dashboardComponents)/(transaction)/BountiesClaimed'
 
 export default function Page(){
     return (
@@ -13,7 +13,7 @@ export default function Page(){
                     <h1 className="text-2xl sm:text-3xl md:text-4xl font-sora font-semibold">Transaction</h1>
                 </div>
 
-                <Tabs defaultValue="created" className="space-y-4">
+                <Tabs defaultValue="claimed" className="space-y-4">
                     <TabsList className="grid w-full max-w-md grid-cols-2">
                         <TabsTrigger value="created">Bounties I Created</TabsTrigger>
                         <TabsTrigger value="claimed">Bounties I Claimed</TabsTrigger>
@@ -22,7 +22,7 @@ export default function Page(){
                         <BountiesCreated />
                     </TabsContent>
                     <TabsContent value="claimed" className="space-y-4">
-                        <BountiesClaimed />
+                        <BountiesClaimedPage />
                     </TabsContent>
                     </Tabs>
                 </div>

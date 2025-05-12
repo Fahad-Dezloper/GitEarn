@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession();
     const body = await req.json();
-    const { bountyAmt, issueId, issueLink, title, signature, from, lamports, transactionId} = body;
+    const { bountyAmt, issueId, issueLink, signature, from, lamports, transactionId} = body;
     const to = process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD;
     // console.log("feilds", signature, from, to, lamports);
 

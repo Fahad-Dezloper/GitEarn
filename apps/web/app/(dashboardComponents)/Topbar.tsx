@@ -20,7 +20,7 @@ import { useSession } from "next-auth/react";
 const Topbar = () => {
   const { data: session, status } = useSession();
   const user = session?.user;
-  console.log("session here on toop bar", session, status);
+  // console.log("session here on toop bar", session, status);
 
   const router = useRouter();
   const pathname = usePathname();

@@ -18,6 +18,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
 import { mockClaimedBounties } from "@/lib/mock-data"
+import { useBountyDetails } from "@/app/context/BountyContextProvider"
+import Link from "next/link"
 
 // Convert lamports to SOL
 const lamportsToSol = (lamports: number) => {
@@ -29,7 +31,7 @@ const formatSol = (sol: number) => {
   return sol.toFixed(2)
 }
 
-export function BountiesClaimed() {
+export function BountiesClaimedPage() {
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({})
   const [searchQuery, setSearchQuery] = useState("")
   const [dateRange, setDateRange] = useState<{
@@ -40,7 +42,7 @@ export function BountiesClaimed() {
     to: undefined,
   })
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([])
-
+  const { bountiesClaimed } = useBountyDetails();
   const toggleRow = (id: string) => {
     setExpandedRows((prev) => ({
       ...prev,
@@ -48,15 +50,17 @@ export function BountiesClaimed() {
     }))
   }
 
+  console.log("claim bounties", bountiesClaimed);
+
   // Calculate summary stats
-  const totalClaimed = mockClaimedBounties.claimed.length
+  const totalClaimed = bountiesClaimed.length
   const totalEarned = mockClaimedBounties.claimed.reduce((sum, bounty) => sum + bounty.claimedAmount, 0)
-  const pendingPayouts = mockClaimedBounties.claimed
+  const pendingPayouts = bountiesClaimed
     .filter((bounty) => bounty.status === "CLAIMED" && !bounty.status.includes("APPROVED"))
-    .reduce((sum, bounty) => sum + bounty.claimedAmount, 0)
+    .reduce((sum, bounty) => sum + bounty.bountyAmount, 0)
 
   // Filter bounties based on search, date range, and status
-  const filteredBounties = mockClaimedBounties.claimed.filter((bounty) => {
+  const filteredBounties = bountiesClaimed.filter((bounty) => {
     // Search filter
     const matchesSearch =
       searchQuery === "" ||
@@ -73,6 +77,20 @@ export function BountiesClaimed() {
 
     return matchesSearch && matchesDateFrom && matchesDateTo && matchesStatus
   })
+
+  function formatIssueTitle(url: string): string {
+    try {
+      const match = url.match(/github\.com\/[^/]+\/([^/]+)\/issues\/(\d+)/);
+      if (!match) return 'Invalid GitHub Issue URL';
+      
+      const repo = match[1];
+      const issueNumber = match[2];
+      return `Issue #${issueNumber} · ${repo}`;
+    } catch {
+      return 'Error formatting issue title';
+    }
+  }
+
 
   return (
     <div className="space-y-4">
@@ -198,7 +216,7 @@ export function BountiesClaimed() {
             ) : (
               filteredBounties.map((bounty) => (
                 <>
-                  <TableRow key={bounty.title}>
+                  <TableRow key={bounty.id}>
                     <TableCell className="font-medium">
                       <a
                         href={bounty.htmlUrl}
@@ -206,21 +224,24 @@ export function BountiesClaimed() {
                         rel="noopener noreferrer"
                         className="text-primary hover:underline"
                       >
-                        {bounty.title}
+                        {formatIssueTitle(bounty.htmlUrl)}
                       </a>
                     </TableCell>
                     <TableCell>
                       <StatusBadge status={bounty.status} />
                     </TableCell>
-                    <TableCell className="text-right">{formatSol(lamportsToSol(bounty.claimedAmount))} SOL</TableCell>
+                    <TableCell className="text-right">{bounty.bountyAmountInLamports} SOL</TableCell>
                     <TableCell className="font-mono text-xs">
-                      {bounty.contributorClaimedAdd.substring(0, 6)}...
-                      {bounty.contributorClaimedAdd.substring(bounty.contributorClaimedAdd.length - 4)}
+                      {bounty.contributorClaimedAdd === null ? <Link href={"/earn/claim"} className="text-blue-300 text-base font-semibold hover:underline">Claim Now</Link> : 
+                      <div>
+                        {bounty.contributorClaimedAdd.substring(0, 6)}...
+                        {bounty.contributorClaimedAdd.substring(bounty.contributorClaimedAdd.length - 4)}
+                      </div>}
                     </TableCell>
                     <TableCell>{format(new Date(bounty.createdAt), "MMM dd, yyyy")}</TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="sm" onClick={() => toggleRow(bounty.title)}>
-                        {expandedRows[bounty.title] ? (
+                      <Button variant="ghost" size="sm" onClick={() => toggleRow(bounty.id)}>
+                        {expandedRows[bounty.id] ? (
                           <ChevronUp className="h-4 w-4" />
                         ) : (
                           <ChevronDown className="h-4 w-4" />
@@ -228,7 +249,7 @@ export function BountiesClaimed() {
                       </Button>
                     </TableCell>
                   </TableRow>
-                  {expandedRows[bounty.title] && (
+                  {expandedRows[bounty.id] && (
                     <TableRow className="bg-muted/50">
                       <TableCell colSpan={6} className="p-0">
                         <div className="p-4">
@@ -252,7 +273,7 @@ export function BountiesClaimed() {
                                     <StatusBadge status={transaction.status} />
                                   </TableCell>
                                   <TableCell className="text-right">
-                                    {formatSol(lamportsToSol(transaction.amount))} SOL
+                                    {transaction.bountyAmountInLamports} SOL
                                   </TableCell>
                                   <TableCell>
                                     <div className="flex space-x-2">

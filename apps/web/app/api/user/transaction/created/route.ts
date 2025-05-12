@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import prisma from "@repo/db/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
@@ -35,22 +36,31 @@ export async function GET(){
         }
     });
 
-    console.log("txn created", createdTxn);
+    // console.log("txn created", createdTxn);
 
-    function serializeBigInts(obj: any): any {
-        if (Array.isArray(obj)) {
-          return obj.map(serializeBigInts);
-        } else if (obj !== null && typeof obj === 'object') {
-          return Object.fromEntries(
-            Object.entries(obj).map(([key, value]) => [key, serializeBigInts(value)])
-          );
-        } else if (typeof obj === 'bigint') {
-          return obj.toString();
-        }
-        return obj;
+    function serializePrimitives(obj: any): any {
+      if (Array.isArray(obj)) {
+        return obj.map(serializePrimitives);
+      } else if (obj !== null && typeof obj === 'object') {
+        return Object.fromEntries(
+          Object.entries(obj).map(([key, value]) => {
+            if (typeof value === 'bigint') {
+              return [key, value.toString()];
+            } else if (value instanceof Date) {
+              return [key, value.toISOString()];
+            } else {
+              return [key, serializePrimitives(value)];
+            }
+          })
+        );
       }
+      return obj;
+    }
+    
 
-    return NextResponse.json({message: "User created transaction fetched successfully", data: serializeBigInts(createdTxn)}, {status: 200})
+      // console.log("after serial", serializePrimitives(createdTxn));
+
+    return NextResponse.json({message: "User created transaction fetched successfully", data: serializePrimitives(createdTxn)}, {status: 200})
     
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch(e){

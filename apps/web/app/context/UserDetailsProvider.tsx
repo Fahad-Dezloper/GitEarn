@@ -53,13 +53,13 @@ export function UserDetailsProvider({ children }: { children: ReactNode }) {
 
     async function fetchUserwalletAdd(){
         const res = await axios.get("/api/user/wallet/get");
-        console.log("res for wallet ADD", res.data);
+        // console.log("res for wallet ADD", res.data);
         setWalletAdd(res.data.walletAdd);
     }
 
     async function fetchUserMoneyClaimed(){
         const res = await axios.get("/api/user/claim");
-        console.log("fetchUserMoneyClaimed", res.data.claimBounties);
+        // console.log("fetchUserMoneyClaimed", res.data.claimBounties);
         setClaimBounties(res.data.claimBounties);
     };
 

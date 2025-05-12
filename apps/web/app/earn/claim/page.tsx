@@ -99,7 +99,7 @@ export default function Page(){
             <Card key={bounty.id} className="shadow-md hover:shadow-xl transition-shadow border border-border">
             <CardHeader className="pb-3 flex flex-col gap-1">
               <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                <GithubIcon className="h-5 w-5" />
+                <GithubIcon className="" />
                 <span>Issue #{getIssueNumber(bounty.htmlUrl)}</span>
                 <Badge variant="success" className="ml-auto text-xs">Approved</Badge>
               </CardTitle>

@@ -16,8 +16,13 @@ export async function GET(){
     const user = await prisma.user.findUnique({
         where: {
             email: session.user.email
+        }, 
+        include: {
+            accounts: true
         }
-    })
+    });
+
+    console.log("user", user);
 
     if(!user){
         return NextResponse.json({message: "User not found"}, {status: 404});
@@ -26,7 +31,7 @@ export async function GET(){
 
     const claimedTxn = await prisma.bountyIssues.findMany({
         where: {
-            contributorId: user.id,
+            contributorId: user.accounts[0].providerAccountId,
             status: {
                 in: ["CLAIMED", "APPROVED"]
             }
@@ -38,20 +43,26 @@ export async function GET(){
 
     console.log("txn claimedTxn", claimedTxn);
 
-    function serializeBigInts(obj: any): any {
+    function serializePrimitives(obj: any): any {
         if (Array.isArray(obj)) {
-          return obj.map(serializeBigInts);
+          return obj.map(serializePrimitives);
         } else if (obj !== null && typeof obj === 'object') {
           return Object.fromEntries(
-            Object.entries(obj).map(([key, value]) => [key, serializeBigInts(value)])
+            Object.entries(obj).map(([key, value]) => {
+              if (typeof value === 'bigint') {
+                return [key, value.toString()];
+              } else if (value instanceof Date) {
+                return [key, value.toISOString()];
+              } else {
+                return [key, serializePrimitives(value)];
+              }
+            })
           );
-        } else if (typeof obj === 'bigint') {
-          return obj.toString();
         }
         return obj;
       }
 
-    return NextResponse.json({message: "User created transaction fetched successfully", data: serializeBigInts(claimedTxn)}, {status: 200})
+    return NextResponse.json({message: "User created transaction fetched successfully", data: serializePrimitives(claimedTxn)}, {status: 200})
     
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch(e){

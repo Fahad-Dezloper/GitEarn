@@ -22,7 +22,7 @@ import { toast } from "sonner";
 import { ModeToggle } from "@/components/Toggle";
 
 export default function UserAvatarCircle({session}){
-  console.log("here tooo on useravatar circle", session);
+  // console.log("here tooo on useravatar circle", session);
   const user = session?.user;
 
     const [githubName, setGithubName] = useState<string | undefined>(undefined);

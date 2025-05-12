@@ -12,7 +12,7 @@ import bs58 from 'bs58'
 interface BountyContextType {
   issuesRepo: any[];
   setIssuesRepo: React.Dispatch<React.SetStateAction<any[]>>;
-  addBounty: (bountyAmt: any, issueId: any, issueLink: any, title: any, lamports: any) => Promise<void>;
+  addBounty: (bountyAmt: any, issueId: any, issueLink: any, lamports: any, title?: any, transactionId?: any) => Promise<void>;
   approveBounty: (issueId: any, issueLink: any, contributorId: any) => Promise<void>;
   bountyIssues: any[];
   setBountyIssues: React.Dispatch<React.SetStateAction<any[]>>;
@@ -20,6 +20,7 @@ interface BountyContextType {
   removeBounty: ({ issueId, issueLink, lamports }: { issueId: string, issueLink: string, lamports: any }) => Promise<void>;
   claimMoney: (contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any) => Promise<void>;
   bountiesCreated: any[];
+  bountiesClaimed: any[];
 }
 
 const BountyDetailsContext = createContext<BountyContextType | undefined>(undefined);
@@ -62,7 +63,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     try {
       const res = await axios.get(`${window.location.origin}/api/issues/bounty`);
       setBountyIssues(res.data.BountyIssues);
-      console.log("here user bounty issue", res.data.BountyIssues);
+      // console.log("here user bounty issue", res.data.BountyIssues);
     } catch (e) {
       console.log("Error fetching Bounty Issues", e);
     }
@@ -73,6 +74,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     getUserBountyIssues();
     getBountyIssues();
     getBountiesCreated();
+    getBountiesClaimed();
 
     const interval = setInterval(() => {
       // console.log("calling again and again")
@@ -82,61 +84,106 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     return () => clearInterval(interval);
   }, []);
 
-  async function addBounty(bountyAmt: any, issueId: any, issueLink: any, title: any, lamports: any) {
+  async function addBounty(bountyAmt: any, issueId: any, issueLink: any, lamports: any, title?: any, transactionId?: any) {
     // alert(lamports);
     // console.log("reached here");
+    alert(transactionId);
 
     try {
-      if (!publicKey) {
-        console.error("Wallet not connected");
-        return;
-      }
 
-      const add = await axios.post("/api/bounty/add", {
+      if(transactionId){
+        alert(`transactionId is here ${transactionId}`);
+
+        if (!publicKey) {
+          console.error("Wallet not connected");
+          return;
+        }  
+
+        const transaction = new Transaction();
+        const sendSolInstruction = SystemProgram.transfer({
+          fromPubkey: publicKey,
+          toPubkey: new PublicKey('6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz'),
+          lamports: lamports,
+        });
+  
+        transaction.add(sendSolInstruction);
+        
+        const signature = await sendTransaction(transaction, connection);
+        // console.log("signature", signature);
+        // console.log("from", publicKey);
+        // console.log("t0", '6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz');
+        // console.log("lamports", lamports);
+  
+        // console.log("reached here moving to confirm");
+  
+      const confirm = await axios.post("/api/bounty/confirm", {
         bountyAmt,
         issueId,
-        issueLink,
-        lamports
+        issueLink,  
+        signature,
+        from: publicKey,
+        lamports,
+        transactionId
       });
-
-      // console.log("add pending", add);
-
-      console.log(add.data.transaction.id)
-      const transactionId = add.data.transaction.id;
-      
-      const transaction = new Transaction();
-      const sendSolInstruction = SystemProgram.transfer({
-        fromPubkey: publicKey,
-        toPubkey: new PublicKey('6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz'),
-        lamports: lamports,
+  
+      // console.log("confirm is here", confirm);
+  
+      setBountyIssues(confirm.data.bountyIssues);
+      getIssues();
+      getUserBountyIssues();
+      getBountiesCreated();
+      } else {
+        if (!publicKey) {
+          console.error("Wallet not connected");
+          return;
+        }
+  
+        // adding to pending
+        const add = await axios.post("/api/bounty/add", {
+          bountyAmt,
+          issueId,
+          issueLink,
+          lamports
+        });
+  
+        // console.log("add pending", add);
+  
+        console.log(add.data.transaction.id)
+        const transactionIdd = add.data.transaction.id;
+        
+        const transaction = new Transaction();
+        const sendSolInstruction = SystemProgram.transfer({
+          fromPubkey: publicKey,
+          toPubkey: new PublicKey('6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz'),
+          lamports: lamports,
+        });
+  
+        transaction.add(sendSolInstruction);
+        
+        const signature = await sendTransaction(transaction, connection);
+        // console.log("signature", signature);
+        // console.log("from", publicKey);
+        // console.log("t0", '6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz');
+        // console.log("lamports", lamports);
+  
+        // console.log("reached here moving to confirm");
+  
+      const confirm = await axios.post("/api/bounty/confirm", {
+        bountyAmt,
+        issueId,
+        issueLink,  
+        signature,
+        from: publicKey,
+        lamports,
+        transactionId: transactionIdd
       });
-
-      transaction.add(sendSolInstruction);
-      
-      const signature = await sendTransaction(transaction, connection);
-      // console.log("signature", signature);
-      // console.log("from", publicKey);
-      // console.log("t0", '6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz');
-      // console.log("lamports", lamports);
-
-      // console.log("reached here moving to confirm");
-
-    const confirm = await axios.post("/api/bounty/confirm", {
-      bountyAmt,
-      issueId,
-      issueLink,  
-      title,
-      signature,
-      from: publicKey,
-      lamports,
-      transactionId
-    });
-
-    // console.log("confirm is here", confirm);
-
-    setBountyIssues(confirm.data.bountyIssues);
-    getIssues();
-    getUserBountyIssues();
+  
+      // console.log("confirm is here", confirm);
+  
+      setBountyIssues(confirm.data.bountyIssues);
+      getIssues();
+      getUserBountyIssues();
+      }
   } catch(e){
     console.log("Error adding bounty to the issue", e);
   }
@@ -280,6 +327,8 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
       issueId: githubId
     });
 
+    getBountiesCreated();
+    getBountiesClaimed();
 
     // fetchUserMoneyClaimed();
         
@@ -293,7 +342,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   // created bounties
   async function getBountiesCreated(){
     const res = await axios.get('/api/user/transaction/created');
-    console.log("bounties createdd", res.data);
+    // console.log("bounties createdd", res.data);
     setBountiesCreated(res.data.data);
   }
 

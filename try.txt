@@ -148,3 +148,5 @@ then /profile --> done
 
 
 ///show data for transaction for claimed and created perfectly with buttons if pending to retry
+
+/// in profile page remove edit button for changing wallet address

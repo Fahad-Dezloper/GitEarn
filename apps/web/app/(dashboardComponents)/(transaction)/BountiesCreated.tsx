@@ -19,6 +19,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { cn } from "@/lib/utils"
 import { mockCreatedBounties } from "@/lib/mock-data"
 import { useBountyDetails } from "@/app/context/BountyContextProvider"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 
 // Convert lamports to SOL
 const lamportsToSol = (lamports: number) => {
@@ -41,9 +49,18 @@ export function BountiesCreated() {
     to: undefined,
   })
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([])
-  const { bountiesCreated } = useBountyDetails();
+  const { bountiesCreated, addBounty } = useBountyDetails();
+  const [loading, setLoading] = useState(false);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [bountyToConfirm, setBountyToConfirm] = useState<{
+    txnId: string;
+    bountyAmountInLamports: number;
+    htmlUrl: string;
+    githubId: string;
+    bountyAmount: number;
+  } | null>(null);
 
-  console.log("bounties created", bountiesCreated);
+  // console.log("bounties created", bountiesCreated);
 
   const toggleRow = (id: string) => {
     setExpandedRows((prev) => ({
@@ -73,6 +90,46 @@ export function BountiesCreated() {
 
     return matchesSearch && matchesDateFrom && matchesDateTo && matchesStatus
   })
+
+  function formatIssueTitle(url: string): string {
+    try {
+      const match = url.match(/github\.com\/[^/]+\/([^/]+)\/issues\/(\d+)/);
+      if (!match) return 'Invalid GitHub Issue URL';
+      
+      const repo = match[1];
+      const issueNumber = match[2];
+      return `Issue #${issueNumber} · ${repo}`;
+    } catch {
+      return 'Error formatting issue title';
+    }
+  }
+
+  async function confirmPendingBounty(txnId: string, bountyAmountInLamports: number, htmlUrl: string, githubId: string, bountyAmount: number){
+    try{
+      setLoading(true)
+      const res = await addBounty(
+        bountyAmount,            // Matching order
+        githubId,                // Matching order
+        htmlUrl,                 // Matching order
+        bountyAmountInLamports,  // Matching order
+        undefined,               // Optional 'title', passing undefined if not needed
+        txnId                    // Matching order
+      );
+      console.log("res", res);
+    } catch (e){
+      console.error("Error while confirming pending bounty", e);
+    } finally{
+      setLoading(false);
+    }
+
+  }
+
+  const formatter = new Intl.DateTimeFormat('en-GB', {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit'
+  });
+  
 
   return (
     <div className="space-y-4">
@@ -204,7 +261,7 @@ export function BountiesCreated() {
             ) : (
               filteredBounties.map((bounty) => (
                 <>
-                  <TableRow key={bounty.title}>
+                  <TableRow key={bounty.id}>
                     <TableCell className="font-medium">
                       <a
                         href={bounty.htmlUrl}
@@ -212,7 +269,7 @@ export function BountiesCreated() {
                         rel="noopener noreferrer"
                         className="text-primary hover:underline"
                       >
-                        {bounty.title}
+                        {formatIssueTitle(bounty.htmlUrl)};
                       </a>
                     </TableCell>
                     <TableCell>
@@ -223,11 +280,11 @@ export function BountiesCreated() {
                     <TableCell className="text-right">
                       {bounty.claimedAmount ? `${bounty.bountyAmountInLamports} SOL` : "-"}
                     </TableCell>
-                    <TableCell>2nd April</TableCell>
-                    {/* <TableCell>{bounty.createdAt}</TableCell> */}
+                    {/* <TableCell>2nd April</TableCell> */}
+                    <TableCell>{formatter.format(new Date(bounty.createdAt))}</TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="sm" onClick={() => toggleRow(bounty.title)}>
-                        {expandedRows[bounty.title] ? (
+                      <Button variant="ghost" size="sm" onClick={() => toggleRow(bounty.id)}>
+                        {expandedRows[bounty.id] ? (
                           <ChevronUp className="h-4 w-4" />
                         ) : (
                           <ChevronDown className="h-4 w-4" />
@@ -235,7 +292,7 @@ export function BountiesCreated() {
                       </Button>
                     </TableCell>
                   </TableRow>
-                  {expandedRows[bounty.title] && (
+                  {expandedRows[bounty.id] && (
                     <TableRow className="bg-muted/50">
                       <TableCell colSpan={6} className="p-0">
                         <div className="p-4">
@@ -254,7 +311,7 @@ export function BountiesCreated() {
                               {bounty.transactions.map((txn, index) => (
                                 <TableRow key={index}>
                                   {/* // {txn.createdAt} */}
-                                  <TableCell>2nd April</TableCell>
+                                  <TableCell>{formatter.format(new Date(txn.createdAt))}</TableCell>
                                   <TableCell>{txn.type}</TableCell>
                                   <TableCell>
                                     <StatusBadge status={txn.status} />
@@ -265,7 +322,8 @@ export function BountiesCreated() {
                                   </TableCell>
                                   <TableCell>
                                     {/* {txn.type === "PENDING"} */}
-                                    {/* <div className="flex space-x-2">
+                                    {txn.txnHash !== null && 
+                                      <div className="flex space-x-2">
                                       <a
                                         href={`https://explorer.solana.com/tx/${txn.txnHash}`}
                                         target="_blank"
@@ -283,7 +341,22 @@ export function BountiesCreated() {
                                       >
                                         Solscan
                                       </a>
-                                    </div> */}
+                                    </div>
+                                    }
+
+                                    {txn.status === "PENDING" && 
+                                      <Button onClick={() => {
+                                        setIsConfirmDialogOpen(true);
+                                        setBountyToConfirm({
+                                          txnId: txn.id,
+                                          bountyAmountInLamports: bounty.bountyAmountInLamports,
+                                          htmlUrl: bounty.htmlUrl,
+                                          githubId: bounty.githubId,
+                                          bountyAmount: bounty.bountyAmount
+                                        });
+                                      }} className="cursor-pointer">Confirm Payment</Button>
+                                    }
+
                                   </TableCell>
                                 </TableRow>
                               ))}
@@ -299,6 +372,73 @@ export function BountiesCreated() {
           </TableBody>
         </Table>
       </div>
+
+      <Dialog open={isConfirmDialogOpen} onOpenChange={(open) => {
+        setIsConfirmDialogOpen(open);
+        if (!open) setBountyToConfirm(null);
+      }}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Confirm Payment</DialogTitle>
+            <DialogDescription>
+              Please review the details below before confirming the payment.
+            </DialogDescription>
+          </DialogHeader>
+          {bountyToConfirm && (
+            <dl className="bg-muted/30 rounded-md px-4 py-3 space-y-3 border">
+              <div className="flex flex-col gap-1">
+                <dt className="font-semibold text-muted-foreground">Bounty URL</dt>
+                <dd>
+                  <a href={bountyToConfirm.htmlUrl} target="_blank" rel="noopener noreferrer" className="text-primary underline break-all">
+                    {bountyToConfirm.htmlUrl}
+                  </a>
+                </dd>
+              </div>
+              <div className="flex flex-col gap-1">
+                <dt className="font-semibold text-muted-foreground">GitHub ID</dt>
+                <dd>{bountyToConfirm.githubId}</dd>
+              </div>
+              <div className="flex flex-col gap-1">
+                <dt className="font-semibold text-muted-foreground">Bounty Amount</dt>
+                <dd>{bountyToConfirm.bountyAmount} <span className="text-xs text-muted-foreground">(SOL)</span></dd>
+              </div>
+              <div className="flex flex-col gap-1">
+                <dt className="font-semibold text-muted-foreground">Bounty Amount (Lamports)</dt>
+                <dd>{bountyToConfirm.bountyAmountInLamports}</dd>
+              </div>
+              <div className="flex flex-col gap-1">
+                <dt className="font-semibold text-muted-foreground">Transaction ID</dt>
+                <dd className="break-all">{bountyToConfirm.txnId}</dd>
+              </div>
+            </dl>
+          )}
+          <DialogFooter className="flex flex-row gap-3 justify-end mt-4">
+            <Button variant="outline" onClick={() => {
+              setIsConfirmDialogOpen(false);
+              setBountyToConfirm(null);
+            }}>Cancel</Button>
+            <Button
+              type="button"
+              disabled={loading}
+              onClick={async () => {
+                if (bountyToConfirm) {
+                  await confirmPendingBounty(
+                    bountyToConfirm.txnId,
+                    bountyToConfirm.bountyAmountInLamports,
+                    bountyToConfirm.htmlUrl,
+                    bountyToConfirm.githubId,
+                    bountyToConfirm.bountyAmount
+                  );
+                  setIsConfirmDialogOpen(false);
+                  setBountyToConfirm(null);
+                }
+              }}
+            >
+              {loading ? "Confirming..." : "Confirm"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
