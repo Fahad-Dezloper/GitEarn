@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { useState } from "react"
@@ -265,7 +266,7 @@ export function BountiesClaimedPage() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {bounty.transactions.map((transaction, index) => (
+                              {bounty.transactions.map((transaction: any, index: number) => (
                                 <TableRow key={index}>
                                   <TableCell>{format(new Date(bounty.createdAt), "MMM dd, yyyy")}</TableCell>
                                   <TableCell>{transaction.type}</TableCell>

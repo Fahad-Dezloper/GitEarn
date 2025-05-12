@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import { useState } from "react"
@@ -115,7 +117,7 @@ export function BountiesCreated() {
         undefined,               // Optional 'title', passing undefined if not needed
         txnId                    // Matching order
       );
-      // console.log("res", res);
+      // console.log("res", res);  
     } catch (e){
       console.error("Error while confirming pending bounty", e);
     } finally{
@@ -308,7 +310,7 @@ export function BountiesCreated() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {bounty.transactions.map((txn, index) => (
+                              {bounty.transactions.map((txn: any, index: number) => (
                                 <TableRow key={index}>
                                   {/* // {txn.createdAt} */}
                                   <TableCell>{formatter.format(new Date(txn.createdAt))}</TableCell>

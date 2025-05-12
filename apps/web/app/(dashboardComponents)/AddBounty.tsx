@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -54,11 +55,6 @@ interface Repository {
     issues: Issue[];
 }
 
-interface LatestIssuesProps {
-    repoData: Repository[]; 
-    isLoading?: boolean; 
-}
-
 function formatTimeAgo(dateString: string): string {
     try {
         const date = new Date(dateString);
@@ -69,7 +65,7 @@ function formatTimeAgo(dateString: string): string {
     }
 }
 
-const AddBounty: React.FC<LatestIssuesProps> = () => {
+const AddBounty = () => {
     const router = useRouter();
     const { issuesRepo } = useBountyDetails();
     const repoData = issuesRepo;
@@ -85,7 +81,7 @@ const AddBounty: React.FC<LatestIssuesProps> = () => {
         }
 
         const allIssues = repoData.flatMap(repo =>
-            repo.issues.map(issue => ({
+            repo.issues.map((issue: any) => ({
                 ...issue,
                 repoName: repo.name, 
                 repoUrl: repo.html_url 
@@ -176,7 +172,7 @@ const AddBounty: React.FC<LatestIssuesProps> = () => {
                                             {issue.title}
                                         </Link>
                                         <div className='flex items-center gap-2 flex-shrink-0'>
-                                            {issue.labels.map((label) => (
+                                            {issue.labels.map((label: any) => (
                                                 <Badge
                                                     key={label.name}
                                                     className={`text-sm px-3 py-1 rounded-full

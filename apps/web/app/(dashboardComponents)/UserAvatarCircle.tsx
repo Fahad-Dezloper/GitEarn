@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogOut } from "lucide-react";
@@ -8,7 +9,6 @@ import { SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/
 import { SidebarMenu } from "@/components/ui/sidebar";
 import { BadgeCheck, ChevronsUpDown, Wallet, Check } from "lucide-react";
 import { signOut } from "next-auth/react";
-import { useSession } from "next-auth/react";
 import githubUsername from 'github-username';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -21,7 +21,7 @@ import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { toast } from "sonner";
 import { ModeToggle } from "@/components/Toggle";
 
-export default function UserAvatarCircle({session}){
+export default function UserAvatarCircle({session}: {session: any}){
   // console.log("here tooo on useravatar circle", session);
   const user = session?.user;
 

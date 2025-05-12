@@ -7,7 +7,6 @@ import BountyEarners from './BountyEarners';
 import AddBounty from './AddBounty';
 
 const MainPage = () => {
-    // const {data: session, status} = useSession();
 
     return (
         <div className='w-full h-full flex md:flex-row flex-col gap-8 py-6'>

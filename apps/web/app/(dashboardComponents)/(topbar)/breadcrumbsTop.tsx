@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { usePathname } from "next/navigation";
@@ -27,7 +29,7 @@ export default function BreadcrumbsTop(){
         <SidebarTrigger className="-ml-1 md:hidden flex" />
         <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
         
-        < >
+        <>
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/">Home</BreadcrumbLink>

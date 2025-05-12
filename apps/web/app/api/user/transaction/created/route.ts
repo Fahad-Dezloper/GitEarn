@@ -62,7 +62,6 @@ export async function GET(){
 
     return NextResponse.json({message: "User created transaction fetched successfully", data: serializePrimitives(createdTxn)}, {status: 200})
     
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch(e){
         console.log("Error while fetch user created transaction", e);
         return NextResponse.json({message: "Error while fetch user created transaction" }, { status: 500 })

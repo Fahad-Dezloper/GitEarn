@@ -1,4 +1,4 @@
-import react from 'react'
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import Topbar from '@/app/(dashboardComponents)/Topbar'
 import {BountiesCreated} from '@/app/(dashboardComponents)/(transaction)/BountiesCreated'

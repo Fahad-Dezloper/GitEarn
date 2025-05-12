@@ -156,7 +156,7 @@ then /profile --> done
 /// show claimed contributor address in transactions page
 
 
-/earn page
+/earn page - done
 
 
 --later--
