@@ -50,7 +50,7 @@ export function BountiesClaimedPage() {
     }))
   }
 
-  console.log("claim bounties", bountiesClaimed);
+  // console.log("claim bounties", bountiesClaimed);
 
   // Calculate summary stats
   const totalClaimed = bountiesClaimed.length

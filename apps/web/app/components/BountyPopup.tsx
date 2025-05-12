@@ -57,7 +57,7 @@ interface BountyPopupProps {
 
 const BountyPopup = ({title, isAddingBounty, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId}: BountyPopupProps) => {
   
-console.log("main", latestComment);
+// console.log("main", latestComment);
   const largeViewport = useClientMediaQuery("(min-width: 800px)");
   const [bountyAmount, setBountyAmount] = useState<string | number | null>(null);
   const [customAmount, setCustomAmount] = useState("");
@@ -103,19 +103,16 @@ const usdToSol = (usdAmount: number) => {
   const { addBounty } = useBountyDetails();
 
   async function AddBountyToTheIssue(bountyAmt: number){
-    // alert(usdToSol(bountyAmt));
     if (!publicKey) {
       console.error("Wallet not connected");
       return;
     }
 
-    alert(bountyAmt);
-
     try {
       setIsLoading(true);
       const lamports = Math.round(Number(usdToSol(bountyAmt)) * LAMPORTS_PER_SOL);
 
-      const res = await addBounty(bountyAmt, issueId, issueLink, title, lamports);
+      const res = await addBounty(bountyAmt, issueId, issueLink, lamports, title);
 
     } catch (error) {
       console.error("Transaction failed", error);
@@ -142,7 +139,6 @@ const usdToSol = (usdAmount: number) => {
     
     setCustomAmount(value);
     const numericValue = parseFloat(value);
-    // console.log("number", numericValue);
 
     if (isNaN(numericValue) || numericValue <= 0) {
       setSelectedAmount(null);
@@ -429,6 +425,7 @@ const usdToSol = (usdAmount: number) => {
       <div className="border-t flex w-full items-center justify-center border-zinc-200 dark:border-zinc-800 p-2 bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur-sm">
         <button onClick={() => AddBountyToTheIssue(Number(bountyAmount))}
         disabled={
+          isLoading ||
           bountyAmount === null ||
           (selectedAmount !== null && selectedAmount <= 0) ||
           bountyAmount === "custom" && (customAmount.trim() === "" || isNaN(Number(customAmount)))

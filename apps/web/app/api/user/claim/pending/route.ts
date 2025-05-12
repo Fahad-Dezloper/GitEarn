@@ -22,22 +22,25 @@ export async function POST(req: NextRequest) {
     const user = await prisma.user.findUnique({
         where: {
             email: session?.user?.email
+        }, include: {
+            accounts: true
         }
     })
     
-    console.log("user id", user);
+    // console.log("user id", user);
     const userIdd = user?.id;
 
-    console.log("user id", userIdd);
+    // console.log("user id", userIdd);
+    // console.log("before checking", contributorId, walletAdd, bountyAmountInLamports, githubId, htmlUrl);
 
-    const checkingPendingBounty = await prisma.bountyIssues.findUnique({
+    const checkingPendingBounty = await prisma.bountyIssues.findFirst({
         where: {
-            githubId: githubId,
-            contributorId: contributorId,
-            htmlUrl: htmlUrl,
-            status: 'APPROVED'
+          githubId,
+          contributorId,
+          htmlUrl,
+          status: "APPROVED",
         }
-    });
+      });
 
     if(!checkingPendingBounty){
         return NextResponse.json({message: "There is no pending bounty for this issue"}, {status: 500})
@@ -56,7 +59,7 @@ export async function POST(req: NextRequest) {
         const transaction = await tx.transaction.create({
             data: {
                 bountyIssueId: checkingPendingBounty.id,
-                type: 'CLAIM',
+                type: 'WITHDRAWAL',
                 status: 'PENDING',
                 bountyAmount: bountyIssueClaim.bountyAmount,
                 bountyAmountInLamports: bountyIssueClaim.bountyAmountInLamports

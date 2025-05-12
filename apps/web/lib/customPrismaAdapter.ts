@@ -11,27 +11,27 @@ export function CustomPrismaAdapter(prisma: PrismaClient): Adapter {
   return {
     async createUser(userData: any) {
       try {
-        console.log("Creating user with data:", JSON.stringify(userData));
+        // console.log("Creating user with data:", JSON.stringify(userData));
         
         const wallet = generateWalletKeypair();
-        console.log("Generated wallet publicKey:", wallet.publicKey);
+        // console.log("Generated wallet publicKey:", wallet.publicKey);
         
         // Check if secretKey exists and is in the expected format
-        console.log("Secret key type:", typeof wallet.secretKey);
+        // console.log("Secret key type:", typeof wallet.secretKey);
         if (!wallet.secretKey) {
           console.error("secretKey is undefined or null");
           throw new Error("Failed to generate wallet secret key");
         }
         
         const secretKeyString = wallet.secretKey.toString();
-        console.log("Secret key string length:", secretKeyString.length);
+        // console.log("Secret key string length:", secretKeyString.length);
         
         // Now encrypt with proper error handling
         const { encryptedData, iv } = encrypt(secretKeyString);
         
         const userWithWallet = await prisma.$transaction(async (tx: any) => {
           const user = await tx.user.create({ data: userData });
-          console.log("Created user with ID:", user.id);
+          // console.log("Created user with ID:", user.id);
 
           await tx.wallet.create({
             data: {

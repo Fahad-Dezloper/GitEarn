@@ -37,7 +37,6 @@ export function UserDetailsProvider({ children }: { children: ReactNode }) {
     });
     const [wakaTimeDetails, setWakaTimeDetails] = useState({});
     const [walletAdd, setWalletAdd] = useState<string | undefined>();
-    const [claimBounties, setClaimBounties] = useState<any[]>([]);
 
     async function getUserDets(){
         const res = await axios.get("/api/user/details");
@@ -57,23 +56,17 @@ export function UserDetailsProvider({ children }: { children: ReactNode }) {
         setWalletAdd(res.data.walletAdd);
     }
 
-    async function fetchUserMoneyClaimed(){
-        const res = await axios.get("/api/user/claim");
-        // console.log("fetchUserMoneyClaimed", res.data.claimBounties);
-        setClaimBounties(res.data.claimBounties);
-    };
 
     useEffect(() => {
         try{
             getUserDets();
             fetchUserwalletAdd();
-            fetchUserMoneyClaimed();
         } catch (e){
             console.log("error fetching user details", e);
         }
     }, []);
     return (
-        <UserDetailsContext.Provider value={{ userDetailss, setUserDetailss, wakaTimeDetails, setWakaTimeDetails, addWalletAdd, walletAdd, claimBounties }}>
+        <UserDetailsContext.Provider value={{ userDetailss, setUserDetailss, wakaTimeDetails, setWakaTimeDetails, addWalletAdd, walletAdd }}>
             {children}
         </UserDetailsContext.Provider>
     );

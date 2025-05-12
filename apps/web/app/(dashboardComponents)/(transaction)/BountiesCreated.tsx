@@ -115,7 +115,7 @@ export function BountiesCreated() {
         undefined,               // Optional 'title', passing undefined if not needed
         txnId                    // Matching order
       );
-      console.log("res", res);
+      // console.log("res", res);
     } catch (e){
       console.error("Error while confirming pending bounty", e);
     } finally{

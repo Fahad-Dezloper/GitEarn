@@ -150,3 +150,7 @@ then /profile --> done
 ///show data for transaction for claimed and created perfectly with buttons if pending to retry
 
 /// in profile page remove edit button for changing wallet address
+
+/// make the refresh button work on popup
+
+/// show claimed contributor address in transactions page

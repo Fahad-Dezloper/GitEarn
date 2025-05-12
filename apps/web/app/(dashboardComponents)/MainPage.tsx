@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 
 const MainPage = () => {
     const {data: session, status} = useSession();
-    console.log("session here with status", session, status);
+    // console.log("session here with status", session, status);
 
     const token = session?.accessToken
     

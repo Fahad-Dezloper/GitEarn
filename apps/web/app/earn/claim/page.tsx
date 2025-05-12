@@ -18,9 +18,9 @@ import { format } from "date-fns"
 import Topbar from '@/app/(dashboardComponents)/Topbar';
 
 export default function Page(){
-    const { claimBounties, walletAdd } = useUserDetails();
-    const { claimMoney } = useBountyDetails();
-    console.log("claim BOUNYT", claimBounties);   
+    const {  walletAdd } = useUserDetails();
+    const { claimMoney, claimBounties  } = useBountyDetails();
+    // console.log("claim BOUNYT", claimBounties);   
     
     useEffect(() => {
       if (walletAdd) {
@@ -46,7 +46,7 @@ export default function Page(){
   const handleSubmitClaim = async (contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any) => {
     try{
       setLoading(true);
-      console.log("Claiming bounty", contributorId, walletAdd, bountyAmountInLamports, githubId, htmlUrl);
+      // console.log("Claiming bounty", contributorId, walletAdd, bountyAmountInLamports, githubId, htmlUrl);
       const res = await claimMoney(contributorId, walletAdd, bountyAmountInLamports, githubId, htmlUrl);
       // console.log("done claiming", res);
     } catch(e){
@@ -142,7 +142,7 @@ export default function Page(){
             </CardContent>
           
             <CardFooter>
-              <Button className="w-full" onClick={() => handleClaim(bounty)}>
+              <Button className="w-full cursor-pointer" onClick={() => handleClaim(bounty)}>
                 Claim Bounty
               </Button>
             </CardFooter>

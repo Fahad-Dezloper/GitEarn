@@ -109,7 +109,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
   const confirmApproval = async () => {
     setApproveLoading(true);
     if (selectedAssignee) {
-      console.log("Approving payment to:", selectedAssignee.id);
+      // console.log("Approving payment to:", selectedAssignee.id);
       const contributorId = selectedAssignee.id;
       try{
         const res = await approveBounty(issueId, issueLink, contributorId );
@@ -130,13 +130,13 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
     setShowCancelDialog(true);
   };
 
-  console.log("lamports", lamports);
+  // console.log("lamports", lamports);
 
   async function confirmCancel() {
     try{
       setLoading(true);
       // @ts-ignore
-      console.log("lamports here", lamports)
+      // console.log("lamports here", lamports)
       alert(`from here ${lamports}`)
       const res = await removeBounty({issueId, issueLink, lamports});
     } catch(e){
@@ -459,9 +459,9 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                     <Button
                       className={`bg-green-600 hover:bg-green-700 text-white ${selectedAssignee?.walletAddress === null ? `cursor-not-allowed` : `cursor-pointer`}`}
                       onClick={confirmApproval}
-                      disabled={selectedAssignee?.walletAddress === null}
+                      disabled={selectedAssignee?.walletAddress === null || approveLoading}
                     >
-                      Approve Payment
+                      {approveLoading ? 'Approving...' : 'Approve Payment'} 
                     </Button>
                   </div>
                 </div>
@@ -497,6 +497,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                     <Button 
                       className="bg-red-600 hover:bg-red-700 text-white"
                       onClick={confirmCancel}
+                      disabled={loading}
                     >
                       {loading ? "Cancelling..." : "Yes, Cancel Bounty"}
                     </Button>

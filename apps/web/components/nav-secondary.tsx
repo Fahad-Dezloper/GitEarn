@@ -20,7 +20,7 @@ export function NavSecondary({
     icon: LucideIcon
   }[]
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
-  console.log("items here",items);
+  // console.log("items here",items);
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent className="flex">

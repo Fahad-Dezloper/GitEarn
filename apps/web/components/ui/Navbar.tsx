@@ -23,7 +23,7 @@ export default function NavbarDemo() {
   ];
  
   const {data: session, status} = useSession();
-  console.log("session from navbar", session?.user);
+  // console.log("session from navbar", session?.user);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
  
   return (

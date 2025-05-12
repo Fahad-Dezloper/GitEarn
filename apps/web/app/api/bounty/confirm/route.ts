@@ -44,7 +44,7 @@ async function ConfirmTxt(signature: any, from: any, to: string, lamports: numbe
   const tx = res.data.result;
   // console.log("main transaction", tx);
   if (!tx) {
-    console.log("Transaction not found or not confirmed.");
+    // console.log("Transaction not found or not confirmed.");
     return false;
   }
 
@@ -59,12 +59,12 @@ async function ConfirmTxt(signature: any, from: any, to: string, lamports: numbe
   // console.log("fromkey", fromIndex, toIndex);
 
   if (!fromIndex || !toIndex) {
-    console.log("From or To address are not there.");
+    // console.log("From or To address are not there.");
     return false;
   }
 
   if (fromIndex !== from || toIndex !== to) {
-    console.log("From or To address are diffrent.");
+    // console.log("From or To address are diffrent.");
     return false;
   }
 
@@ -78,8 +78,8 @@ async function ConfirmTxt(signature: any, from: any, to: string, lamports: numbe
   } else {
     isValid = false;
   }
-  console.log(total, totalSent, lamports);
-  console.log(`Valid: ${isValid}`);
+  // console.log(total, totalSent, lamports);
+  // console.log(`Valid: ${isValid}`);
   return isValid;
 }
 
@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
 
     const confirmTransaction = await ConfirmTxt(signature, from, to, lamports);
 
-    console.log("confirming", confirmTransaction);
+    // console.log("confirming", confirmTransaction);
     if(!confirmTransaction){
       return NextResponse.json({message: "Transaction mismatch"}, {status: 401});
     }
@@ -153,7 +153,7 @@ export async function POST(req: NextRequest) {
         data: {status: 'ACTIVE', bountyAmountInLamports: lamports}
       });
 
-      console.log('transaction form confirm', transaction);
+      // console.log('transaction form confirm', transaction);
       return transaction;
     })
 

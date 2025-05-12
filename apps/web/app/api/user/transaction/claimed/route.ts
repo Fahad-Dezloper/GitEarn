@@ -22,7 +22,7 @@ export async function GET(){
         }
     });
 
-    console.log("user", user);
+    // console.log("user", user);
 
     if(!user){
         return NextResponse.json({message: "User not found"}, {status: 404});
@@ -41,7 +41,7 @@ export async function GET(){
         }
     });
 
-    console.log("txn claimedTxn", claimedTxn);
+    // console.log("txn claimedTxn", claimedTxn);
 
     function serializePrimitives(obj: any): any {
         if (Array.isArray(obj)) {

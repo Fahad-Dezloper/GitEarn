@@ -3,9 +3,9 @@ import { AuthTesti } from '@/app/(landingpageComponent)/AuthTesti';
 import SignInButtons from "@/app/(landingpageComponent)/SignInButtons";
 
 export default async function SignInPage() {
-  console.log("signin page");
+  // console.log("signin page");
   const providers = await getProviders();
-  console.log("provider here", providers );
+  // console.log("provider here", providers );
 
   return (
     <div className='flex overflow-x-hidden mainGradAuth w-full h-full md:px-24'>
@@ -15,7 +15,7 @@ export default async function SignInPage() {
         </div>
       </div>
 
-      <div className="md:w-[50%] w-full border-r !overflow-y-hidden h-full flex flex-col gap-6 items-center justify-center text-center px-4">
+      <div className="md:w-[50%] w-full border-r h-full !overflow-y-hidden h-full flex flex-col gap-6 items-center justify-center text-center px-4">
   <h1 className="font-sora text-6xl">Sign In</h1>
   <p className="text-gray-500 dark:text-gray-400 max-w-md">
     Access your dashboard and start earning by contributing to open source.
