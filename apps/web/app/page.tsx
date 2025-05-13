@@ -24,15 +24,12 @@ export default function Home() {
 
   return (
     <div className="flex flex-col md:gap-12 gap-4 w-full min-h-screen  overflow-x-hidden">
-      {/* navbar */}
       <div className="flex flex-col ">
         <Navbar />
 
-        {/* landing */}
         <div className="w-full flex h-fit mainGrad relative overflow-x-hidden">
           <div className="px-4 md:px-8 lg:pl-18">
             <div className="w-full h-full flex flex-col lg:flex-row items-center gap-6 lg:gap-9 p-2 lg:p-6">
-              {/* left */}
               <div className="flex w-full h-full flex-col pt-8 lg:pt-18 gap-3">
                 <div className="px-2 group border rounded-full text-[10px]  md:text-xs w-fit backdrop-blur-md flex items-center bg-gradient-to-r from-[#d0f1ff] via-[#e3f5ff] to-[#d0f1ff] text-slate-800 font-semibold">
                   <BoxesIcon
@@ -63,7 +60,6 @@ export default function Home() {
                 </Link>
               </div>
 
-              {/* right */}
               <div className="w-full hidden md:block lg:block h-full mt-8 lg:mt-0">
                 <RightSideLanding />
               </div>
@@ -111,7 +107,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* section 2 */}
       <div
         id="howitworks"
         className="w-full h-full md:px-34 p-4 md:py-4 flex flex-col gap-3"
@@ -122,7 +117,6 @@ export default function Home() {
         <HowItWorks />
       </div>
 
-      {/* section 3 */}
       <div id="features" className="w-full h-full md:px-34 p-4 md:py-4">
         <h1 className="md:text-[4rem] text-[2rem] w-full text-left font-sora text-white font-semibold">
           Features
@@ -130,10 +124,8 @@ export default function Home() {
         <FeaturesSectionDemo />
       </div>
 
-      {/* Powered By */}
       <PoweredBy />
 
-      {/* testimonials By */}
       <div id="customers" className="w-full h-full md:px-18 px-4">
         <div className="flex flex-col items-center gap-6">
           <Testimonials />
