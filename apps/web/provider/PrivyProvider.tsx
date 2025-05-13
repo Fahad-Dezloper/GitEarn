@@ -9,9 +9,9 @@ const PrivyProviderr = ({children}: {children: React.ReactNode}) => {
                 config={{
                 "appearance": {
                   "accentColor": "#6A6FF5",
-                  "theme": "#FFFFFF",
+                  "theme": "#222224",
                   "showWalletLoginFirst": false,
-                  "logo": "https://auth.privy.io/logos/privy-logo.png",
+                  "logo": "https://ox35safakaidjuzg.public.blob.vercel-storage.com/GITEARN%20%282%29-EbGaOHcbaiC81M4aO8Y4olTmGPYdIy.png",
                   "walletChainType": "solana-only",
                   "walletList": [
                     "detected_solana_wallets",

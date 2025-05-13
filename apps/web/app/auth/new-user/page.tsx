@@ -49,14 +49,14 @@ export default function Page() {
   }, [ready, authenticated, user, walletAdded, router]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
-      <div className="bg-white p-8 rounded-2xl shadow-lg text-center max-w-md w-full">
-        <h1 className="text-2xl font-bold mb-4">Welcome to DevStack</h1>
-        <p className="mb-6 text-gray-600">Let’s get your wallet set up</p>
+    <div className="flex flex-col items-center w-full h-full justify-center min-h-screen bg-background px-4 sm:px-6 lg:px-8">
+      <div className="bg-card p-6 sm:p-8 rounded-2xl shadow-lg text-center w-full max-w-md mx-auto border border-border">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-foreground font-sora">Welcome to GITEARN</h1>
+        <p className="mb-8 text-muted-foreground text-base sm:text-lg">Let&apos;s get your wallet set up</p>
 
         {ready && !authenticated && (
           <Button
-            className="bg-blue-600 hover:bg-blue-700 text-white w-full"
+            className="w-full h-12 text-base font-medium transition-all duration-200 cursor-pointer hover:invert-colors"
             onClick={() => login()}
           >
             Start now
@@ -64,7 +64,12 @@ export default function Page() {
         )}
 
         {authenticated && (
-          <p className="text-sm text-gray-500 mt-4">Creating your wallet...</p>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">Creating your wallet...</p>
+            <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+              <div className="h-full bg-primary animate-pulse w-1/2"></div>
+            </div>
+          </div>
         )}
       </div>
     </div>
