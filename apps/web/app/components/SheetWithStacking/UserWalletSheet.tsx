@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { useCallback, useEffect, useState } from "react";
@@ -12,8 +13,6 @@ import {
 import { Wallet, Copy, Check } from "lucide-react";
 import { usePrivy } from "@privy-io/react-auth";
 import axios from "axios";
-import { XIcon } from "@/components/ui/x";
-import { SheetTriggerCard } from "../app/SheetTriggerCard/SheetTriggerCard";
 
 const WalletStackingView = () => {
   const [scrolled, setScrolled] = useState(false);

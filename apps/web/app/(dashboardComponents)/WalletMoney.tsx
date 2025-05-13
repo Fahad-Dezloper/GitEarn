@@ -1,8 +1,5 @@
 "use client";
-import { usePrivy } from '@privy-io/react-auth';
-import { Wallet } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import { UserWalletSheet } from '../components/SheetWithStacking/UserWalletSheet';
 export default function WalletMoney() {
 

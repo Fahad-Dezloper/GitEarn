@@ -23,11 +23,7 @@ async function getUserByGitHubId(githubId: string){
       }
     },
     include: {
-      user: {
-        include: {
-          wallet: true
-        }
-      }
+      user: true
     }
   });
 
@@ -36,7 +32,11 @@ async function getUserByGitHubId(githubId: string){
     return;
   }
 
-  return res?.user?.wallet?.publicKey;
+  if (!res.user) {
+    return null;
+  }
+
+  return res.user.solanaAddress;
 }
 
 async function fetchGitHubIssueData(htmlUrl: string) {

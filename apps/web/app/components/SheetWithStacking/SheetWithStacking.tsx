@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React from "react";
 import {
@@ -5,7 +6,6 @@ import {
   SheetStack,
   SheetViewProps,
   useClientMediaQuery,
-  VisuallyHidden,
   type SheetContentProps,
 } from "@silk-hq/components";
 import "./SheetWithStacking.css";
