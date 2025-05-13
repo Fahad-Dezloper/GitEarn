@@ -4,37 +4,28 @@ import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest){
+    console.log("reached here");
     try {
         const session = await getServerSession();
         const body = await req.json();
-        const { walletAddress } = body;
-
-        if(!session?.user?.email){
-            return NextResponse.json({message: "Unauthorized Request"}, {status: 401})
+        const { walletAddress, privyId } = body;
+        const email = session?.user?.email
+        if(!email){
+            return NextResponse.json({message: "Unauthorized Request"}, {status: 404})
         }
-    
-        const existingUser = await prisma.user.findUnique({
-            where: {
-              email: session.user.email,
-            },
-          });
 
-          if (!existingUser) {
-            return NextResponse.json({ message: 'User not found' }, { status: 404 });
-          }
+        console.log("adding wallet", walletAddress, privyId);
 
-        const updatedUser = await prisma.user.update({
-            where: {
-                email: session.user.email,
-            },
+
+        const user = await prisma.user.update({
+            where: { email },
             data: {
-                wallet: walletAddress,
-            },
-        });
-          
-            // console.log('Wallet address added:', updatedUser);
+                privyDID: privyId,
+                solanaAddress: walletAddress
+            }
+        })
 
-            return NextResponse.json({message: "Wallet Address Added Successfully"}, {status: 200});
+    return NextResponse.json({message: "Wallet Address Added Successfully"}, {status: 200});
     
     }catch(e){
         return NextResponse.json({message: "Error while saving wallet address"}, {status: 500})

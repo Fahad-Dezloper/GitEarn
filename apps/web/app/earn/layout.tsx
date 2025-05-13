@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar";
+import PrivyProviderr from "@/provider/PrivyProvider";
 import { ReactNode } from "react";
 
 interface DashboardLayoutProps {
