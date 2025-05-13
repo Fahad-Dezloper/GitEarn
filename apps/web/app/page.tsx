@@ -26,7 +26,6 @@ export default function Home() {
     <div className="flex flex-col md:gap-12 gap-4 w-full min-h-screen  overflow-x-hidden">
       <div className="flex flex-col ">
         <Navbar />
-
         <div className="w-full flex h-fit mainGrad relative overflow-x-hidden">
           <div className="px-4 md:px-8 lg:pl-18">
             <div className="w-full h-full flex flex-col lg:flex-row items-center gap-6 lg:gap-9 p-2 lg:p-6">
