@@ -1,18 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Sheet } from "@silk-hq/components";
 import { DetachedSheet } from "./DetachedSheet";
 import "./ExampleDetachedSheet.css";
 import { SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { useState } from "react";
-import { LucideIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSession } from "next-auth/react";
 
 interface SupportItem {
   title: string;
   url: string;
-  icon: LucideIcon;
-  key: string;
+  icon: any;
 }
 
 interface SupportSheetProps {
@@ -208,11 +207,8 @@ const SupportContent = () => {
 
 const SupportSheet = ({ items }: SupportSheetProps) => {
   const [selectedItem, setSelectedItem] = useState<SupportItem | null>(null);
-  console.log("selectedItem", selectedItem);
 
   const currentItem = selectedItem;
-
-  console.log("current item", currentItem);
 
   return (
     <DetachedSheet
