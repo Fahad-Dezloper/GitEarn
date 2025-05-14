@@ -30,3 +30,7 @@
    background-color: white;
    box-shadow: var(--shadow-4);
 }
+
+:is(.dark) .DetachedSheet-innerContent {
+   background-color: #171717;
+}

@@ -339,16 +339,23 @@ const UserWalletSheet = () => {
     <SheetWithStackingStack>
       <SheetWithStackingRoot>
         <Sheet.Trigger>
-          <div className="px-4 bg-[#F5F5F5] md:flex font-sora dark:bg-[#262626] py-2.5 cursor-pointer rounded-full items-center gap-3 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-            <Wallet size={18} className="text-[#A1A1A1]" />
+          <div className="md:px-4 md:bg-[#F5F5F5] md:flex font-sora md:dark:bg-[#262626] py-2.5 cursor-pointer rounded-full items-center gap-3 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+            <div className="relative">
+            <Wallet className="md:text-[#A1A1A1] " />
+              {walletAddress && (
+                <div className="absolute -top-2 -right-2 bg-green-500 rounded-full w-4 h-4 flex items-center justify-center sm:hidden">
+                  <span className="text-white text-[8px] font-semibold">${usdValue > 999 ? '1k+' : usdValue.toFixed(0)}</span>
+                </div>
+              )}
+            </div>
             {walletAddress ? (
-              <div className="flex flex-col">
+              <div className="hidden sm:flex flex-col whitespace-nowrap">
                 <span className="text-sm font-medium text-[#A1A1A1] whitespace-nowrap">
                   ${usdValue.toFixed(2)}
                 </span>
               </div>
             ) : (
-              <span className="text-sm text-[#737373]">Connect Wallet</span>
+              <span className="hidden sm:inline-block text-sm text-[#737373] whitespace-nowrap">Connect Wallet</span>
             )}
           </div>
         </Sheet.Trigger>
