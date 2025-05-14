@@ -6,6 +6,7 @@ import {
     Transaction,
     LAMPORTS_PER_SOL,
     clusterApiUrl,
+    Cluster,
   } from '@solana/web3.js';
   import crypto from 'crypto';
   
@@ -46,7 +47,7 @@ export async function withdrawMoney({
       .update(timestamp)
       .digest('hex');
     
-    const connection = new Connection(clusterApiUrl(network), 'confirmed');
+    const connection = new Connection(clusterApiUrl(network as Cluster), 'confirmed');
     const senderPubkey = new PublicKey(from);
     const recipientPubkey = new PublicKey(to);
   

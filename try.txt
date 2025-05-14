@@ -167,8 +167,6 @@ delete custom prisma adapter.- done
 
 improve UI for /auth/new-user
 
-work on seo
-
 write all small problems on paper  -- done
 
 
@@ -188,3 +186,18 @@ write all small problems on paper  -- done
                 <div className="text-sm text-gray-400 dark:text-gray-500 max-w-md">Your rewards will show up here when you&apos;re paid by a maintainer</div>
               </div>
             </div> */}
+
+
+
+
+////
+
+work on seo
+
+make videos for landing page
+
+make main video
+
+submit for grant/solana mini hackathon/everything
+
+get it live

@@ -285,7 +285,7 @@ const WithdrawStackingView = ({usdBalance, solBalance}: {usdBalance: number, sol
     try {
       const res = await withdrawMoney({
         walletId: walletId,
-        from: walletAddress,
+        from: walletAddress!,
         to: withdrawAddress,
         amount: Number(amount),
         network: 'devnet'
