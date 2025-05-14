@@ -419,7 +419,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   }
   return (
     // @ts-ignore
-    <BountyDetailsContext.Provider value={{ issuesRepo, setIssuesRepo, addBounty, bountyIssues, setBountyIssues, userBountyIssue, removeBounty, approveBounty, claimMoney, bountiesCreated, bountiesClaimed, claimBounties, withdrawMoney}}>
+    <BountyDetailsContext.Provider value={{ issuesRepo, setIssuesRepo, addBounty, bountyIssues, setBountyIssues, userBountyIssue, removeBounty, approveBounty, claimMoney, bountiesCreated, bountiesClaimed, claimBounties}}>
       {children}
     </BountyDetailsContext.Provider>
   );
