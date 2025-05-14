@@ -21,8 +21,6 @@ interface UserDetailssContextType {
     setUserDetailss: React.Dispatch<React.SetStateAction<UserDetailss>>;
     wakaTimeDetails: any;
     setWakaTimeDetails: React.Dispatch<React.SetStateAction<any>>;
-    addWalletAdd: (params: { dbWallet: string }) => Promise<void>;
-    walletAdd: any;
 }
 
 const UserDetailsContext = createContext<UserDetailssContextType | undefined>(undefined);
@@ -36,7 +34,7 @@ export function UserDetailsProvider({ children }: { children: ReactNode }) {
         avatar_url: undefined
     });
     const [wakaTimeDetails, setWakaTimeDetails] = useState({});
-    const [walletAdd, setWalletAdd] = useState<string | undefined>();
+    // const [walletAdd, setWalletAdd] = useState<string | undefined>();
 
     async function getUserDets(){
         const res = await axios.get("/api/user/details");
@@ -44,29 +42,22 @@ export function UserDetailsProvider({ children }: { children: ReactNode }) {
         setWakaTimeDetails(res.data.wakatime)
     }
 
-    async function addWalletAdd({dbWallet}: {dbWallet: string}){
-        const res = await axios.post("/api/user/wallet/add", {
-            walletAddress: dbWallet
-          });
-    }
-
-    async function fetchUserwalletAdd(){
-        const res = await axios.get("/api/user/wallet/get");
-        // console.log("res for wallet ADD", res.data);
-        setWalletAdd(res.data.walletAdd);
-    }
+    // async function fetchUserwalletAdd(){
+    //     const res = await axios.get("/api/user/wallet/get");
+    //     // console.log("res for wallet ADD", res.data);
+    //     setWalletAdd(res.data.walletAdd);
+    // }
 
 
     useEffect(() => {
         try{
             getUserDets();
-            fetchUserwalletAdd();
         } catch (e){
             console.log("error fetching user details", e);
         }
     }, []);
     return (
-        <UserDetailsContext.Provider value={{ userDetailss, setUserDetailss, wakaTimeDetails, setWakaTimeDetails, addWalletAdd, walletAdd }}>
+        <UserDetailsContext.Provider value={{ userDetailss, setUserDetailss, wakaTimeDetails, setWakaTimeDetails }}>
             {children}
         </UserDetailsContext.Provider>
     );

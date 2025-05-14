@@ -21,7 +21,6 @@ export default function Mainbounties() {
 
       const storageKey = `gitEarn-signature-${publicKey.toBase58()}`;
 
-      // Check if signature is already stored
       const existingSignature = localStorage.getItem(storageKey);
       if (existingSignature) return;
 
@@ -29,7 +28,6 @@ export default function Mainbounties() {
         const message = new TextEncoder().encode("Sign into GitEarn");
         const signature = await signMessage(message);
         
-        // Store signature
         localStorage.setItem(storageKey, JSON.stringify([...signature]));
         // console.log("Signature stored:", signature);
       } catch (err) {

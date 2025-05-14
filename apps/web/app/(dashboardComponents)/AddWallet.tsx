@@ -14,27 +14,16 @@ import { useState, useEffect } from "react";
 import { ed25519 } from "@noble/curves/ed25519";
 import { CopyIcon } from "@/components/ui/copy";
 
-export default function AddWallet() {
+export default function AddWallet({walletAddress}: {walletAddress: string}) {
   const { publicKey, signMessage, connected } = useWallet();
-  const { userDetailss, addWalletAdd, walletAdd } = useUserDetails();
   const [copied, setCopied] = useState(false);
 
   const [dbWallet, setDbWallet] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (walletAdd) {
-      setDbWallet(walletAdd);
-    }
-  }, [walletAdd]);
-
   const handleEdit = () => {
     setIsEditing(true);
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDbWallet(e.target.value);
   };
 
   const handleAddWalletAddress = async () => {
@@ -60,8 +49,6 @@ export default function AddWallet() {
         alert("Invalid signature");
         return;
       }
-
-      const res = await addWalletAdd({dbWallet});
 
       alert("Wallet address saved!");
       setIsEditing(false);
@@ -118,20 +105,19 @@ export default function AddWallet() {
 
       <div className="flex items-center gap-2">
         <Input
-          value={dbWallet ?? ""}
-          onChange={handleInputChange}
-          disabled={!isEditing && !!dbWallet}
+            value={walletAddress ?? ""}
+          disabled={!isEditing && !!walletAddress}
           placeholder="Permanent Wallet Address"
         />
-        {!dbWallet && connected && (
+        {!walletAddress && connected && (
           <Button onClick={handleAddWalletAddress} disabled={loading}>
             {loading ? "Saving..." : "+"}
           </Button>
         )}
-        {dbWallet && !isEditing && (
+        {!walletAddress && !isEditing && (
           <Button onClick={handleEdit}>Edit</Button>
         )}
-        {dbWallet && isEditing && (
+        {walletAddress && isEditing && (
           <Button onClick={handleAddWalletAddress} disabled={loading}>
             {loading ? "Confirming..." : "Confirm"}
           </Button>
