@@ -172,6 +172,7 @@ work on seo
 write all small problems on paper  -- done
 
 
+// move to main mainnet and recheck the money again
 
 
  {/* Assets Section */}
