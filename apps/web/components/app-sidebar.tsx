@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/sidebar"
 import { useSession } from "next-auth/react"
 import AnnouncementFooter from "@/app/(dashboardComponents)/AnnouncementFooter"
-import { SupportSheet } from "@/app/components/DetachedSheet/ExampleDetachedSheet"
+import { SupportSheet } from "@/app/components/DetachedSheet/FeedbackSupport"
 import { usePrivy } from "@privy-io/react-auth"
 
 const data = {
