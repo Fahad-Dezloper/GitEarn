@@ -10,15 +10,28 @@ import {
   SheetWithStackingView,
 } from "./SheetWithStacking";
 
-import { Wallet, Copy, Check } from "lucide-react";
+import { Wallet, Copy, Check, ExternalLink } from "lucide-react";
 import { usePrivy } from "@privy-io/react-auth";
 import axios from "axios";
+import { useSession } from "next-auth/react";
+import { getSolanaWalletInfo } from "@/lib/getWalletBalance";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
-const WalletStackingView = () => {
+const WalletStackingView = ({ usdBalance, solBalance, transactions }: { usdBalance: number, solBalance: number, transactions: any[] }) => {
   const [scrolled, setScrolled] = useState(false);
   const [copied, setCopied] = useState(false);
   const { user } = usePrivy();
   const walletAddress = user?.wallet?.address;
+  const {data: session} = useSession();
+  const username = session?.user?.name;
 
   const handleCopyAddress = async () => {
     if (walletAddress) {
@@ -41,10 +54,9 @@ const WalletStackingView = () => {
           onScroll={({ distance }) => setScrolled(distance > 0)}
         >
           <Scroll.Content className="ExampleSheetWithStacking-scrollContent">
-            {/* Wallet Header */}
             <div className="flex flex-col gap-3 p-6 border-b border-gray-200 dark:border-gray-800 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-[#171717]">
               <div className="flex items-center justify-between">
-                <div className="text-xl font-semibold dark:text-white">Fahad&apos;s Wallet</div>
+                <div className="text-xl font-semibold dark:text-white">{username}&apos;s Wallet</div>
                 <button 
                   onClick={handleCopyAddress}
                   className="text-sm text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors group"
@@ -63,7 +75,7 @@ const WalletStackingView = () => {
             {/* Balance Section */}
             <div className="flex flex-col items-start gap-4 px-6 py-8 border-b border-gray-200 dark:border-gray-800">
               <div className="w-full">
-                <div className="text-4xl font-bold dark:text-white mb-1">$0 <span className="text-lg font-normal text-gray-500 dark:text-gray-400">USD</span></div>
+                <div className="text-4xl font-bold dark:text-white mb-1">${usdBalance.toFixed(2)} <span className="text-lg font-normal text-gray-500 dark:text-gray-400">USD</span></div>
                 <div className="text-sm text-gray-400 dark:text-gray-500">BALANCE</div>
               </div>
 
@@ -74,43 +86,107 @@ const WalletStackingView = () => {
                       Withdraw <span>↗</span>
                     </button>
                   </Sheet.Trigger>
-                  <WithdrawStackingView />
+                  <WithdrawStackingView usdBalance={usdBalance} solBalance={solBalance} />
                 </SheetWithStackingRoot>
 
                 <div className="text-sm text-[#7C7C7C] dark:text-gray-400 cursor-pointer hover:text-gray-900 dark:hover:text-gray-200 transition-colors flex items-center gap-2">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                   </svg>
-                  Edit Two Factor Authentication
+                  Transfer funds to your own wallet
                 </div>
-              </div>
-            </div>
-
-            {/* Assets Section */}
-            <div className="px-6 pt-8 pb-4">
-              <div className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-6">Assets</div>
-              <div className="flex flex-col items-center justify-center py-12 text-center border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 rounded-xl">
-                <div className="mb-4">
-                  <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="mx-auto text-gray-300 dark:text-gray-600">
-                    <ellipse cx="12" cy="12" rx="8" ry="3"/>
-                  </svg>
-                </div>
-                <div className="text-xl font-medium text-gray-400 dark:text-gray-500 mb-2">Your wallet is empty</div>
-                <div className="text-sm text-gray-400 dark:text-gray-500 max-w-md">Your rewards will show up here when you&apos;re paid by a maintainer</div>
               </div>
             </div>
 
             {/* Activity Section */}
             <div className="px-6 pt-8 pb-4">
               <div className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-6">Activity</div>
-              <div className="flex flex-col items-center justify-center py-12 text-center bg-gray-50 dark:bg-gray-900/50 rounded-xl">
-                <div className="mb-4">
-                  <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="mx-auto text-gray-300 dark:text-gray-600">
-                    <path d="M16 12h4m0 0-3-3m3 3-3 3M8 12H4m0 0 3-3m-3 3 3 3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <div className="text-xl font-medium text-gray-400 dark:text-gray-500 mb-2">No activity yet</div>
-                <div className="text-sm text-gray-400 dark:text-gray-500 max-w-md">All earnings and withdrawals from your Earn wallet will show up here.</div>
+              
+              <div className="overflow-auto rounded-md border border-gray-200 dark:border-gray-700/30">
+                <Table>
+                  {transactions && transactions.length > 0 && (
+                    <TableCaption className="px-4 text-xs text-gray-500 dark:text-gray-500">
+                      Showing recent transaction history.
+                    </TableCaption>
+                  )}
+                  <TableHeader className="bg-gray-50/80 dark:bg-[#202020]">
+                    <TableRow className="border-gray-200 dark:border-gray-800/30">
+                      <TableHead className="w-[80px] text-xs uppercase text-gray-500 dark:text-gray-400">From</TableHead>
+                      <TableHead className="w-[80px] text-xs uppercase text-gray-500 dark:text-gray-400">To</TableHead>
+                      <TableHead className="hidden md:table-cell text-xs uppercase text-gray-500 dark:text-gray-400">Signature</TableHead>
+                      <TableHead className="text-xs uppercase text-gray-500 dark:text-gray-400">Date</TableHead>
+                      <TableHead className="text-xs uppercase w-[60px] text-gray-500 dark:text-gray-400">View</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody className="bg-white dark:bg-[#171717]">
+                    {Array.isArray(transactions) && transactions.length > 0 ? (
+                      transactions.map((tx: { signature: string; blockTime?: number; from?: string; to?: string }) => (
+                        <TableRow key={tx.signature} className="border-gray-100 dark:border-gray-800/30 hover:bg-gray-50/50 dark:hover:bg-[#1A1A1A]">
+                          <TableCell className="font-medium">
+                            {tx.from ? (
+                              <span className="text-xs text-gray-600 dark:text-gray-300" title={tx.from}>
+                                {tx.from.substring(0, 4)}...{tx.from.substring(tx.from.length - 4)}
+                              </span>
+                            ) : (
+                              <span className="text-xs text-gray-400 dark:text-gray-500">—</span>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {tx.to ? (
+                              <span className="text-xs text-gray-600 dark:text-gray-300" title={tx.to}>
+                                {tx.to.substring(0, 4)}...{tx.to.substring(tx.to.length - 4)}
+                              </span>
+                            ) : (
+                              <span className="text-xs text-gray-400 dark:text-gray-500">—</span>
+                            )}
+                          </TableCell>
+                          <TableCell className="hidden md:table-cell">
+                            <span className="text-xs text-gray-500 dark:text-gray-400" title={tx.signature}>
+                              {tx.signature.substring(0, 6)}...{tx.signature.substring(tx.signature.length - 6)}
+                            </span>
+                          </TableCell>
+                          <TableCell>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                              {tx.blockTime ? new Date(tx.blockTime * 1000).toLocaleDateString() : "—"}
+                            </span>
+                          </TableCell>
+                          <TableCell>
+                            <a
+                              href={`https://explorer.solana.com/tx/${tx.signature}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 transition-colors inline-flex items-center gap-1 text-xs"
+                            >
+                              <span className="sm:inline hidden">View</span>
+                              <ExternalLink size={12} />
+                            </a>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={5} className="h-40">
+                          <div className="flex flex-col items-center justify-center text-center py-8">
+                            <div className="mb-3 bg-gray-100 dark:bg-[#202020] p-2 rounded-full">
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-gray-400 dark:text-gray-500">
+                                <path d="M16 12h4m0 0-3-3m3 3-3 3M8 12H4m0 0 3-3m-3 3 3 3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                            </div>
+                            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">No transactions yet</h3>
+                            <p className="text-xs text-gray-400 dark:text-gray-500 max-w-md">
+                              All earnings and withdrawals will show up here.
+                            </p>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Responsive additional information for small screens */}
+              <div className="mt-3 md:hidden text-xs text-gray-400 dark:text-gray-500">
+                <p>Tap on an address or signature to see full details.</p>
               </div>
             </div>
           </Scroll.Content>
@@ -127,7 +203,7 @@ const WalletStackingView = () => {
   )
 };
 
-const WithdrawStackingView = () => {
+const WithdrawStackingView = ({usdBalance, solBalance}: {usdBalance: number, solBalance: number}) => {
   const [scrolled, setScrolled] = useState(false);
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -194,7 +270,7 @@ const WithdrawStackingView = () => {
             {/* Withdrawal Form */}
             <div className="flex flex-col items-start gap-4 px-6 py-6 border-b border-gray-200 dark:border-gray-800">
               <div className="w-full">
-                <div className="text-3xl font-bold mb-4 dark:text-white">$0 <span className="text-base font-normal text-gray-500 dark:text-gray-400">USD</span></div>
+                <div className="text-3xl font-bold mb-4 dark:text-white">${usdBalance} <span className="text-base font-normal text-gray-500 dark:text-gray-400">USD</span></div>
                 <div className="text-xs text-gray-400 dark:text-gray-500 mb-4">AVAILABLE BALANCE</div>
 
                 <div className="w-full space-y-4">
@@ -276,51 +352,20 @@ const WithdrawStackingView = () => {
 const UserWalletSheet = () => {
   const { user } = usePrivy();
   const walletAddress = user?.wallet?.address;
-  const [balance, setBalance] = useState<number>(0);
-  const [solPrice, setSolPrice] = useState<number>(0);
-  
-  // Format wallet address to show only first 6 and last 4 characters
-  const formatAddress = (address: string) => {
-    if (!address) return '';
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  };
+  const [usdBalance, setUsdBalance] = useState<number>(0);
+  const [solBalance, setSolBalance] = useState<number>(0);
+  const [transactions, setTransactions] = useState<any[]>([]);
 
-  // Fetch SOL price in USD
-  useEffect(() => {
-    const fetchSolPrice = async () => {
-      try {
-        const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
-        setSolPrice(response.data.solana.usd);
-      } catch (error) {
-        console.error("Error fetching SOL price:", error);
-      }
-    };
-
-    fetchSolPrice();
-    // Refresh price every 5 minutes
-    const interval = setInterval(fetchSolPrice, 300000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Fetch wallet balance
   useEffect(() => {
     const fetchBalance = async () => {
       if (!walletAddress) return;
       
       try {
-        const response = await axios.post(
-          "https://solana-devnet.g.alchemy.com/v2/8liAO-lmQabNLQ0We92gFQy_cJYOULew",
-          {
-            jsonrpc: "2.0",
-            id: 1,
-            method: "getBalance",
-            params: [walletAddress],
-          }
-        );
-        
-        // Convert lamports to SOL (1 SOL = 1,000,000,000 lamports)
-        const balanceInSol = response.data.result.value / 1_000_000_000;
-        setBalance(balanceInSol);
+        const dets = await getSolanaWalletInfo(walletAddress.toString())
+        console.log("dets here", dets);
+        setUsdBalance(dets.usd);
+        setSolBalance(dets.sol);
+        setTransactions(dets.transactions);
       } catch (error) {
         console.error("Error fetching balance:", error);
       }
@@ -332,8 +377,6 @@ const UserWalletSheet = () => {
     return () => clearInterval(interval);
   }, [walletAddress]);
 
-  // Calculate USD value
-  const usdValue = balance * solPrice;
 
   return (
     <SheetWithStackingStack>
@@ -344,14 +387,14 @@ const UserWalletSheet = () => {
             <Wallet className="md:text-[#A1A1A1] " />
               {walletAddress && (
                 <div className="absolute -top-2 -right-2 bg-green-500 rounded-full w-4 h-4 flex items-center justify-center sm:hidden">
-                  <span className="text-white text-[8px] font-semibold">${usdValue > 999 ? '1k+' : usdValue.toFixed(0)}</span>
+                  <span className="text-white text-[8px] font-semibold">${usdBalance > 999 ? '1k+' : usdBalance.toFixed(0)}</span>
                 </div>
               )}
             </div>
             {walletAddress ? (
               <div className="hidden sm:flex flex-col whitespace-nowrap">
                 <span className="text-sm font-medium text-[#A1A1A1] whitespace-nowrap">
-                  ${usdValue.toFixed(2)}
+                  ${usdBalance.toFixed(2)}
                 </span>
               </div>
             ) : (
@@ -359,7 +402,7 @@ const UserWalletSheet = () => {
             )}
           </div>
         </Sheet.Trigger>
-        <WalletStackingView />
+        <WalletStackingView usdBalance={usdBalance} solBalance={solBalance} transactions={transactions} />
       </SheetWithStackingRoot>
     </SheetWithStackingStack>
   );

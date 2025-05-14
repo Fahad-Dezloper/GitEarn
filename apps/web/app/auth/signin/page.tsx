@@ -3,9 +3,7 @@ import { AuthTesti } from '@/app/(landingpageComponent)/AuthTesti';
 import SignInButtons from "@/app/(landingpageComponent)/SignInButtons";
 
 export default async function SignInPage() {
-  // console.log("signin page");
   const providers = await getProviders();
-  // console.log("provider here", providers );
 
   return (
     <div className='flex overflow-x-hidden mainGradAuth w-full h-full md:px-24'>
@@ -24,12 +22,12 @@ export default async function SignInPage() {
   <div className="w-full border-t border-gray-300 dark:border-gray-700 my-4"></div>
 
   <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm">
-    We only use your data to personalize your experience and connect your GitHub account to our bounty system.
-    Read more in our <a href="/privacy" className="underline hover:text-gray-700 dark:hover:text-white">Privacy Policy</a> and 
-    <a href="/terms" className="underline ml-1 hover:text-gray-700 dark:hover:text-white">Terms of Service</a>.
-  </p>
+  We request access to your public repositories to help you seamlessly add bounties and track activity on your issues through GitEarn. This lets us personalize your experience and connect your GitHub account to our bounty system effectively.
+</p>
 
-  <p className="text-xs text-gray-400 mt-4">Your data is never sold. Ever.</p>
+<p className="text-xs text-gray-400 mt-4">
+  We never access your data without your action, and we never sell it. If you have any concerns, feel free to reach out to us at <a href="mailto:support@gitearn.com" className="underline">support@gitearn.com</a>.
+</p>
 </div>
 
     </div>

@@ -47,8 +47,9 @@
 }
 
 /* Dark mode styles */
-/* :is(.dark) .SheetWithStacking-innerContent {
+:is(.dark) .SheetWithStacking-innerContent {
    background-color: #171717;
-} */
+   box-shadow: var(--shadow-4);
+}
 
 
