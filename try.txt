@@ -161,3 +161,12 @@ then /profile --> done
 
 --later--
 /// move to leader board page 
+
+
+delete custom prisma adapter.- done
+
+improve UI for /auth/new-user
+
+work on seo
+
+write all small problems on paper

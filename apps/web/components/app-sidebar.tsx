@@ -26,6 +26,7 @@ import {
 import { useSession } from "next-auth/react"
 import AnnouncementFooter from "@/app/(dashboardComponents)/AnnouncementFooter"
 import { SupportSheet } from "@/app/components/DetachedSheet/ExampleDetachedSheet"
+import { usePrivy } from "@privy-io/react-auth"
 
 const data = {
   user: {
@@ -92,6 +93,8 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const {data: session} = useSession();
+  const { user } = usePrivy();
+  console.log("user privy", user);
   // console.log(session?.user);
   return (
     <Sidebar variant="floating" className="md:!z-0" {...props}>

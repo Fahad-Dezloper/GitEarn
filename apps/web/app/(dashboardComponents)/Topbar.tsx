@@ -74,7 +74,7 @@ const Topbar = () => {
         <div className="hidden md:flex">
           <ModeToggle />
         </div>
-        {/* <WalletMoney /> */}
+        <WalletMoney />
         <Notification />
         {status === "authenticated" && <UserAvatarCircle session={session} />}
       </div>

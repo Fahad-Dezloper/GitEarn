@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner"
 import { Providers } from "@/provider/Provider";
+import PrivyProviderr from "@/provider/PrivyProvider";
 
 
 const sora = Sora({
@@ -40,7 +41,9 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+           <PrivyProviderr> 
           {children}
+          </PrivyProviderr>
           <Toaster />
           </ThemeProvider>
           </Providers>
