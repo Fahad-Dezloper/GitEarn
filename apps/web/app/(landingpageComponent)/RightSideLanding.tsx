@@ -4,8 +4,8 @@ import { motion } from "motion/react";
 
 const users = [
     {
-      username: "@georgelucas",
-      avatar: "https://avatars.githubusercontent.com/u/8079861?v=4",
+      username: "@regan",
+      avatar: "https://prod-image-cdn.tensor.trade/images/90x90/freeze=false/https%3A%2F%2Fprod-tensor-creators-s3.s3.us-east-1.amazonaws.com%2Fimage%2Fadf0c9f9-8438-4ed3-862a-b82d8f380495",
       badge: "elite",
       issuesSolved: 23,
       earnings: "$1,200",
@@ -13,8 +13,8 @@ const users = [
       bottom: `-left-[4%]`,
     },
     {
-      username: "@hkirat",
-      avatar: "https://avatars.githubusercontent.com/u/8079861?v=4",
+      username: "@pranayraj",
+      avatar: "https://avatars.githubusercontent.com/u/134051033?v=4",
       badge: "rookie",
       issuesSolved: 8,
       earnings: "$300",
@@ -22,8 +22,8 @@ const users = [
       bottom: `-left-[2%]`,
     },
     {
-      username: "@samdoe",
-      avatar: "https://avatars.githubusercontent.com/u/155962781?v=4",
+      username: "@joncodes",
+      avatar: "https://avatars.githubusercontent.com/u/146099103?v=4",
       badge: "newbie",
       issuesSolved: 2,
       earnings: "$50",
@@ -31,8 +31,8 @@ const users = [
       bottom: `left-[27%]`,
     },
     {
-      username: "@georgelucas",
-      avatar: "https://avatars.githubusercontent.com/u/8079861?v=4",
+      username: "@iamdez",
+      avatar: "https://prod-image-cdn.tensor.trade/images/90x90/freeze=false/https%3A%2F%2Fprod-tensor-creators-s3.s3.us-east-1.amazonaws.com%2Fimage%2Fe6811688-3ef2-45d5-9c0e-4aa8c38609a4",
       badge: "elite",
       issuesSolved: 23,
       earnings: "$1,200",
@@ -40,7 +40,7 @@ const users = [
       bottom: `left-[57%]`,
     },
     {
-      username: "@hkirat",
+      username: "@Fahad-Dezloper",
       avatar: "https://avatars.githubusercontent.com/u/155962781?v=4",
       badge: "rookie",
       issuesSolved: 8,
@@ -49,8 +49,8 @@ const users = [
       bottom: `left-[57%]`,
     },
     {
-      username: "@samdoe",
-      avatar: "https://avatars.githubusercontent.com/u/8079861?v=4",
+      username: "@Ishaansharma23",
+      avatar: "https://avatars.githubusercontent.com/u/179945316?v=4",
       badge: "newbie",
       issuesSolved: 2,
       earnings: "$50",

@@ -40,6 +40,8 @@ export default function Page() {
             router.push("/earn");
           } else {
             console.error("Failed to add wallet");
+            setWalletAdded(true);
+            router.push("/earn");
           }
         } catch (error) {
           console.error("API error:", error);
