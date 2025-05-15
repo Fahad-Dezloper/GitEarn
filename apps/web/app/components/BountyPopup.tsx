@@ -212,7 +212,7 @@ const usdToSol = (usdAmount: number) => {
                     ) : (
                       <>
                         ${amount}
-                        <div className="text-[10px] sm:text-xs text-zinc-500">≈ {usdToSol(Number(amount))} SOL</div>
+                        <div className={`text-[10px] sm:text-xs text-zinc-500 ${bountyAmount === amount ? "text-white" : ""}`}>≈ {usdToSol(Number(amount))} SOL</div>
                       </>
                     )}
                   </button>
@@ -430,7 +430,7 @@ const usdToSol = (usdAmount: number) => {
           (selectedAmount !== null && selectedAmount <= 0) ||
           bountyAmount === "custom" && (customAmount.trim() === "" || isNaN(Number(customAmount)))
         }
-        className={`w-full py-2.5 sm:py-3 px-4 rounded-lg text-sm sm:text-base text-white font-semibold transition-all ${
+        className={`w-full py-2.5 sm:py-3 ${isLoading ? "cursor-not-allowed" : ""} px-4 rounded-lg text-sm sm:text-base text-white font-semibold transition-all ${
           bountyAmount === null ||
           (bountyAmount === "custom" && (customAmount.trim() === "" || isNaN(Number(customAmount))))
             ? "bg-blue-600 cursor-not-allowed"
