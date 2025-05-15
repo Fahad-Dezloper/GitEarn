@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import prisma from "@repo/db/client";
 import { NextRequest, NextResponse } from "next/server";
 
