@@ -8,10 +8,10 @@
   display: grid;
   justify-items: center;
 }
-@media (min-width: 600px) {
+@media (max-width: 600px) {
   .ExampleDetachedSheet-root {
     /* SELF-LAYOUT */
-    padding-bottom: var(--size-16);
+    padding-inline: 0.5rem;
   }
 }
 

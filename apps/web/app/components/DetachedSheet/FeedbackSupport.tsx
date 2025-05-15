@@ -67,7 +67,7 @@ const FeedbackContent = () => {
   };
 
   return (
-    <div className="!text-white !bg-[#171717] p-3 sm:p-6 rounded-xl space-y-3 sm:space-y-4 overflow-y-auto max-h-[80vh] sm:max-h-none">
+    <div className="!text-white !bg-[#171717] p-3 rounded-xl space-y-3 sm:space-y-4 h-full overflow-y-auto touch-manipulation">
       <Sheet.Title className="ExampleDetachedSheet-title text-center text-xl sm:text-2xl">
         Feedback
       </Sheet.Title>
@@ -75,12 +75,12 @@ const FeedbackContent = () => {
         We value your feedback! Please let us know how we can improve your experience.
       </Sheet.Description>
       
-      <Tabs value={feedbackType} onValueChange={setFeedbackType} className="w-full !rounded-md">
+      <Tabs value={feedbackType} onValueChange={setFeedbackType} className="w-full !rounded-md touch-manipulation">
         <TabsList className="w-full !rounded-md grid grid-cols-4 gap-1">
           {["Issue", "Idea", "Other", "Compliment"].map((type) => (
             <TabsTrigger 
               value={type}
-              className={`!rounded-md w-full text-xs sm:text-sm py-1.5 ${typeActiveStyle[type]}`}
+              className={`!rounded-md w-full text-xs sm:text-sm py-1.5 touch-manipulation ${typeActiveStyle[type]}`}
               key={type}
             >
               {type}
@@ -89,7 +89,7 @@ const FeedbackContent = () => {
         </TabsList>
       </Tabs>
 
-      <div className="space-y-3 sm:space-y-4">
+      <div className="space-y-3 sm:space-y-4 touch-manipulation">
         <div>
           <label htmlFor="email" className="block text-xs sm:text-sm font-medium !text-slate-300 mb-1">
             Your Email
@@ -100,7 +100,7 @@ const FeedbackContent = () => {
             value={email}
             placeholder="your@email.com"
             readOnly
-            className="w-full px-2 sm:px-3 py-1.5 sm:py-2 !bg-[#2a2a2a] !text-white text-sm rounded-md !border !border-[#3a3a3a] focus:!outline-none focus:!border-blue-500"
+            className="w-full px-2 sm:px-3 py-1.5 sm:py-2 !bg-[#2a2a2a] !text-white text-sm rounded-md !border !border-[#3a3a3a] focus:!outline-none focus:!border-blue-500 touch-manipulation"
           />
         </div>
         
@@ -114,7 +114,7 @@ const FeedbackContent = () => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Tell us what's on your mind..."
-            className="w-full px-2 sm:px-3 py-1.5 sm:py-2 !bg-[#2a2a2a] !text-white text-sm rounded-md !border !border-[#3a3a3a] focus:!outline-none focus:!border-blue-500"
+            className="w-full px-2 sm:px-3 py-1.5 sm:py-2 !bg-[#2a2a2a] !text-white text-sm rounded-md !border !border-[#3a3a3a] focus:!outline-none focus:!border-blue-500 touch-manipulation"
           />
         </div>
         
