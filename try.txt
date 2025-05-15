@@ -161,10 +161,3 @@ then /profile --> done
 
 --later--
 /// move to leader board page 
-
-
-CREATE README FILE FOR GITHUB also
-
-PUT BOUNTIES
-
-failed to add wallet retry
