@@ -9,11 +9,16 @@ import UserBountyDets from '@/app/(dashboardComponents)/UserBountyDets';
 import UserIssuesSolved from '@/app/(dashboardComponents)/UserIssuesSolved';
 import AddWallet from '@/app/(dashboardComponents)/AddWallet';
 import Topbar from '@/app/(dashboardComponents)/Topbar';
+import { usePrivy } from '@privy-io/react-auth';
 
 
 const Page = () => {
   const { userDetailss, wakaTimeDetails } = useUserDetails();
-  
+  const {user} = usePrivy();
+  const walletAddress = user?.wallet?.address;
+  if(!walletAddress){
+    console.log("Error fetching wallet address")
+  }
   return (
     <div className="w-full h-full md:px-2 !overflow-hidden">
     <Topbar />
@@ -133,8 +138,8 @@ const Page = () => {
           {/* Right Column */}
           <div className="w-full lg:w-[35%] flex flex-col gap-4">
             {/* Add wallet is where user can add their wallet address and change there wallet address */}
-
-            <AddWallet />
+              
+            <AddWallet walletAddress={walletAddress ?? ""} />
 
             {/* User Bounty Dets is where user can see their bounty which they have earned and how many issue they have solved */}
             <div className="md:flex hidden">

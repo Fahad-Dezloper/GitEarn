@@ -24,10 +24,10 @@ export default function HowitWorks() {
             <div className="relative flex flex-col">
                 {/* Step 1 */}
                 <div className="flex gap-6 items-center">
-                    <div className={`relative z-10 w-10 border border-[#007AFF] h-10 rounded-full transition-colors duration-500 
+                    <div className={`relative w-10 border border-[#007AFF] h-10 rounded-full transition-colors duration-500 
                         ${activeSteps.includes(0) ? 'bg-[#007AFF]/10 dark:bg-[#00D1FF]/10' : 'bg-transparent'} 
                         flex items-center justify-center`}>
-                        <Check className={`w-5 h-5 transition-colors duration-500 
+                        <Check className={`w-5 h-5 !z-0 transition-colors duration-500 
                             ${activeSteps.includes(0) ? 'text-[#007AFF] dark:text-[#00D1FF]' : 'text-gray-400 dark:text-gray-600'}`} />
                     </div>
                     <div className="flex flex-col leading-none gap-1">
@@ -49,10 +49,10 @@ export default function HowitWorks() {
 
                 {/* Step 2 */}
                 <div className="flex gap-6 items-center">
-                    <div className={`relative z-10 w-10 h-10 border border-[#007AFF] rounded-full transition-colors duration-500 
+                    <div className={`relative w-10 h-10 border border-[#007AFF] rounded-full transition-colors duration-500 
                         ${activeSteps.includes(1) ? 'bg-[#007AFF]/10 dark:bg-[#00D1FF]/10' : 'bg-transparent'} 
                         flex items-center justify-center`}>
-                        <Zap className={`w-5 h-5 transition-colors duration-500 
+                        <Zap className={`w-5 h-5 !z-0 transition-colors duration-500 
                             ${activeSteps.includes(1) ? 'text-[#007AFF] dark:text-[#00D1FF]' : 'text-gray-400 dark:text-gray-600'}`} />
                     </div>
                     <div className="flex flex-col whitespace-nowrap leading-none gap-1">
@@ -74,10 +74,10 @@ export default function HowitWorks() {
                 
                 {/* Step 3 */}
                 <div className="flex gap-6 items-center">
-                    <div className={`relative z-10 w-10 h-10 border border-[#007AFF] rounded-full transition-colors duration-500 
+                    <div className={`relative w-10 h-10 border border-[#007AFF] rounded-full transition-colors duration-500 
                         ${activeSteps.includes(2) ? 'bg-[#007AFF]/10 dark:bg-[#00D1FF]/10' : 'bg-transparent'} 
                         flex items-center justify-center`}>
-                        <CreditCard className={`w-5 h-5 transition-colors duration-500 
+                        <CreditCard className={`w-5 h-5 !z-0 transition-colors duration-500 
                             ${activeSteps.includes(2) ? 'text-[#007AFF] dark:text-[#00D1FF]' : 'text-gray-400 dark:text-gray-600'}`} />
                     </div>
                     <div className="flex flex-col leading-none gap-1">

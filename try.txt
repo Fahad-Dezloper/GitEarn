@@ -161,3 +161,43 @@ then /profile --> done
 
 --later--
 /// move to leader board page 
+
+
+delete custom prisma adapter.- done
+
+improve UI for /auth/new-user
+
+write all small problems on paper  -- done
+
+
+// move to main mainnet and recheck the money again
+
+
+ {/* Assets Section */}
+            {/* <div className="px-6 pt-8 pb-4">
+              <div className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-6">Assets</div>
+              <div className="flex flex-col items-center justify-center py-12 text-center border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 rounded-xl">
+                <div className="mb-4">
+                  <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="mx-auto text-gray-300 dark:text-gray-600">
+                    <ellipse cx="12" cy="12" rx="8" ry="3"/>
+                  </svg>
+                </div>
+                <div className="text-xl font-medium text-gray-400 dark:text-gray-500 mb-2">Your wallet is empty</div>
+                <div className="text-sm text-gray-400 dark:text-gray-500 max-w-md">Your rewards will show up here when you&apos;re paid by a maintainer</div>
+              </div>
+            </div> */}
+
+
+
+
+////
+
+work on seo
+
+make videos for landing page
+
+make main video
+
+submit for grant/solana mini hackathon/everything
+
+get it live

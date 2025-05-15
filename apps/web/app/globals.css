@@ -223,7 +223,7 @@ html, body, #__next {
 
 .Home-main {
   /* APPEARANCE */
-  overflow: hidden;
+  /* overflow: hidden; */
   overflow: clip;
   background-color: white;
   /* INNER-LAYOUT */
@@ -577,6 +577,7 @@ textarea {
   .mainGradAuth {
     height: 100vh;
     overflow-y: hidden;
+    
   }
 }
 

@@ -3,10 +3,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { Keypair, LAMPORTS_PER_SOL, PublicKey, Connection, clusterApiUrl, sendAndConfirmTransaction, SystemProgram, Transaction } from '@solana/web3.js';
+import { Keypair, LAMPORTS_PER_SOL, PublicKey, Connection, clusterApiUrl, sendAndConfirmTransaction, SystemProgram, Transaction, Cluster } from '@solana/web3.js';
 import axios from 'axios';
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import bs58 from 'bs58'
+import crypto from 'crypto'
 
 
 interface BountyContextType {
@@ -22,6 +23,16 @@ interface BountyContextType {
   bountiesCreated: any[];
   bountiesClaimed: any[];
 }
+
+type SendSolanaTxProps = {
+  walletId: string;
+  from: string;
+  to: string;
+  amount: number;
+  network?: 'devnet' | 'mainnet' | 'testnet';
+};
+
+const PRIVY_API_URL = 'https://api.privy.io/v1/wallets';
 
 const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
 
@@ -89,7 +100,6 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   }, []);
 
   async function addBounty(bountyAmt: any, issueId: any, issueLink: any, lamports: any, title?: any, transactionId?: any) {
-
     try {
       if(transactionId){
 
@@ -309,7 +319,6 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
 
   // user claiming money
   async function claimMoney(contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any){
-
       try {
     if(!process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD){
       return console.error("PRIMARY_WALLET_ADD public key not available");
