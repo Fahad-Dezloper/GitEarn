@@ -15,7 +15,7 @@ export default async function Page() {
   const user = await prisma.user.findUnique({
     where: { email: session.user.email }
   });
-
+  
   if (user?.solanaAddress !== null) {
     redirect("/earn");
   }
