@@ -21,7 +21,7 @@ export default function SignInButtons({ providers }: SignInButtonsProps) {
           key={provider.id}
           variant="outline"
           className="flex cursor-pointer text-lg items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          onClick={() => signIn(provider.id)}
+          onClick={() => signIn(provider.id, { callbackUrl: "/earn" })}
         >
           {provider.id === 'github' && <GithubIcon className="hover:bg-transparent" size={32} />}
           Sign in with {provider.name}

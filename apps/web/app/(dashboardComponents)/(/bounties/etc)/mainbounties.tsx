@@ -13,30 +13,29 @@ export default function Mainbounties() {
   const [loading, setLoading] = useState(false);
   const { issuesRepo, userBountyIssue } = useBountyDetails();
   const { publicKey, signMessage } = useWallet();
-// console.log("main bounty here page add");
   
-  useEffect(() => {
-    const signAndSend = async () => {
-      if (!publicKey || !signMessage) return;
+  // useEffect(() => {
+  //   const signAndSend = async () => {
+  //     if (!publicKey || !signMessage) return;
 
-      const storageKey = `gitEarn-signature-${publicKey.toBase58()}`;
+  //     const storageKey = `gitEarn-signature-${publicKey.toBase58()}`;
 
-      const existingSignature = localStorage.getItem(storageKey);
-      if (existingSignature) return;
+  //     const existingSignature = localStorage.getItem(storageKey);
+  //     if (existingSignature) return;
 
-      try {
-        const message = new TextEncoder().encode("Sign into GitEarn");
-        const signature = await signMessage(message);
+  //     try {
+  //       const message = new TextEncoder().encode("Sign into GitEarn");
+  //       const signature = await signMessage(message);
         
-        localStorage.setItem(storageKey, JSON.stringify([...signature]));
-        // console.log("Signature stored:", signature);
-      } catch (err) {
-        console.error("Signature failed:", err);
-      }
-    };
+  //       localStorage.setItem(storageKey, JSON.stringify([...signature]));
+  //       // console.log("Signature stored:", signature);
+  //     } catch (err) {
+  //       console.error("Signature failed:", err);
+  //     }
+  //   };
 
-    signAndSend();
-  }, [publicKey, signMessage]);
+  //   signAndSend();
+  // }, [publicKey, signMessage]);
   
   const [isAddingBounty, setIsAddingBounty] = useState(true);
 

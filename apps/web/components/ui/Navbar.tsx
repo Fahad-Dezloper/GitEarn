@@ -65,10 +65,20 @@ export default function NavbarDemo() {
               </a>
             ))}
             <div className="flex w-full flex-col gap-4">
-              {session?.user ? <></> : <>
+              {session?.user ? <>
+                <NavbarButton
+                onClick={() => setIsMobileMenuOpen(false)}
+                href="/earn"
+                variant="primary"
+                className="w-full"
+              >
+                Earn
+              </NavbarButton>
+              </> : <>
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
+                href="/auth/signin"
                 className="w-full"
               >
                 Sign Up
