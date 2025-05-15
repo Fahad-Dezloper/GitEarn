@@ -7,7 +7,7 @@ import { useLogin, usePrivy } from "@privy-io/react-auth";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
-export default function NewUser() {
+export default function NewUser({ email }: { email: string }) {
   const { login } = useLogin();
   const { ready, authenticated, user } = usePrivy();
   const router = useRouter();
@@ -30,6 +30,7 @@ export default function NewUser() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
+              email: email,
               privyId: user.id,
               walletAddress: user?.wallet?.address,
             }),
@@ -48,7 +49,7 @@ export default function NewUser() {
 
       addWallet();
     }
-  }, [ready, authenticated, user, walletAdded, router]);
+  }, [ready, authenticated, user, walletAdded, router, email]);
 
   return (
     <div className="flex flex-col items-center w-full h-full justify-center min-h-screen bg-background px-4 sm:px-6 lg:px-8">
