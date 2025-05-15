@@ -78,6 +78,7 @@ export default function NavbarDemo() {
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
+                href="/auth/signin"
                 className="w-full"
               >
                 Sign Up
