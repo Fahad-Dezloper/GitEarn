@@ -43,7 +43,7 @@ const data = {
     },
     {
       title: "Bounties",
-      url: "/earn/bounties",
+      url: "/earn/bounties/explore",
       icon: SquareTerminal,
       items: [
         {
