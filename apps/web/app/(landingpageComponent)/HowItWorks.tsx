@@ -7,7 +7,6 @@ import {
 
 const getVimeoId = (url: string) => {
   if (!url) return null;
-  // Extract the video ID from the Vimeo URL
   const match = url.match(/(?:vimeo.com\/)(\d+)/);
   return match ? match[1] : null;
 };
@@ -53,27 +52,27 @@ export function HowItWorks() {
 
 
   return (
-    <Tabs defaultValue="Contributors" className="w-full mx-auto">
-      <TabsList className="flex justify-center w-fit gap-2 mb-6">
-        <TabsTrigger value="Contributors">For Contributors</TabsTrigger>
-        <TabsTrigger value="Maintainers">For Maintainers</TabsTrigger>
+    <Tabs defaultValue="Contributors" className="w-full max-w-[1400px] mx-auto px-4 lg:px-8">
+      <TabsList className="flex justify-center w-fit gap-4 mb-12">
+        <TabsTrigger value="Contributors" className="text-lg px-8 py-3">For Contributors</TabsTrigger>
+        <TabsTrigger value="Maintainers" className="text-lg px-8 py-3">For Maintainers</TabsTrigger>
       </TabsList>
       <TabsContent className="w-full" value="Contributors">
-        <div className="w-full flex flex-col gap-12">
+        <div className="w-full flex flex-col gap-16">
           {ContributorSteps.map((item, i) => (
             <div
               key={i}
-              className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 bg-[#18181b] rounded-xl p-6 shadow-sm"
+              className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-12 bg-[#18181b] rounded-2xl p-8 lg:p-12 shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
-              <div className="flex flex-col items-start gap-4 text-white w-full md:w-1/2">
-                <h1 className="text-2xl md:text-3xl font-semibold font-sora mb-1">{item.title}</h1>
-                <p className="text-base md:text-lg text-gray-300">{item.desc}</p>
+              <div className="flex flex-col items-start gap-6 text-white w-full lg:w-1/2">
+                <h1 className="text-3xl lg:text-4xl font-semibold font-sora">{item.title}</h1>
+                <p className="text-lg lg:text-xl text-gray-300 leading-relaxed">{item.desc}</p>
               </div>
               {item.video && getVimeoId(item.video) && (
-                <div className="w-full md:w-1/2 flex items-center justify-center mt-6 md:mt-0">
-                  <div className="relative w-full pt-[56.25%] rounded-lg overflow-hidden border border-[#222]">
+                <div className="w-full lg:w-1/2 flex items-center justify-center mt-8 lg:mt-0">
+                  <div className="relative w-full pt-[56.25%] rounded-xl overflow-hidden border border-[#222] shadow-lg">
                     <iframe
-                      src={`https://player.vimeo.com/video/${getVimeoId(item.video)}?title=0&byline=0&portrait=0&badge=0&autopause=0`}
+                      src={`https://player.vimeo.com/video/${getVimeoId(item.video)}?title=0&byline=0&portrait=0&badge=0&autopause=0&speed=1.25&loop=1&autoplay=1&controls=0&muted=1`}
                       className="absolute top-0 left-0 w-full h-full"
                       frameBorder="0"
                       allow="autoplay; fullscreen; picture-in-picture"
@@ -87,21 +86,21 @@ export function HowItWorks() {
         </div>
       </TabsContent>
       <TabsContent value="Maintainers">
-        <div className="w-full flex flex-col gap-12">
+        <div className="w-full flex flex-col gap-16">
           {MaintainerSteps.map((item, i) => (
             <div
               key={i}
-              className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 bg-[#18181b] rounded-xl p-6 shadow-sm"
+              className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-12 bg-[#18181b] rounded-2xl p-8 lg:p-12 shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
-              <div className="flex flex-col items-start gap-4 text-white w-full md:w-1/2">
-                <h1 className="text-2xl md:text-3xl font-semibold font-sora mb-1">{item.title}</h1>
-                <p className="text-base md:text-lg text-gray-300">{item.desc}</p>
+              <div className="flex flex-col items-start gap-6 text-white w-full lg:w-1/2">
+                <h1 className="text-3xl lg:text-4xl font-semibold font-sora">{item.title}</h1>
+                <p className="text-lg lg:text-xl text-gray-300 leading-relaxed">{item.desc}</p>
               </div>
               {item.video && getVimeoId(item.video) && (
-                <div className="w-full md:w-1/2 flex items-center justify-center mt-6 md:mt-0">
-                  <div className="relative w-full pt-[56.25%] rounded-lg overflow-hidden border border-[#222]">
+                <div className="w-full lg:w-1/2 flex items-center justify-center mt-8 lg:mt-0">
+                  <div className="relative w-full pt-[56.25%] rounded-xl overflow-hidden border border-[#222] shadow-lg">
                     <iframe
-                      src={`https://player.vimeo.com/video/${getVimeoId(item.video)}?title=0&byline=0&portrait=0&badge=0&autopause=0`}
+                      src={`https://player.vimeo.com/video/${getVimeoId(item.video)}?title=0&byline=0&portrait=0&badge=0&autopause=0&speed=1.25&loop=1&autoplay=1&controls=0&muted=1`}
                       className="absolute top-0 left-0 w-full h-full"
                       frameBorder="0"
                       allow="autoplay; fullscreen; picture-in-picture"

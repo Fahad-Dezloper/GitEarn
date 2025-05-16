@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     siteName: "GITEARN",
     images: [
       {
-        url: "/GITEARN.svg",
+        url: "https://ox35safakaidjuzg.public.blob.vercel-storage.com/GITEARN-nfCZb9sfstAi694FqKBDthGNW8vYu9.svg",
         width: 800,
         height: 600,
         alt: "GITEARN Logo",
