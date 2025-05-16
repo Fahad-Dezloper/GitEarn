@@ -49,8 +49,8 @@ const users = [
       bottom: `left-[57%]`,
     },
     {
-      username: "@Ishaansharma23",
-      avatar: "https://avatars.githubusercontent.com/u/179945316?v=4",
+      username: "@Priyanshu",
+      avatar: "https://ton.x.com/i/ton/data/dm/1923277054629511429/1923277052234387456/yFzI4RTC.jpg:medium",
       badge: "newbie",
       issuesSolved: 2,
       earnings: "$50",
