@@ -50,7 +50,7 @@ const users = [
     },
     {
       username: "@Priyanshu",
-      avatar: "https://ton.x.com/i/ton/data/dm/1923277054629511429/1923277052234387456/yFzI4RTC.jpg:medium",
+      avatar: "https://ox35safakaidjuzg.public.blob.vercel-storage.com/yFzI4RTC-Aq7M2Xm6LBoVVrPuyTcsgXJ18f82k1.jpg",
       badge: "newbie",
       issuesSolved: 2,
       earnings: "$50",
