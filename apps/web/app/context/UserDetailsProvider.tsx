@@ -22,7 +22,6 @@ interface UserDetailssContextType {
     wakaTimeDetails: any;
     setWakaTimeDetails: React.Dispatch<React.SetStateAction<any>>;
     userPrivyDID: string | undefined;
-    setUserPrivyDID: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 const UserDetailsContext = createContext<UserDetailssContextType | undefined>(undefined);
