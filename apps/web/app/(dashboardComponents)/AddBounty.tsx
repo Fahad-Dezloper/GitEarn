@@ -104,7 +104,7 @@ const AddBounty = () => {
         router.push('/earn/bounties/add');
     };
 
-    console.log("latestIssues", latestIssues);  
+    // console.log("latestIssues", latestIssues);  
 
 
     if (isLoading) {

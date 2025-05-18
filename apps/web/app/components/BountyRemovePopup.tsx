@@ -73,7 +73,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
   const {  removeBounty, approveBounty } = useBountyDetails();
 
   // console.log("assignees", assignees)
-  console.log("latestComment", latestComment);
+  // console.log("latestComment", latestComment);
 
   const getActivityIcon = (type: string) => {
     switch (type) {

@@ -94,7 +94,7 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const {data: session} = useSession();
   const { user } = usePrivy();
-  console.log("user privy", user);
+  // console.log("user privy", user);
   // console.log(session?.user);
   return (
     <Sidebar variant="floating" className="md:!z-0" {...props}>

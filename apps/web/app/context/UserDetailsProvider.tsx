@@ -34,12 +34,14 @@ export function UserDetailsProvider({ children }: { children: ReactNode }) {
         avatar_url: undefined
     });
     const [wakaTimeDetails, setWakaTimeDetails] = useState({});
+    const [userPrivyDID, setUserPrivyDID] = useState<string | undefined>();
     // const [walletAdd, setWalletAdd] = useState<string | undefined>();
 
     async function getUserDets(){
         const res = await axios.get("/api/user/details");
         setUserDetailss(res.data.github);
-        setWakaTimeDetails(res.data.wakatime)
+        setWakaTimeDetails(res.data.wakatime);
+        setUserPrivyDID(res.data.userPrivyId);
     }
 
     // async function fetchUserwalletAdd(){
@@ -56,8 +58,9 @@ export function UserDetailsProvider({ children }: { children: ReactNode }) {
             console.log("error fetching user details", e);
         }
     }, []);
+
     return (
-        <UserDetailsContext.Provider value={{ userDetailss, setUserDetailss, wakaTimeDetails, setWakaTimeDetails }}>
+        <UserDetailsContext.Provider value={{ userDetailss, setUserDetailss, wakaTimeDetails, setWakaTimeDetails, userPrivyDID }}>
             {children}
         </UserDetailsContext.Provider>
     );

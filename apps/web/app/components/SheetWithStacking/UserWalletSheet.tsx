@@ -453,7 +453,6 @@ const UserWalletSheet = () => {
       
       try {
         const dets = await getSolanaWalletInfo(walletAddress.toString())
-        console.log("dets here", dets);
         setUsdBalance(dets.usd);
         setSolBalance(dets.sol);
         setTransactions(dets.transactions);
@@ -463,7 +462,6 @@ const UserWalletSheet = () => {
     };
 
     fetchBalance();
-    // Refresh balance every 30 seconds
     const interval = setInterval(fetchBalance, 30000);
     return () => clearInterval(interval);
   }, [walletAddress]);
@@ -500,7 +498,3 @@ const UserWalletSheet = () => {
 };
 
 export { UserWalletSheet };
-
-{/* <span className="text-sm font-medium text-[#A1A1A1]">
-                  {formatAddress(walletAddress)}
-                </span> */}

@@ -8,12 +8,10 @@ export async function middleware(request: NextRequest) {
 
   const isAuthPage = pathname.startsWith('/auth/signin')
 
-  // Redirect signed-in users away from sign-in
   if (isAuthPage && token) {
     return NextResponse.redirect(new URL('/earn', request.url))
   }
 
-  // Redirect unauthenticated users away from protected pages
   if (pathname.startsWith('/earn') || pathname.startsWith('/auth/new-user')) {
     if (!token) {
       const signInUrl = new URL('/auth/signin', request.url)
