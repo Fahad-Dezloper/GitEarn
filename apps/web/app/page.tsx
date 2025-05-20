@@ -34,7 +34,7 @@ export default function Home() {
           <div className="px-4 md:px-8 lg:pl-18">
             <div className="w-full h-full flex flex-col lg:flex-row items-center gap-6 lg:gap-9 p-2 lg:p-6">
               <div className="flex w-full h-full flex-col pt-8 lg:pt-18 gap-3">
-                <div className="px-2 group rounded-full text-[10px] md:text-xs w-fit backdrop-blur-md flex items-center text-slate-800 font-semibold dark:text-white border border-sky-400 bg-blue-500/10">
+                <div className="px-2 group rounded-full text-[10px] md:text-xs w-fit backdrop-blur-md flex items-center bg-gradient-to-r from-[#e6f7ff]/80 via-[#f0faff]/80 to-[#e6f7ff]/80 text-slate-800 font-semibold dark:bg-none dark:bg-blue-400/50 dark:border dark:border-blue-400/20 dark:text-white ">
                   <BoxesIcon
                     size={18}
                     className="hover:!bg-transparent hidden md:flex rounded-full"
