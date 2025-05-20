@@ -1,19 +1,33 @@
 'use client';
 
 import Image from 'next/image';
-import React from 'react';
-import useSWR from 'swr';
-
-const fetcher = (url: string) => fetch(url).then(res => res.json());
+import React, { useEffect, useState } from 'react';
 
 const StaronGithub = () => {
-  const { data, error } = useSWR(
-    'https://api.github.com/repos/fahad-Dezloper/Crowdify',
-    fetcher,
-    { refreshInterval: 3600000 } // optional: refresh every minute
-  );
+  const [starCount, setStarCount] = useState<number | null>(null);
+  const [error, setError] = useState<boolean>(false);
 
-  const starCount = data?.stargazers_count ?? 0;
+  useEffect(() => {
+    const fetchStarCount = async () => {
+      try {
+        const response = await fetch('https://api.github.com/repos/fahad-Dezloper/Crowdify');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        setStarCount(data.stargazers_count);
+        setError(false);
+      } catch (err) {
+        console.error('Failed to fetch star count:', err);
+        setError(true);
+      }
+    };
+
+    fetchStarCount();
+
+    // Optional: re-fetch every hour
+    const interval = setInterval(fetchStarCount, 3600000); // 1 hour
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <a
@@ -47,7 +61,7 @@ const StaronGithub = () => {
           />
         </svg>
         <span className="inline-block tabular-nums tracking-wider font-display font-medium text-black dark:text-white">
-          {error ? '--' : starCount}
+          {error ? '--' : starCount ?? 0}
         </span>
       </div>
     </a>
