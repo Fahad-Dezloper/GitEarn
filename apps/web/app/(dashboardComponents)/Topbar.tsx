@@ -20,7 +20,6 @@ import { useSession } from "next-auth/react";
 const Topbar = () => {
   const { data: session, status } = useSession();
   const user = session?.user;
-  // console.log("session here on toop bar", session, status);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -37,45 +36,49 @@ const Topbar = () => {
       <div className="flex items-center gap-2">
         <SidebarTrigger className="-ml-1 md:hidden flex" />
         <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-        
         <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <Link href="/" passHref legacyBehavior>
-                <BreadcrumbLink>Home</BreadcrumbLink>
-              </Link>
-            </BreadcrumbItem>
+  <BreadcrumbList>
+    {pathSegments.map((segment, index) => {
+      const href = "/" + pathSegments.slice(0, index + 1).join("/");
+      const isLast = index === pathSegments.length - 1;
 
-            {pathSegments.map((segment, index) => {
-              const href = "/" + pathSegments.slice(0, index + 1).join("/");
-              const isLast = index === pathSegments.length - 1;
-              
-              return (
-                <React.Fragment key={href}>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    {isLast ? (
-                      <BreadcrumbPage>{formatSegment(segment)}</BreadcrumbPage>
-                    ) : (
-                      <Link href={href} passHref legacyBehavior>
-                        <BreadcrumbLink>
-                          {formatSegment(segment)}
-                        </BreadcrumbLink>
-                      </Link>
-                    )}
-                  </BreadcrumbItem>
-                </React.Fragment>
-              );
-            })}
-          </BreadcrumbList>
-        </Breadcrumb>
+      // Skip "Home" breadcrumb if first segment is "earn"
+      if (index === 0 && segment === "earn") {
+        return (
+          <BreadcrumbItem key={href}>
+            <Link href="/earn" passHref legacyBehavior>
+              <BreadcrumbLink>Earn</BreadcrumbLink>
+            </Link>
+          </BreadcrumbItem>
+        );
+      }
+
+      return (
+        <React.Fragment key={href}>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            {isLast ? (
+              <BreadcrumbPage>{formatSegment(segment)}</BreadcrumbPage>
+            ) : (
+              <Link href={href} passHref legacyBehavior>
+                <BreadcrumbLink>{formatSegment(segment)}</BreadcrumbLink>
+              </Link>
+            )}
+          </BreadcrumbItem>
+        </React.Fragment>
+      );
+    })}
+  </BreadcrumbList>
+</Breadcrumb>
+
       </div>
       <div className="flex items-center gap-4">
         <div className="hidden md:flex">
           <ModeToggle />
         </div>
         <WalletMoney />
-        <Notification />
+        {/* work on notification system */}
+        {/* <Notification /> */}
         {status === "authenticated" && <UserAvatarCircle session={session} />}
       </div>
     </header>

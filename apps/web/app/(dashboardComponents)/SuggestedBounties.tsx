@@ -1,10 +1,10 @@
- 
 import ExploreButton from '@/components/fancyComponents/page';
-import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import React from 'react'
 import { useBountyDetails } from '../context/BountyContextProvider';
 import Link from 'next/link';
+import { motion } from 'motion/react';
+import { GithubIcon } from '@/components/ui/github';
 
 interface Technology {
   name: string;
@@ -22,8 +22,29 @@ interface BountyIssue {
   htmlUrl: string;
 }
 
+const SkeletonCard = () => (
+  <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 min-w-[20vw] animate-pulse">
+    <div className="flex items-start justify-between mb-3">
+      <div className="flex flex-col gap-1">
+        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24"></div>
+        <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-48"></div>
+      </div>
+      <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
+    </div>
+    <div className="flex flex-wrap gap-2 mb-4">
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="h-5 bg-gray-200 dark:bg-gray-700 rounded-full w-20"></div>
+      ))}
+    </div>
+    <div className="flex items-center justify-between">
+      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-20"></div>
+      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-6"></div>
+    </div>
+  </div>
+);
+
 const SuggestedBounties = () => {
-  const { bountyIssues } = useBountyDetails()
+  const { bountyIssues, isLoading } = useBountyDetails()
 
   const getTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
@@ -43,7 +64,14 @@ const SuggestedBounties = () => {
     return 'just now';
   };
 
-  const suggestedBounties = bountyIssues.slice(0, 3);
+  function hexToRgba(hex: string, alpha: number) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+
+  const suggestedBounties = bountyIssues?.slice(0, 3) || [];
 
   return (
     <div className='flex flex-col gap-6'>
@@ -57,58 +85,80 @@ const SuggestedBounties = () => {
           <ArrowRight className='w-4 h-4 text-gray-500 dark:text-gray-400' />
         </div>
       </div>
-      <div className='w-full'>
-        {suggestedBounties.map((issue: BountyIssue) => (
-          <div 
-            key={issue.id} 
-            className='w-full p-5 rounded-xl bg-white dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700
-              hover:border-[#007AFF]/30 dark:hover:border-[#00D1FF]/30 transition-colors duration-200'
-          >
-            <div className='flex flex-col sm:flex-row sm:items-start justify-between gap-5'>
-              <div className='flex-1 min-w-0'>
-                <div className='flex flex-col gap-2.5'>
-                  <div className='flex flex-col gap-1.5'>
-                    <Link href={issue.htmlUrl} className='text-base hover:underline cursor-pointer sm:text-lg font-semibold text-gray-800 dark:text-gray-100 truncate'>
-                      {issue.title}
-                    </Link>
-                    <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                      <span className='font-medium'>{issue.repo}</span>
-                      <span className='w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600' />
-                      <span>{getTimeAgo(issue.createdAt)}</span>
-                    </div>
-                  </div>
-                  <div className='flex flex-wrap items-center gap-1.5'>
-                    {issue.technologies.slice(0, 3).map((tech: Technology, index: number) => (
-                      <Badge 
-                        variant="outline" 
-                        key={index} 
-                        className='text-xs px-2 py-0.5 rounded-full font-medium'
-                        style={{ 
-                          borderColor: tech.color + '40', 
-                          color: tech.color,
-                          backgroundColor: tech.color + '10'
-                        }}
-                      >
-                        {tech.name}
-                      </Badge>
-                    ))}
-                  </div>
+      <div className='flex gap-4 scrolllx shrink-0 scrollbar-hide'>
+        {isLoading ? (
+          // Show skeleton loading state
+          Array(3).fill(0).map((_, index) => (
+            <SkeletonCard key={index} />
+          ))
+        ) : suggestedBounties.length > 0 ? (
+          // Show actual bounties
+          suggestedBounties.map((issue: BountyIssue, index: number) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+              className="bg-white flex min-w-[20vw] flex-col justify-between dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+              style={{
+                '--cursor-color': 'rgb(0, 122, 255)',
+                '--cursor-color-dark': 'rgb(0, 209, 255)',
+              } as React.CSSProperties}
+              onMouseEnter={(e) => {
+                const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${document.documentElement.classList.contains('dark') ? 'rgb(0, 209, 255)' : 'rgb(0, 122, 255)'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 4 7.07 17 2.51-7.39L21 11.07z"/></svg>`;
+                e.currentTarget.style.cursor = `url('data:image/svg+xml;base64,${btoa(svg)}'), pointer`;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.cursor = 'pointer';
+              }}
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex flex-col gap-1">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{issue.repo}</p>
+                  <Link href={issue.htmlUrl} target="_blank" className="text-lg hover:underline font-semibold text-gray-900 dark:text-white">{issue.title}</Link>
+                </div>
+                <div className="relative group">
+                  <span
+                    title={`This GitHub issue has a bounty of $${issue.bountyAmount}`}
+                    className="bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 px-3 py-1 rounded-md text-sm font-medium"
+                  >
+                    ${issue.bountyAmount}
+                  </span>
                 </div>
               </div>
-              <div className='flex flex-col items-end gap-2 sm:ml-4'>
-                <div className='text-[#14F195] font-sora text-lg sm:text-xl font-bold whitespace-nowrap'>
-                  ${issue.bountyAmount} <span className="font-normal text-gray-400 text-xs sm:text-sm">USDC</span>
-                </div>
-                <Badge 
-                  variant="secondary" 
-                  className='text-xs px-2.5 py-0.5 bg-[#007AFF]/10 text-[#007AFF] dark:bg-[#00D1FF]/10 dark:text-[#00D1FF] font-medium'
-                >
-                  {issue.status}
-                </Badge>
+
+              <div className="flex flex-wrap gap-2 mb-4">
+                {issue.technologies.map((tech, i: React.Key) => (
+                  <span
+                    key={i}
+                    style={{backgroundColor:  hexToRgba(tech.color, 0.4)}}
+                    className={`text-xs font-medium px-2 py-0.5 rounded-full`}
+                  >
+                    {tech.name}
+                  </span>
+                ))}
               </div>
-            </div>
+
+              <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                <span>{getTimeAgo(issue.createdAt)}</span>
+                <div className="flex items-center gap-3">
+                  <Link
+                    href={issue.htmlUrl}
+                    target="_blank"
+                    className="transition-colors"
+                  >
+                    <GithubIcon className="hover:text-blue-600 dark:hover:text-blue-400 hover:bg-transparent" />
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          ))
+        ) : (
+          // Show no bounties message
+          <div className="w-full text-center py-8">
+            <p className="text-gray-500 dark:text-gray-400 text-lg">No active bounties available at the moment</p>
           </div>
-        ))}
+        )}
       </div>
     </div>
   )

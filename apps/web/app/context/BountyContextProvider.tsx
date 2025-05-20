@@ -22,6 +22,8 @@ interface BountyContextType {
   claimMoney: (contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any) => Promise<void>;
   bountiesCreated: any[];
   bountiesClaimed: any[];
+  isLoading: boolean;
+  claimBounties: any[];
 }
 
 type SendSolanaTxProps = {
@@ -39,7 +41,7 @@ const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
 const BountyDetailsContext = createContext<BountyContextType | undefined>(undefined);
 
 export function BountyContextProvder({ children }: { children: ReactNode }) {
-  const [issuesRepo, setIssuesRepo] = useState([]);
+  const [issuesRepo, setIssuesRepo] = useState<any[]>([]);
   const [bountyIssues, setBountyIssues] = useState<any[]>([]);
   const [userBountyIssue, setUserBountyIssue] = useState<any[]>([]);
   const { publicKey, sendTransaction } = useWallet();
@@ -47,6 +49,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   const [bountiesCreated, setBountiesCreated] = useState<any[]>([]);
   const [bountiesClaimed, setBountiesClaimed] = useState<any[]>([]);
   const [claimBounties, setClaimBounties] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   // const { fetchUserMoneyClaimed } = useUserDetails();
 
   // console.log("public key", publicKey);
@@ -66,7 +69,6 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   async function getUserBountyIssues(){
     try{
       const res = await axios.get('/api/user/bountyIssues');
-      // console.log("here user bounty issue main", res.data.UsersBountyIssues);
       setUserBountyIssue(res.data.UsersBountyIssues);
     } catch(e) {
       console.log("Error fetching user bounty issues");
@@ -75,11 +77,15 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
 
   async function getBountyIssues() {
     try {
+      if (bountyIssues.length === 0) {
+        setIsLoading(true);
+      }
       const res = await axios.get(`${window.location.origin}/api/issues/bounty`);
       setBountyIssues(res.data.BountyIssues);
-      // console.log("here user bounty issue", res.data.BountyIssues);
     } catch (e) {
       console.log("Error fetching Bounty Issues", e);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -92,12 +98,13 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     fetchUserMoneyClaimed();
 
     const interval = setInterval(() => {
-      // console.log("calling again and again")
-      getBountyIssues();
+      if (bountyIssues.length > 0) {
+        getBountyIssues();
+      }
     }, 15000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [bountyIssues.length]);
 
   async function addBounty(bountyAmt: any, issueId: any, issueLink: any, lamports: any, title?: any, transactionId?: any) {
     try {
@@ -419,7 +426,21 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   }
   return (
     // @ts-ignore
-    <BountyDetailsContext.Provider value={{ issuesRepo, setIssuesRepo, addBounty, bountyIssues, setBountyIssues, userBountyIssue, removeBounty, approveBounty, claimMoney, bountiesCreated, bountiesClaimed, claimBounties}}>
+    <BountyDetailsContext.Provider value={{ 
+      issuesRepo, 
+      setIssuesRepo, 
+      addBounty, 
+      bountyIssues, 
+      setBountyIssues, 
+      userBountyIssue, 
+      removeBounty, 
+      approveBounty, 
+      claimMoney, 
+      bountiesCreated, 
+      bountiesClaimed, 
+      claimBounties,
+      isLoading 
+    }}>
       {children}
     </BountyDetailsContext.Provider>
   );

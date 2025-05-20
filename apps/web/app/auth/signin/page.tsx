@@ -13,7 +13,7 @@ export default async function SignInPage() {
         </div>
       </div>
 
-      <div className="md:w-[50%] w-full border-r h-full !overflow-y-hidden h-full flex flex-col gap-6 items-center justify-center text-center px-4">
+      <div className="md:w-[50%] w-full border-r !overflow-y-hidden h-full flex flex-col gap-6 items-center justify-center text-center px-4">
         <h1 className="font-sora text-6xl text-foreground">Sign In</h1>
         <p className="text-muted-foreground max-w-md">
           Access your dashboard and start earning by contributing to open source.
