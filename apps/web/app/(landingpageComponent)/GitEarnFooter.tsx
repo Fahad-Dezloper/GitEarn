@@ -12,7 +12,8 @@ export default function GitEarnFooter() {
         {/* Brand Section */}
         <div className="flex flex-col gap-3">
           <div>
-              <img src="/LOGO/GITEARN.svg" alt="GitEarn Logo" className="h-6 mb-3" />
+              <img src="/LOGO/GITEARN.svg" alt="GitEarn Logo" className="h-6 mb-3 dark:flex hidden" />
+              <img src="/LOGO/GITEARND.svg" alt="GitEarn Logo" className="h-6 mb-3 dark:hidden flex" />
           </div>
           <p className="leading-relaxed text-wrap max-w-md">
             GitEarn is a decentralized bounty platform rewarding open-source contributions.
