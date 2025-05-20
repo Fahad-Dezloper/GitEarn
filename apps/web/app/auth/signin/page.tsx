@@ -26,7 +26,7 @@ export default async function SignInPage() {
         </p>
 
         <p className="text-xs text-muted-foreground/80 mt-4">
-          We never access your data without your action, and we never sell it. If you have any concerns, feel free to reach out to us at <a href="mailto:support@gitearn.com" className="underline hover:text-foreground">support@gitearn.com</a>.
+          We never access your data without your action, and we never sell it. If you have any concerns, feel free to reach out to us at <a href="mailto:support@gitearn.com" className="text-sky-400 hover:underline font-semibold font-sora">support@gitearn.com</a>.
         </p>
       </div>
 

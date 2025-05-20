@@ -199,7 +199,7 @@ const WalletStackingView = ({ usdBalance, solBalance, transactions }: { usdBalan
       <div
         className={`ExampleSheetWithStacking-bottomBar fullyVisible-${scrolled} dark:bg-[#171717] px-6 py-4 border-t border-gray-200 dark:border-gray-800`}
       >
-        <h3 className="text-sm text-gray-500 dark:text-gray-400 text-center">Have questions? Reach out to us at <a href="mailto:support@gitearn.com" className="text-[#5B5B8C] dark:text-[#A1A1F4] hover:underline">support@gitearn.com</a></h3>
+        <h3 className="text-sm text-gray-500 dark:text-gray-400 text-center">Have questions? Reach out to us at <a href="mailto:support@gitearn.com" className="text-sky-400 hover:underline font-semibold font-sora">support@gitearn.com</a></h3>
       </div>
     </SheetWithStackingView>
   )
@@ -433,7 +433,7 @@ const WithdrawStackingView = ({usdBalance, solBalance}: {usdBalance: number, sol
       {/* bottom bar */}
       <div className={`ExampleSheetWithStacking-bottomBar ${scrolled ? 'fullyVisible' : ''} px-6 py-4 border-t border-gray-200 dark:border-gray-800 dark:bg-[#171717]`}>
         <h3 className="text-sm text-gray-500 dark:text-gray-400 text-center">
-          Have questions? Reach out to us at <a href="mailto:support@gitearn.com" className="text-[#5B5B8C] dark:text-[#A1A1F4] hover:underline">support@gitearn.com</a>
+          Have questions? Reach out to us at <a href="mailto:support@gitearn.com" className="text-sky-400 hover:underline font-semibold font-sora">support@gitearn.com</a>
         </h3>
       </div>
     </SheetWithStackingView>
