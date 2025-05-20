@@ -18,9 +18,14 @@ import GitEarnFooter from "./(landingpageComponent)/GitEarnFooter";
 import Navbar from "@/components/ui/Navbar";
 import PoweredBy from "@/components/ui/PoweredBy";
 import { Button } from "@/components/ui/button";
+import Earning from "@/components/fancyComponents/Earning";
+import { useTheme } from "next-themes";
 
 export default function Home() {
   const [hovered, setHovered] = useState(false);
+  const { theme } = useTheme();
+  const gradientColor = theme === "dark" ? "black" : "white";
+
   return (
     <div className="flex flex-col md:gap-12 gap-4 w-full min-h-screen  overflow-x-hidden">
       <div className="flex flex-col ">
@@ -29,7 +34,7 @@ export default function Home() {
           <div className="px-4 md:px-8 lg:pl-18">
             <div className="w-full h-full flex flex-col lg:flex-row items-center gap-6 lg:gap-9 p-2 lg:p-6">
               <div className="flex w-full h-full flex-col pt-8 lg:pt-18 gap-3">
-                <div className="px-2 group border rounded-full text-[10px]  md:text-xs w-fit backdrop-blur-md flex items-center bg-gradient-to-r from-[#d0f1ff] via-[#e3f5ff] to-[#d0f1ff] text-slate-800 font-semibold">
+                <div className="px-2 group border rounded-full text-[10px] md:text-xs w-fit backdrop-blur-md flex items-center bg-gradient-to-r from-[#e6f7ff]/80 via-[#f0faff]/80 to-[#e6f7ff]/80 text-slate-800 font-semibold dark:from-[#1e293b] dark:via-[#334155] dark:to-[#1e293b] dark:text-white">
                   <BoxesIcon
                     size={18}
                     className="hover:!bg-transparent hidden md:flex rounded-full"
@@ -41,20 +46,18 @@ export default function Home() {
                   On-Chain Rewards for Dev Contributions
                 </div>
                 <h1 className="text-5xl sm:text-5xl md:text-6xl lg:text-[5.7rem] md:max-w-7xl leading-tight lg:leading-none font-semibold font-sora">
-                  <span className="relative z-10 bg-clip-text text-transparent bg-gradient-to-b to-neutral-200 from-neutral-800">
+                  <span className="relative z-10 bg-clip-text text-transparent bg-gradient-to-b to-neutral-800 from-neutral-200 dark:to-neutral-200 dark:from-neutral-800">
                     Earn Crypto
                   </span>{" "}
                   by Solving Open Source
                 </h1>
 
-                <div className="font-roboto text-base md:text-lg mt-4 lg:mt-6 text-neutral-300">
+                <div className="font-roboto text-base md:text-lg mt-4 lg:mt-6 text-neutral-700 dark:text-neutral-300">
                   Contribute to open source, claim bounties, and build your
                   on-chain reputation.
                 </div>
-                <Link href="/auth/signin" className="flex flex-col sm:flex-row w-full gap-4 lg:gap-6 mt-4 lg:mt-6">
-                  <Button className="text-lg lg:text-xl md:flex gap-2 items-center font-semibold bg-green-600 hover:bg-green-700 transition-all duration-200 text-white backdrop-blur-md cursor-pointer shadow-md">
-                    Start Earning
-                  </Button>
+                 <Link href="/auth/signin" className="mt-4 lg:mt-6">
+                  <Earning />
                 </Link>
               </div>
 
@@ -73,7 +76,7 @@ export default function Home() {
               pauseOnHover={true}
               speed={50}
               gradient={true}
-              gradientColor="black"
+              gradientColor={gradientColor}
               gradientWidth={50}
               className="text-xl sm:text-2xl lg:text-[2rem] font-sora"
             >
@@ -109,23 +112,23 @@ export default function Home() {
         id="howitworks"
         className="w-full h-full md:px-34 p-4 md:py-4 flex flex-col gap-3"
       >
-        <h1 className="md:text-[4rem] text-[2rem] font-sora text-white font-semibold">
+        <h1 className="md:text-[4rem] text-[2rem] font-sora dark:text-white text-black font-semibold">
           How it Works
         </h1>
         <HowItWorks />
       </div>
 
       <div id="features" className="w-full h-full md:px-34 p-4 md:py-4">
-        <h1 className="md:text-[4rem] text-[2rem] w-full text-left font-sora text-white font-semibold">
+        <h1 className="md:text-[4rem] text-[2rem] w-full text-left font-sora dark:text-white text-black font-semibold">
           Features
         </h1>
         <FeaturesSectionDemo />
       </div>
 
-      <PoweredBy />
-
       <div id="customers" className="w-full h-full md:px-18 px-4">
-        <div className="flex flex-col items-center gap-6">
+        <div className="flex flex-col items-center">
+          <h1 className="md:text-sm text-sm font-roboto dark:text-[#00BCFF] text-black font-semibold text-center">TESTIMONIALS</h1>
+          <h2 className="text-lg md:text-6xl font-sora text-neutral-700 dark:text-neutral-300 mb-6 text-center">Hear Others</h2>
           <Testimonials />
           <button
             onClick={() => {

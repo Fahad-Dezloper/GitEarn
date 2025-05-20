@@ -52,25 +52,25 @@ export function HowItWorks() {
 
 
   return (
-    <Tabs defaultValue="Contributors" className="w-full max-w-[1400px] mx-auto px-4 lg:px-8">
+    <Tabs defaultValue="Contributors" className="w-full">
       <TabsList className="flex justify-center w-fit gap-2 md:gap-4 mb-6 md:mb-12">
-        <TabsTrigger value="Contributors" className="text-base md:text-lg px-4 md:px-8 py-2 md:py-3">For Contributors</TabsTrigger>
-        <TabsTrigger value="Maintainers" className="text-base md:text-lg px-4 md:px-8 py-2 md:py-3">For Maintainers</TabsTrigger>
+        <TabsTrigger value="Contributors" className="text-base md:text-base px-4 md:px-8 py-2 md:py-3">For Contributors</TabsTrigger>
+        <TabsTrigger value="Maintainers" className="text-base md:text-base px-4 md:px-8 py-2 md:py-3">For Maintainers</TabsTrigger>
       </TabsList>
       <TabsContent className="w-full" value="Contributors">
         <div className="w-full flex flex-col gap-8 md:gap-16">
           {ContributorSteps.map((item, i) => (
             <div
               key={i}
-              className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 md:gap-12 bg-[#18181b] rounded-xl md:rounded-2xl p-6 md:p-8 lg:p-12 shadow-lg hover:shadow-xl transition-shadow duration-300"
+              className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 md:gap-12 bg-white dark:bg-zinc-900 rounded-xl md:rounded-2xl p-6 md:p-8 lg:p-12 shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
-              <div className="flex flex-col items-start gap-4 md:gap-6 text-white w-full md:w-1/2">
+              <div className="flex flex-col items-start gap-4 md:gap-6 text-zinc-900 dark:text-white w-full md:w-1/2">
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold font-sora">{item.title}</h1>
-                <p className="text-base md:text-lg lg:text-xl text-gray-300 leading-relaxed">{item.desc}</p>
+                <p className="text-base md:text-lg lg:text-xl text-zinc-600 dark:text-zinc-300 leading-relaxed">{item.desc}</p>
               </div>
               {item.video && getVimeoId(item.video) && (
                 <div className="w-full md:w-1/2 flex items-center justify-center mt-6 md:mt-0">
-                  <div className="relative w-full pt-[56.25%] rounded-lg md:rounded-xl overflow-hidden border border-[#222] shadow-lg">
+                  <div className="relative w-full pt-[56.25%] rounded-lg md:rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-lg">
                     <iframe
                       src={`https://player.vimeo.com/video/${getVimeoId(item.video)}?title=0&byline=0&portrait=0&badge=0&autopause=0&speed=1.25&loop=1&autoplay=1&controls=0&muted=1`}
                       className="absolute top-0 left-0 w-full h-full"
@@ -90,15 +90,15 @@ export function HowItWorks() {
           {MaintainerSteps.map((item, i) => (
             <div
               key={i}
-              className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 md:gap-12 bg-[#18181b] rounded-xl md:rounded-2xl p-6 md:p-8 lg:p-12 shadow-lg hover:shadow-xl transition-shadow duration-300"
+              className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 md:gap-12 bg-white dark:bg-zinc-900 rounded-xl md:rounded-2xl p-6 md:p-8 lg:p-12 shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
-              <div className="flex flex-col items-start gap-4 md:gap-6 text-white w-full md:w-1/2">
+              <div className="flex flex-col items-start gap-4 md:gap-6 text-zinc-900 dark:text-white w-full md:w-1/2">
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold font-sora">{item.title}</h1>
-                <p className="text-base md:text-lg lg:text-xl text-gray-300 leading-relaxed">{item.desc}</p>
+                <p className="text-base md:text-lg lg:text-xl text-zinc-600 dark:text-zinc-300 leading-relaxed">{item.desc}</p>
               </div>
               {item.video && getVimeoId(item.video) && (
                 <div className="w-full md:w-1/2 flex items-center justify-center mt-6 md:mt-0">
-                  <div className="relative w-full pt-[56.25%] rounded-lg md:rounded-xl overflow-hidden border border-[#222] shadow-lg">
+                  <div className="relative w-full pt-[56.25%] rounded-lg md:rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-lg">
                     <iframe
                       src={`https://player.vimeo.com/video/${getVimeoId(item.video)}?title=0&byline=0&portrait=0&badge=0&autopause=0&speed=1.25&loop=1&autoplay=1&controls=0&muted=1`}
                       className="absolute top-0 left-0 w-full h-full"

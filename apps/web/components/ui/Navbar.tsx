@@ -27,7 +27,7 @@ export default function NavbarDemo() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
  
   return (
-    <div className="relative w-full py-4">
+    <div className="relative w-full py-4 bg-transparent">
       <Navbar>
         {/* Desktop Navigation */}
         <NavBody>
