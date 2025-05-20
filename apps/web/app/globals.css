@@ -588,6 +588,17 @@ textarea {
   overflow: hidden;
 }
 
+/* Light mode styles */
+:root[class~="light"] .mainGradAuth {
+  background: radial-gradient(
+    ellipse 80% 160% at bottom right,
+    #3b82f6 -80%,    
+    #f8fafc 60%,   
+    #ffffff 110% 
+  );
+  color: #1e293b;
+}
+
 @media (max-width: 1024px) {
   .mainGradAuth {
     height: 80vh;
@@ -598,28 +609,8 @@ textarea {
   .mainGradAuth {
     height: 100vh;
     overflow-y: hidden;
-    
   }
 }
-
-/* .mainGradAuth::before{
-  content: "";
-  position: absolute;
-  bottom: -10%;
-  left: 50%;
-  width: 200%;
-  height: 200%;
-  background: repeating-radial-gradient(
-    circle at center,
-    rgba(59, 130, 246, 0.08) 0px,
-    rgba(59, 130, 246, 0.08) 1px,
-    transparent 1px,
-    transparent 60px
-  );
-  transform: translateX(-50%);
-  z-index: 0;
-  pointer-events: none;
-} */
 
 .inset-shadoww{
   box-shadow:
