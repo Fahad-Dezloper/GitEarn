@@ -17,7 +17,8 @@ export default function PoweredBy() {
         <div className="flex items-center gap-2">
           {/* Replace the div below with the GitHub logo image */}
           <div className="w-6 h-6 ">
-            <img src="/LOGO/github-mark-white.svg" alt="GitHub" className="w-full h-full" />
+            <img src="/LOGO/github-mark-white.svg" alt="GitHub" className="w-full hidden dark:flex h-full" />
+            <img src="/LOGO/github-mark.svg" alt="GitHub" className="w-full flex dark:hidden h-full" />
           </div>
         </div>
       </div>
