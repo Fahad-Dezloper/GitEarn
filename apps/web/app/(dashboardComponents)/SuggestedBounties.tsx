@@ -23,7 +23,7 @@ interface BountyIssue {
 }
 
 const SkeletonCard = () => (
-  <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 min-w-[20vw] animate-pulse">
+  <div className="bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 w-full sm:w-[300px] md:w-[350px] animate-pulse">
     <div className="flex items-start justify-between mb-3">
       <div className="flex flex-col gap-1">
         <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24"></div>

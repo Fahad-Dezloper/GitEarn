@@ -84,7 +84,7 @@ const WalletStackingView = ({ usdBalance, solBalance, transactions }: { usdBalan
               <div className="w-full flex flex-col gap-4">
                 <SheetWithStackingRoot className="ExampleSheetWithStacking-nestedSheetRoot w-full">
                   <Sheet.Trigger className="w-full">
-                    <button className="w-full bg-[#C7C6F4] dark:bg-[#2A2A4A] text-[#5B5B8C] dark:text-[#A1A1F4] px-6 py-3 rounded-xl font-semibold text-base flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+                    <button className="w-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-6 py-3 rounded-xl font-semibold text-base flex items-center justify-center gap-2 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors">
                       Withdraw <span>↗</span>
                     </button>
                   </Sheet.Trigger>
@@ -365,7 +365,7 @@ const WithdrawStackingView = ({usdBalance, solBalance}: {usdBalance: number, sol
                         placeholder="Enter amount in USD"
                         className={`w-full px-4 py-3 rounded-lg border bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 
                           ${!isValidAmount && amount ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-700'} 
-                          focus:outline-none focus:ring-2 focus:ring-[#C7C6F4] dark:focus:ring-[#2A2A4A] focus:border-transparent`}
+                          focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800 focus:border-transparent`}
                       />
                       
                       {amount && !isNaN(parsedAmount) && parsedAmount > 0 && (
@@ -391,14 +391,14 @@ const WithdrawStackingView = ({usdBalance, solBalance}: {usdBalance: number, sol
                     <button
                       onClick={handleWithdraw}
                       disabled={!isValidAddress || !withdrawAddress || isLoading || !isValidAmount}
-                      className={`w-full bg-[#C7C6F4] dark:bg-[#2A2A4A] text-[#5B5B8C] dark:text-[#A1A1F4] px-6 py-3 rounded-lg font-semibold text-base flex items-center justify-center gap-2 transition-all
+                      className={`w-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-6 py-3 rounded-lg font-semibold text-base flex items-center justify-center gap-2 transition-all
                         ${(!isValidAddress || !withdrawAddress || isLoading || !isValidAmount) 
                           ? 'opacity-50 cursor-not-allowed' 
-                          : 'hover:opacity-90 dark:hover:bg-[#32325A]'}`}
+                          : 'hover:bg-blue-100 dark:hover:bg-blue-900/30'}`}
                     >
                       {isLoading ? (
                         <>
-                          <svg className="animate-spin h-5 w-5 text-[#5B5B8C] dark:text-[#A1A1F4]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <svg className="animate-spin h-5 w-5 text-blue-600 dark:text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
@@ -471,9 +471,9 @@ const UserWalletSheet = () => {
     <SheetWithStackingStack>
       <SheetWithStackingRoot>
         <Sheet.Trigger>
-          <div className="md:px-4  md:bg-[#F5F5F5] md:flex font-sora md:dark:bg-[#262626] py-2.5 cursor-pointer rounded-full items-center gap-3 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+          <div className="md:px-4 md:bg-blue-50/50 md:flex font-sora md:dark:bg-gray-800 py-2.5 cursor-pointer rounded-full items-center gap-3 hover:bg-blue-100 dark:hover:bg-gray-700 transition-colors">
             <div className="relative">
-            <Wallet size={18} className="md:text-[#A1A1A1] " />
+            <Wallet size={18} className="md:text-blue-600 dark:md:text-blue-400" />
               {walletAddress && (
                 <div className="absolute !cursor-pointer -top-2 -right-2 bg-green-500 rounded-full w-4 h-4 flex items-center justify-center sm:hidden">
                   <span className="text-white text-[8px] font-semibold">${usdBalance > 999 ? '1k+' : usdBalance.toFixed(0)}</span>
@@ -482,7 +482,7 @@ const UserWalletSheet = () => {
             </div>
             {walletAddress ? (
               <div className="hidden !cursor-pointer sm:flex flex-col whitespace-nowrap">
-                <span className="text-sm font-medium cursor-pointer text-[#A1A1A1] whitespace-nowrap">
+                <span className="text-sm font-medium cursor-pointer text-blue-600 dark:text-blue-400 whitespace-nowrap">
                   ${usdBalance.toFixed(2)}
                 </span>
               </div>

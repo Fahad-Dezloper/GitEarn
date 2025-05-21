@@ -190,6 +190,14 @@ solana mini hackathon
 atheos
 
 
-
-
 {/* work on notification system */}
+
+
+
+correct wallet popup theme.
+
+support and feed popup colors.
+
+create a escrow contract
+
+and github application
