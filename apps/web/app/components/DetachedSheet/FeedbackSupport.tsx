@@ -8,6 +8,8 @@ import { SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, Side
 import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSession } from "next-auth/react";
+import { Textarea } from "@/components/ui/textarea"
+
 
 interface SupportItem {
   title: string;
@@ -68,7 +70,7 @@ const FeedbackContent = () => {
 
   return (
     <div className="bg-white dark:bg-[#171717] text-black dark:text-white p-3 rounded-xl space-y-4 h-full overflow-y-auto">
-      <Sheet.Title className="text-center text-xl sm:text-2xl">Feedback</Sheet.Title>
+      <Sheet.Title className="text-center text-xl sm:text-2xl font-sora font-semibold">Feedback</Sheet.Title>
       <Sheet.Description className="text-center text-sm sm:text-base text-gray-600 dark:text-slate-400">
         We value your feedback! Let us know how we can improve your experience.
       </Sheet.Description>
@@ -95,7 +97,7 @@ const FeedbackContent = () => {
           <input
             id="email"
             type="email"
-            value={email}
+            value={email} 
             readOnly
             placeholder="your@email.com"
             className="w-full px-3 py-2 !z-[50] bg-gray-100 dark:bg-[#2a2a2a] text-black dark:text-white border border-gray-300 dark:border-[#3a3a3a] rounded-md focus:outline-none focus:border-blue-500 text-sm"
@@ -106,13 +108,13 @@ const FeedbackContent = () => {
           <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">
             Your Feedback
           </label>
-          <textarea
+          <Textarea
             id="message"
-            rows={4}
+            rows={6}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Tell us what's on your mind..."
-            className="w-full px-3 py-2 flex !z-[52] !relative bg-gray-100 dark:bg-[#2a2a2a] text-black dark:text-white border border-gray-300 dark:border-[#3a3a3a] rounded-md focus:outline-none focus:border-blue-500 text-sm"
+            className="!w-full !px-3 !py-2 !flex !bg-gray-100 !dark:bg-[#2a2a2a] !text-black !dark:text-white !border !border-gray-300 !dark:border-[#3a3a3a] !rounded-md !focus:outline-none !focus:border-blue-500 !text-sm ExampleDetachedSheet-validateTrigger"
           />
         </div>
 
@@ -140,7 +142,7 @@ const FeedbackContent = () => {
 
 const SupportContent = () => (
   <div className="bg-white dark:bg-[#171717] text-black dark:text-white p-3 sm:p-6 rounded-xl space-y-6 overflow-y-auto max-h-[80vh]">
-    <Sheet.Title className="text-center text-xl sm:text-2xl">Support</Sheet.Title>
+    <Sheet.Title className="text-center text-xl sm:text-2xl font-sora font-semibold">Support</Sheet.Title>
     <Sheet.Description className="text-center text-sm sm:text-base text-gray-600 dark:text-slate-400">
       Our support team is here to assist you with any questions or issues you may have.
     </Sheet.Description>

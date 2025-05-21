@@ -180,8 +180,10 @@ export default function UserAvatarCircle({session}: {session: any}){
               </div>
             </div>
             <DropdownMenuSeparator />
-            <div className="md:hidden flex flex-col gap-2">
+            <div className="flex flex-col gap-2">
+              <span className="md:hidden">
             <ModeToggle />
+            </span>
             <SupportSheet items={navSecondary} />
             </div>
             <DropdownMenuSeparator />
