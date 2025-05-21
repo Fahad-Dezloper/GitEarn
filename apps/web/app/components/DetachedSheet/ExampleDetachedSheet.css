@@ -23,6 +23,7 @@
   margin-top: var(--size-4);
   width: 50px;
   height: 6px;
+  z-index: 50;
 
   /* APPEARANCE */
   border: 0;

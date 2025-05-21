@@ -25,7 +25,6 @@ import {
 } from "@/components/ui/sidebar"
 import { useSession } from "next-auth/react"
 import AnnouncementFooter from "@/app/(dashboardComponents)/AnnouncementFooter"
-import { SupportSheet } from "@/app/components/DetachedSheet/FeedbackSupport"
 import { usePrivy } from "@privy-io/react-auth"
 
 const data = {
@@ -117,7 +116,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/* {session?.user ? <NavUser user={session?.user} /> : <div></div>} */}
         <AnnouncementFooter />
         {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
-        <SupportSheet items={data.navSecondary} />
+        {/* <SupportSheet items={data.navSecondary} /> */}
       </SidebarFooter>
     </Sidebar>
   )

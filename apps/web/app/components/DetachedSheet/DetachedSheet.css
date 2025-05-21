@@ -38,7 +38,7 @@
    background-color: white;
    box-shadow: var(--shadow-4);
    position: relative;
-   z-index: 51;
+   /* z-index: 51; */
 }
 
 :is(.dark) .DetachedSheet-innerContent {

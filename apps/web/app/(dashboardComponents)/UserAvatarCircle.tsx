@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LogOut } from "lucide-react";
+import { LifeBuoy, LogOut, Send } from "lucide-react";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -20,6 +20,7 @@ import { useConnection } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { toast } from "sonner";
 import { ModeToggle } from "@/components/Toggle";
+import { SupportSheet } from "../components/DetachedSheet/FeedbackSupport";
 
 export default function UserAvatarCircle({session}: {session: any}){
   // console.log("here tooo on useravatar circle", session);
@@ -76,6 +77,19 @@ export default function UserAvatarCircle({session}: {session: any}){
             walletButton?.click();
         }
     };
+
+    const navSecondary = [
+      {
+        title: "Support",
+        url: "#",
+        icon: LifeBuoy,
+      },
+      {
+        title: "Feedback",
+        url: "#",
+        icon: Send,
+      },
+    ];
 
     return (
         <>
@@ -166,8 +180,9 @@ export default function UserAvatarCircle({session}: {session: any}){
               </div>
             </div>
             <DropdownMenuSeparator />
-            <div className="md:hidden flex">
+            <div className="md:hidden flex flex-col gap-2">
             <ModeToggle />
+            <SupportSheet items={navSecondary} />
             </div>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer" onClick={() => signOut()}>
