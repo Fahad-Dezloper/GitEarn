@@ -54,7 +54,7 @@ async function ConfirmTxt(signature: any, from: any, to: string, lamports: numbe
   if (!fromIndex || !toIndex || fromIndex !== from || toIndex !== to) return false;
 
   const balanceChanges = preBalances.map((pre: number, i: number) => postBalances[i] - pre);
-  const totalSent = -balanceChanges.filter((change: number) => change < 0).reduce((a, b) => a + b, 0);
+  const totalSent = -balanceChanges.filter((change: number) => change < 0).reduce((a: any, b:any) => a + b, 0);
   const total = totalSent - fee;
 
   return total === lamports;

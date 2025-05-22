@@ -28,7 +28,9 @@ export default (app: Probot) => {
           });
           await context.octokit.issues.createComment(issueComment);
           return;
-        }
+        };
+
+        // db call
         
         const confirmBountyUrl = `https://gitearn.vercel.app/earn/transactions`;
 
@@ -184,4 +186,5 @@ To claim your tip, please visit: [gitearn.vercel.app/earn/claim](https://gitearn
       console.error("Error in tip processing:", error);
     }
   });
+  
 };

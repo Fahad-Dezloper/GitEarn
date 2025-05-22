@@ -14,7 +14,7 @@ interface BountyContextType {
   issuesRepo: any[];
   setIssuesRepo: React.Dispatch<React.SetStateAction<any[]>>;
   addBounty: (bountyAmt: any, issueId: any, issueLink: any, lamports: any, title?: any, transactionId?: any) => Promise<void>;
-  approveBounty: (issueId: any, issueLink: any, contributorId: any) => Promise<void>;
+  approveBounty: (issueId: any, issueLink: string, contributorId: number, contributorUserName: string) => Promise<void>;
   bountyIssues: any[];
   setBountyIssues: React.Dispatch<React.SetStateAction<any[]>>;
   userBountyIssue: any[];

@@ -200,3 +200,5 @@ support and feed popup colors. -- done
 
 create a escrow contract
 and github application -- done [ left with db call and connecting it with fe ];
+
+same issue not able to add twice.

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Octokit } from "@octokit/rest";
 import { createAppAuth } from "@octokit/auth-app";
@@ -24,6 +25,7 @@ export async function getInstallationOctokit(owner: string, repo: string): Promi
     repo,
   });
 
+  // @ts-ignore
   const { token } = await appOctokit.auth({
     type: "installation",
     installationId,
