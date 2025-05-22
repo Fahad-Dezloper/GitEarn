@@ -304,14 +304,15 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
 
 
   // check vulnerablity its happening on client side
-  async function approveBounty( issueId: any, issueLink: any, contributorId: any){
+  async function approveBounty( issueId: any, issueLink: string, contributorId: number, contributorUserName: string){
     // console.log("here reached here", issueId, issueLink, contributorId);
     // approved
     try{
       const res = await axios.post("/api/bounty/approve", {
         issueId,
         issueLink,
-        contributorId
+        contributorId,
+        contributorUserName
       });
 
       // console.log("after approving", res);

@@ -13,28 +13,39 @@ export function UpgradeGithubAccess() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     async function checkInstallation() {
-      setIsLoading(true);
+      if (!session?.user?.email) return;
+      
       try {
         const res = await fetch("/api/github/check-installation", { method: "GET" });
         if (!res.ok) throw new Error("Failed to check installation");
         const data = await res.json();
-        setHasRepoAccess(data.installed);
+        if (isMounted) {
+          setHasRepoAccess(data.installed);
+          setIsLoading(false);
+        }
       } catch (error) {
         console.error("Error checking GitHub app installation:", error);
-        setHasRepoAccess(false);
-      } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setHasRepoAccess(false);
+          setIsLoading(false);
+        }
       }
     }
 
-    if (status === "authenticated" && session?.user?.email) {
+    if (status === "authenticated") {
       checkInstallation();
     } else if (status === "unauthenticated") {
       setHasRepoAccess(false);
       setIsLoading(false);
     }
-  }, [session, status]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [status]);
 
   if (status === "loading" || isLoading || hasRepoAccess === null) {
     return (
