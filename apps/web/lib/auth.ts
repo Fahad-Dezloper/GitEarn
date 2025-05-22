@@ -24,6 +24,20 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  callbacks: {
+    async jwt({ token, account, profile }) {
+      if (account && profile) {
+        token.githubUsername = profile.login;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token.githubUsername) {
+        session.user.githubUsername = token.githubUsername;
+      }
+      return session;
+    }
+  },
   pages: {
     signIn: '/auth/signin',
     signOut: '/auth/signout',
