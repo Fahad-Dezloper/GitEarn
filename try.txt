@@ -194,10 +194,9 @@ atheos
 
 
 
-correct wallet popup theme.
+correct wallet popup theme. -- done
 
-support and feed popup colors.
+support and feed popup colors. -- done
 
 create a escrow contract
-
-and github application
+and github application -- done [ left with db call and connecting it with fe ];
