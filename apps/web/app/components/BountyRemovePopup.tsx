@@ -72,7 +72,8 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
 
   const {  removeBounty, approveBounty } = useBountyDetails();
 
-  // console.log("assignees", asis)
+  // console.log("assignees", assignees)
+  // console.log("latestComment", latestComment);
 
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -108,7 +109,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
   const confirmApproval = async () => {
     setApproveLoading(true);
     if (selectedAssignee) {
-      console.log("Approving payment to:", selectedAssignee.id);
+      // console.log("Approving payment to:", selectedAssignee.id);
       const contributorId = selectedAssignee.id;
       try{
         const res = await approveBounty(issueId, issueLink, contributorId );
@@ -129,13 +130,13 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
     setShowCancelDialog(true);
   };
 
-  console.log("lamports", lamports);
+  // console.log("lamports", lamports);
 
   async function confirmCancel() {
     try{
       setLoading(true);
       // @ts-ignore
-      console.log("lamports here", lamports)
+      // console.log("lamports here", lamports)
       alert(`from here ${lamports}`)
       const res = await removeBounty({issueId, issueLink, lamports});
     } catch(e){
@@ -168,10 +169,11 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
       </div>
 
       {/* Scrollable Content */}
-      <Scroll.Root asChild className="flex-grow">
+      <div className="max-h-[76vh] md:max-h-[38vw]">
+      <Scroll.Root asChild className="flex-grow h-full">
         <Scroll.View className="ExampleSheetWithKeyboard-scrollView"
               scrollGestureTrap={{ yEnd: !largeViewport }}>
-          <Scroll.Content className="p-6 max-h-[38vw] flex flex-col overflow-y-auto gap-8">
+          <Scroll.Content className="p-4 sm:p-6 flex flex-col overflow-y-auto gap-6 sm:gap-8">
             {/* Bounty Section */}
               
               <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800/50 rounded-lg p-3 text-sm text-blue-700 dark:text-blue-300">
@@ -320,7 +322,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                       <div className="bg-zinc-50 dark:bg-zinc-800 px-4 py-2 flex justify-between items-center border-b border-zinc-200 dark:border-zinc-700">
                         <div className="flex items-center gap-2">
                           <div className="w-6 h-6 rounded-full overflow-hidden bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white text-xs font-bold">
-                            <img src={activity.userAvatar} alt="user_avatar" className="w-full h-full object-cover" />
+                            <img src={activity.user.avatar_url} alt="user_avatar" className="w-full h-full object-cover" />
                           </div>
                           <span className="font-medium text-sm">{activity.user.login}</span>
                           <span className="text-xs text-zinc-500 dark:text-zinc-400 flex items-center gap-1">
@@ -355,12 +357,13 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
           </Scroll.Content>
         </Scroll.View>
       </Scroll.Root>
+      </div>
 
       <div className="border-t border-zinc-200 dark:border-zinc-800 p-4 bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur-sm">
-          <div className="flex flex-col sm:flex-row gap-3 justify-between">
+          <div className="flex  justify-between">
             <Button 
               variant="outline" 
-              className="bg-white dark:bg-zinc-800 border-red-200 dark:border-red-800/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300"
+              className="bg-white w-fit dark:bg-zinc-800 border-red-200 dark:border-red-800/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300"
               onClick={handleCancel}
               disabled={assignees.length > 0}
             >
@@ -376,7 +379,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
             </Button> */}
             
             <Button 
-              className="bg-green-600 hover:bg-green-700 text-white"
+              className="bg-green-600 w-fit hover:bg-green-700 text-white"
               onClick={handleApprove}
             >
               Approve Bounty
@@ -456,9 +459,9 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                     <Button
                       className={`bg-green-600 hover:bg-green-700 text-white ${selectedAssignee?.walletAddress === null ? `cursor-not-allowed` : `cursor-pointer`}`}
                       onClick={confirmApproval}
-                      disabled={selectedAssignee?.walletAddress === null}
+                      disabled={selectedAssignee?.walletAddress === null || approveLoading}
                     >
-                      Approve Payment
+                      {approveLoading ? 'Approving...' : 'Approve Payment'} 
                     </Button>
                   </div>
                 </div>
@@ -494,6 +497,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
                     <Button 
                       className="bg-red-600 hover:bg-red-700 text-white"
                       onClick={confirmCancel}
+                      disabled={loading}
                     >
                       {loading ? "Cancelling..." : "Yes, Cancel Bounty"}
                     </Button>

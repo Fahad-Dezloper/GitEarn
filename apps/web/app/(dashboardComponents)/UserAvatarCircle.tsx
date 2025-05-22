@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LogOut } from "lucide-react";
+import { LifeBuoy, LogOut, Send } from "lucide-react";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { DropdownMenuContent, DropdownMenuGroup, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -8,7 +9,6 @@ import { SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/
 import { SidebarMenu } from "@/components/ui/sidebar";
 import { BadgeCheck, ChevronsUpDown, Wallet, Check } from "lucide-react";
 import { signOut } from "next-auth/react";
-import { useSession } from "next-auth/react";
 import githubUsername from 'github-username';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -20,10 +20,12 @@ import { useConnection } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { toast } from "sonner";
 import { ModeToggle } from "@/components/Toggle";
+import { SupportSheet } from "../components/DetachedSheet/FeedbackSupport";
 
-export default function UserAvatarCircle(){
-    const {data: session} = useSession();
-    const user = session?.user;
+export default function UserAvatarCircle({session}: {session: any}){
+  // console.log("here tooo on useravatar circle", session);
+  const user = session?.user;
+
     const [githubName, setGithubName] = useState<string | undefined>(undefined);
     const { isMobile } = useSidebar();
     const { publicKey, connected, disconnect } = useWallet();
@@ -41,7 +43,6 @@ export default function UserAvatarCircle(){
                 setGithubName(undefined);
             }
         }
-
         if (user?.email) {
             fetchGithubUsername(user.email);
         }
@@ -58,7 +59,7 @@ export default function UserAvatarCircle(){
     }, [publicKey, connection]);
 
     if(!user){
-        return <div>We are coming</div>
+      toast("Event has been created.")
     }
 
     const copyToClipboard = (text: string) => {
@@ -77,8 +78,22 @@ export default function UserAvatarCircle(){
         }
     };
 
+    const navSecondary = [
+      {
+        title: "Support",
+        url: "#",
+        icon: LifeBuoy,
+      },
+      {
+        title: "Feedback",
+        url: "#",
+        icon: Send,
+      },
+    ];
+
     return (
         <>
+        
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
@@ -110,7 +125,7 @@ export default function UserAvatarCircle(){
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="rounded-lg">
-                  <AvatarImage src={user.image || undefined} alt={user.name || 'User'} />
+                  <AvatarImage src={user.image} alt={user.name || 'User'} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -165,8 +180,11 @@ export default function UserAvatarCircle(){
               </div>
             </div>
             <DropdownMenuSeparator />
-            <div className="md:hidden flex">
-            <ModeToggle />
+            <div className="flex flex-col gap-2">
+              <span className="md:hidden">
+             <ModeToggle />
+            </span>
+            <SupportSheet items={navSecondary} />
             </div>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer" onClick={() => signOut()}>

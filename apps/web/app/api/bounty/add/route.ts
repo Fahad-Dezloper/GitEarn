@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const session = await getServerSession();
     const body = await req.json();
     const { bountyAmt, issueId, issueLink, lamports } = body;
-    // console.log(bountyAmt, issueId, issueLink);
+    console.log("here dets", bountyAmt, issueId, issueLink, lamports);
 
     const user = await prisma.user.findFirst({
       where: {

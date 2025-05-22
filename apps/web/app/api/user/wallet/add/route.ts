@@ -1,42 +1,35 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import prisma from "@repo/db/client";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest){
-    try {
-        const session = await getServerSession();
-        const body = await req.json();
-        const { walletAddress } = body;
+export async function POST(request: NextRequest) {
+  const { email, privyId, walletAddress } = await request.json();
 
-        if(!session?.user?.email){
-            return NextResponse.json({message: "Unauthorized Request"}, {status: 401})
+  try {
+    const user = await prisma.user.findUnique({
+        where: {
+            email: email,
         }
-    
-        const existingUser = await prisma.user.findUnique({
-            where: {
-              email: session.user.email,
-            },
-          });
+    });
 
-          if (!existingUser) {
-            return NextResponse.json({ message: 'User not found' }, { status: 404 });
-          }
-
-        const updatedUser = await prisma.user.update({
-            where: {
-                email: session.user.email,
-            },
-            data: {
-                wallet: walletAddress,
-            },
-        });
-          
-            // console.log('Wallet address added:', updatedUser);
-
-            return NextResponse.json({message: "Wallet Address Added Successfully"}, {status: 200});
-    
-    }catch(e){
-        return NextResponse.json({message: "Error while saving wallet address"}, {status: 500})
+    if (!user) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
+
+    const updatedUser = await prisma.user.update({
+        where: {
+            id: user.id,
+        },
+        data: {
+            privyDID: privyId,
+            solanaAddress: walletAddress,
+        }
+    })
+
+    return NextResponse.json({ message: "Wallet added successfully" }, { status: 200 });
+  } catch (error) {
+    console.error("API error:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+  
 }

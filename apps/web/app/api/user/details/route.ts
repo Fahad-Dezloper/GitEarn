@@ -21,6 +21,8 @@ export async function GET() {
   if (!token) {
     return NextResponse.json({ error: "GitHub token is required" }, { status: 401 });
   }
+  
+  const userPrivyId = user.privyDID;
 
   const userResponse = await axios.get("https://api.github.com/user", {
     headers: { Authorization: `token ${token}` },
@@ -61,6 +63,7 @@ export async function GET() {
     {
       github: githubUser,
       wakatime: summary,
+      userPrivyId: userPrivyId,
     },
     { status: 200 }
   );

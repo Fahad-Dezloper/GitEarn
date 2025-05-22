@@ -10,7 +10,7 @@ interface SignInButtonsProps {
 }
 
 export default function SignInButtons({ providers }: SignInButtonsProps) {
-  console.log("signin buttons");
+  // console.log("signin buttons");
   // console.log("providers", providers);
   if (!providers) return <div>No providers found</div>;
 
@@ -20,10 +20,10 @@ export default function SignInButtons({ providers }: SignInButtonsProps) {
         <Button
           key={provider.id}
           variant="outline"
-          className="flex cursor-pointer text-lg items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          onClick={() => signIn(provider.id, { callbackUrl: '/earn' })}
+          className="flex cursor-pointer text-lg items-center gap-2 hover:bg-accent hover:text-accent-foreground transition-colors"
+          onClick={() => signIn(provider.id, { callbackUrl: "/earn" })}
         >
-          {provider.id === 'github' && <GithubIcon className="bg-transparent" size={32} />}
+          {provider.id === 'github' && <GithubIcon className="hover:bg-transparent" size={32} />}
           Sign in with {provider.name}
         </Button>
       ))}

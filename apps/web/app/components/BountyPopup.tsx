@@ -57,7 +57,7 @@ interface BountyPopupProps {
 
 const BountyPopup = ({title, isAddingBounty, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId}: BountyPopupProps) => {
   
-console.log("main", latestComment);
+// console.log("main", latestComment);
   const largeViewport = useClientMediaQuery("(min-width: 800px)");
   const [bountyAmount, setBountyAmount] = useState<string | number | null>(null);
   const [customAmount, setCustomAmount] = useState("");
@@ -103,19 +103,16 @@ const usdToSol = (usdAmount: number) => {
   const { addBounty } = useBountyDetails();
 
   async function AddBountyToTheIssue(bountyAmt: number){
-    // alert(usdToSol(bountyAmt));
     if (!publicKey) {
       console.error("Wallet not connected");
       return;
     }
 
-    alert(bountyAmt);
-
     try {
       setIsLoading(true);
       const lamports = Math.round(Number(usdToSol(bountyAmt)) * LAMPORTS_PER_SOL);
 
-      const res = await addBounty(bountyAmt, issueId, issueLink, title, lamports);
+      const res = await addBounty(bountyAmt, issueId, issueLink, lamports, title);
 
     } catch (error) {
       console.error("Transaction failed", error);
@@ -142,7 +139,6 @@ const usdToSol = (usdAmount: number) => {
     
     setCustomAmount(value);
     const numericValue = parseFloat(value);
-    // console.log("number", numericValue);
 
     if (isNaN(numericValue) || numericValue <= 0) {
       setSelectedAmount(null);
@@ -189,7 +185,7 @@ const usdToSol = (usdAmount: number) => {
         </button>
       </div>
 
-    <div className="max-h-[76vh] md:max-h-[38vw]">
+    <div className="flex-1 overflow-y-auto h-fit">
       <Scroll.Root asChild className="flex-grow h-full">
         <Scroll.View className="ExampleSheetWithKeyboard-scrollView"
               scrollGestureTrap={{ yEnd: !largeViewport }}>
@@ -216,7 +212,7 @@ const usdToSol = (usdAmount: number) => {
                     ) : (
                       <>
                         ${amount}
-                        <div className="text-[10px] sm:text-xs text-zinc-500">≈ {usdToSol(Number(amount))} SOL</div>
+                        <div className={`text-[10px] sm:text-xs ${bountyAmount === amount ? "text-white" : "text-zinc-500"}`}>≈ {usdToSol(Number(amount))} SOL</div>
                       </>
                     )}
                   </button>
@@ -426,14 +422,36 @@ const usdToSol = (usdAmount: number) => {
       </Scroll.Root>
       </div>
 
-      <div className="border-t flex w-full items-center justify-center border-zinc-200 dark:border-zinc-800 p-2 bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur-sm">
-        <button onClick={() => AddBountyToTheIssue(Number(bountyAmount))}
+
+
+      <div className="flex justify-between md:hidden items-center p-3 sm:p-4 border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+      <button onClick={() => AddBountyToTheIssue(Number(bountyAmount))}
         disabled={
+          isLoading ||
           bountyAmount === null ||
           (selectedAmount !== null && selectedAmount <= 0) ||
           bountyAmount === "custom" && (customAmount.trim() === "" || isNaN(Number(customAmount)))
         }
-        className={`w-full py-2.5 sm:py-3 px-4 rounded-lg text-sm sm:text-base text-white font-semibold transition-all ${
+        className={`w-full py-2.5 sm:py-3 ${isLoading ? "cursor-not-allowed" : ""} px-4 rounded-lg text-sm sm:text-base text-white font-semibold transition-all ${
+          bountyAmount === null ||
+          (bountyAmount === "custom" && (customAmount.trim() === "" || isNaN(Number(customAmount))))
+            ? "bg-blue-600 cursor-not-allowed"
+            : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+        }`}
+      >
+        {isLoading ? "Adding Bounty..." : "Add Bounty"}
+        </button>
+      </div>
+
+      <div className="border-t h-fit flex w-full items-center justify-center border-zinc-200 dark:border-zinc-800 p-2 bg-zinc-50 dark:bg-zinc-900/80 backdrop-blur-sm">
+        <button onClick={() => AddBountyToTheIssue(Number(bountyAmount))}
+        disabled={
+          isLoading ||
+          bountyAmount === null ||
+          (selectedAmount !== null && selectedAmount <= 0) ||
+          bountyAmount === "custom" && (customAmount.trim() === "" || isNaN(Number(customAmount)))
+        }
+        className={`w-full py-2.5 sm:py-3 ${isLoading ? "cursor-not-allowed" : ""} px-4 rounded-lg text-sm sm:text-base text-white font-semibold transition-all ${
           bountyAmount === null ||
           (bountyAmount === "custom" && (customAmount.trim() === "" || isNaN(Number(customAmount))))
             ? "bg-blue-600 cursor-not-allowed"

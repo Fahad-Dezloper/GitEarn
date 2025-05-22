@@ -17,7 +17,7 @@ interface Bounty {
 }
 
 const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
-  console.log("bounties here", bounties);
+  // console.log("bounties here", bounties);
 
   function hexToRgba(hex: string, alpha: number) {
     const r = parseInt(hex.slice(1, 3), 16);
@@ -48,7 +48,7 @@ const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
   }
   
     return (
-    <div className="w-full grid grid-cols-3 gap-4">
+    <div className="w-full grid md:grid-cols-3 grid-cols-1 gap-4">
         {bounties.map((bounty: Bounty, index: number) => (
         <motion.div
         key={bounty.title}

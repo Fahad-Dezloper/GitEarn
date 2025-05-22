@@ -20,16 +20,16 @@ export async function GET(){
         });
     
         // console.log("res to user unique idd", res)
-        console.log("res to user unique id", res?.accounts[0].providerAccountId);
+        // console.log("res to user unique id", res?.accounts[0].providerAccountId);
 
         const userGitId = res?.accounts[0].providerAccountId;
 
         const money = await prisma.bountyIssues.findMany({
             where: {
+                contributorId: userGitId,
                 status: {
                     in: ['APPROVED', 'CLAIMING']
                 },
-                contributorId: userGitId
             }
         })
 

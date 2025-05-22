@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/sidebar"
 import { useSession } from "next-auth/react"
 import AnnouncementFooter from "@/app/(dashboardComponents)/AnnouncementFooter"
-import { SupportSheet } from "@/app/components/DetachedSheet/ExampleDetachedSheet"
+import { usePrivy } from "@privy-io/react-auth"
 
 const data = {
   user: {
@@ -42,7 +42,7 @@ const data = {
     },
     {
       title: "Bounties",
-      url: "/earn/bounties",
+      url: "/earn/bounties/explore",
       icon: SquareTerminal,
       items: [
         {
@@ -59,22 +59,12 @@ const data = {
       title: "Transactions",
       url: "/earn/transactions",
       icon: Scroll,
-      items: [
-        {
-          title: "Payment History",
-          url: "/earn/transactions/history",
-        },
-        {
-          title: "Deposits & Withdrawals",
-          url: "/earn/transactions/wallet",
-        },
-      ],
     },
-    {
-      title: "Leaderboard",
-      url: "/earn/leaderboard",
-      icon: Trophy,
-    },
+    // {
+    //   title: "Leaderboard",
+    //   url: "/earn/leaderboard",
+    //   icon: Trophy,
+    // },
     {
       title: "Claim",
       url: "/earn/claim",
@@ -102,6 +92,8 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const {data: session} = useSession();
+  const { user } = usePrivy();
+  // console.log("user privy", user);
   // console.log(session?.user);
   return (
     <Sidebar variant="floating" className="md:!z-0" {...props}>
@@ -124,7 +116,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/* {session?.user ? <NavUser user={session?.user} /> : <div></div>} */}
         <AnnouncementFooter />
         {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
-        <SupportSheet items={data.navSecondary} />
+        {/* <SupportSheet items={data.navSecondary} /> */}
       </SidebarFooter>
     </Sidebar>
   )

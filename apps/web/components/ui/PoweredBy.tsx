@@ -3,25 +3,23 @@
 
 export default function PoweredBy() {
   return (
-    <div className="flex flex-col items-center justify-center py-8">
-      <span className="uppercase text-xs tracking-widest text-muted-foreground mb-2">Powered by</span>
-      <div className="flex items-center gap-8 bg-muted/60 px-8 py-4 rounded-2xl shadow-md border border-border">
+    <div className="flex flex-col items-center justify-center">
+      <div className="flex items-center bg-muted/60 px-4 py-2 gap-6 rounded-2xl shadow-md border border-white">
         {/* Solana */}
         <div className="flex items-center gap-2">
           {/* Replace the div below with the Solana logo image */}
-          <div className="w-8 h-8 ">
-            <img src="/LOGO/solana-sol-logo.svg" alt="Solana" className="w-8 h-8" />
+          <div className="w-6 h-6 ">
+            <img src="/LOGO/solana-sol-logo.svg" alt="Solana" className="w-full h-full" />
           </div>
-          <span className="font-semibold text-base text-foreground">Solana</span>
         </div>
-        <span className="text-muted-foreground text-xl font-black font-sora">|</span>
         {/* GitHub */}
+        <div className="text-muted-foreground text-xl font-black font-sora rounded-full">|</div>
         <div className="flex items-center gap-2">
           {/* Replace the div below with the GitHub logo image */}
-          <div className="w-8 h-8 ">
-            <img src="/LOGO/github-mark-white.svg" alt="GitHub" className="w-8 h-8" />
+          <div className="w-6 h-6 ">
+            <img src="/LOGO/github-mark-white.svg" alt="GitHub" className="w-full hidden dark:flex h-full" />
+            <img src="/LOGO/github-mark.svg" alt="GitHub" className="w-full flex dark:hidden h-full" />
           </div>
-          <span className="font-semibold text-base text-foreground">GitHub</span>
         </div>
       </div>
     </div>

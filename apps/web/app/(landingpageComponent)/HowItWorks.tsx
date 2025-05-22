@@ -1,6 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-
-import { GitCommitVerticalIcon } from "@/components/ui/git-commit-vertical"
 import {
   Tabs,
   TabsContent,
@@ -8,105 +5,113 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 
+const getVimeoId = (url: string) => {
+  if (!url) return null;
+  const match = url.match(/(?:vimeo.com\/)(\d+)/);
+  return match ? match[1] : null;
+};
+
 export function HowItWorks() {
 
   const ContributorSteps=[
     {
       title: "Explore Bounties",
       desc: "Browse a curated list of GitHub issues that have real crypto bounties attached. Use filters to sort by repository, tags, or difficulty and find tasks that match your skills and interests",
-      image: "/dashboard/dash.png"
-    },
-    {
-      title: "Fix the Issue",
-      desc: "Pick a bounty you want to work on. Clone the repo, start solving the issue, and submit a pull request like you normally would. Your activity is automatically tracked through GitHub.",
-      image: "/dashboard/dash.png"
+      video: "https://vimeo.com/1084637230"
     },
     {
       title: "Earn Instantly",
-      desc: "Once your pull request is reviewed and merged, GitEarn triggers an on-chain payout directly to your wallet — no invoices, no waiting. Just merge and earn.",
-      image: "/dashboard/dash.png"
-    }
+      desc: "Once your pull request is reviewed and merged, Check your claim bounty section to claim your bounty. Just merge and earn.",
+      video: "https://vimeo.com/1084637159"
+    },
+    {
+      title: "Track Wallet",
+      desc: "Once you claim your bounty the money will be shown in your wallet.",
+      video: "https://vimeo.com/1084637306"
+    },
   ]
 
 
   const MaintainerSteps=[
     {
       title: "Add a Bounty",
-      desc: "Easily attach a crypto bounty to any GitHub issue from the GitEarn dashboard or browser extension. Set the amount, choose a token, and let contributors take it from there.",
-      image: "/dashboard/dash.png"
+      desc: "Easily attach a crypto bounty to any GitHub issue from the GitEarn dashboard or browser extension. Set the amount in USD and pay in SOL, and let contributors take it from there.",
+      video: "https://vimeo.com/1084637017"
     },
     {
       title: "Track Submissions",
       desc: "Sit back and track contributor activity in real time. See who's assigned, view submitted pull requests, and follow issue progress — all within GitEarn's dashboard.",
-      image: "/dashboard/dash.png"
+      video: ""
     },
     {
       title: "Merge & Reward",
-      desc: "Once your pull request is reviewed and merged, GitEarn triggers an on-chain payout directly to your wallet — no invoices, no waiting. Just merge and earn.",
-      image: "/dashboard/dash.png"
+      desc: "Once your pull request is reviewed and merged, approve the bounty to the contributor through GitEarn dashboard.",
+      video: "https://vimeo.com/1084637096"
     }
   ]
 
 
   return (
-    <Tabs defaultValue="Contributors" className="w">
-      <TabsList className="grid w-fit grid-cols-2">
-        <TabsTrigger value="Contributors">For Contributors</TabsTrigger>
-        <TabsTrigger value="Maintainers">For Maintainers</TabsTrigger>
+    <Tabs defaultValue="Contributors" className="w-full">
+      <TabsList className="flex justify-center w-fit gap-2 md:gap-4 mb-6 md:mb-12">
+        <TabsTrigger value="Contributors" className="text-base md:text-base px-4 md:px-8 py-2 md:py-3">For Contributors</TabsTrigger>
+        <TabsTrigger value="Maintainers" className="text-base md:text-base px-4 md:px-8 py-2 md:py-3">For Maintainers</TabsTrigger>
       </TabsList>
       <TabsContent className="w-full" value="Contributors">
-        <div className="w-full h-[80vh] inset-shadoww flex flex-col gap-36 px-20 py-42 border-2 scrolll border-[#262626] rounded-2xl overflow-y-auto overflow-x-hidden">
-            
-            {/* step 1 */}
-            {ContributorSteps.map((item, i) => (
-              <div key={i} className="flex justify-between gap-6">
-              <div className="flex flex-col items-start gap-20 text-white">
-                  <div className="">
-                      <GitCommitVerticalIcon className="hover:bg-transparent mainGrad2 p-4 rounded-full border-2" />
-                  </div>
-                  <div className="flex flex-col gap-4">
-                  <div className="flex gap-1 items-center">
-                      <h1 className="text-4xl font-sora">{item.title}</h1>
-                  </div>
-                      <p>{item.desc}</p>
-                      </div>
+        <div className="w-full flex flex-col gap-8 md:gap-16">
+          {ContributorSteps.map((item, i) => (
+            <div
+              key={i}
+              className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 md:gap-12 bg-white dark:bg-zinc-900 rounded-xl md:rounded-2xl p-6 md:p-8 lg:p-12 shadow-lg hover:shadow-xl transition-shadow duration-300"
+            >
+              <div className="flex flex-col items-start gap-4 md:gap-6 text-zinc-900 dark:text-white w-full md:w-1/2">
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold font-sora">{item.title}</h1>
+                <p className="text-base md:text-lg lg:text-xl text-zinc-600 dark:text-zinc-300 leading-relaxed">{item.desc}</p>
               </div>
-
-              <div className="w-full h-full flex items-center justify-center ">
-                  <div className="w-[40vw] h-[40vh] rounded-2xl overflow-hidden">
-                  <img src={item.image} alt="Dashboard image" className="w-full h-full object-contain" />
+              {item.video && getVimeoId(item.video) && (
+                <div className="w-full md:w-1/2 flex items-center justify-center mt-6 md:mt-0">
+                  <div className="relative w-full pt-[56.25%] rounded-lg md:rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-lg">
+                    <iframe
+                      src={`https://player.vimeo.com/video/${getVimeoId(item.video)}?title=0&byline=0&portrait=0&badge=0&autopause=0&speed=1.25&loop=1&autoplay=1&controls=0&muted=1`}
+                      className="absolute top-0 left-0 w-full h-full"
+                      frameBorder="0"
+                      allow="autoplay; fullscreen; picture-in-picture"
+                      title={item.title}
+                    />
                   </div>
-              </div>
-              </div>
-            ))}
-            
-
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </TabsContent>
       <TabsContent value="Maintainers">
-      <div className="w-full h-[80vh] inset-shadoww flex flex-col gap-36 px-20 py-42 border-2 scrolll border-[#262626] rounded-2xl overflow-y-auto overflow-x-hidden">
-      {MaintainerSteps.map((item, i) => (
-              <div key={i} className="flex justify-between gap-6">
-              <div className="flex flex-col items-start gap-20 text-white">
-                  <div className="">
-                      <GitCommitVerticalIcon className="hover:bg-transparent mainGrad2 p-4 rounded-full border-2" />
-                  </div>
-                  <div className="flex flex-col gap-4">
-                  <div className="flex gap-1 items-center">
-                      <h1 className="text-4xl font-sora">{item.title}</h1>
-                  </div>
-                      <p>{item.desc}</p>
-                      </div>
+        <div className="w-full flex flex-col gap-8 md:gap-16">
+          {MaintainerSteps.map((item, i) => (
+            <div
+              key={i}
+              className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 md:gap-12 bg-white dark:bg-zinc-900 rounded-xl md:rounded-2xl p-6 md:p-8 lg:p-12 shadow-lg hover:shadow-xl transition-shadow duration-300"
+            >
+              <div className="flex flex-col items-start gap-4 md:gap-6 text-zinc-900 dark:text-white w-full md:w-1/2">
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold font-sora">{item.title}</h1>
+                <p className="text-base md:text-lg lg:text-xl text-zinc-600 dark:text-zinc-300 leading-relaxed">{item.desc}</p>
               </div>
-
-              <div className="w-full h-full flex items-center justify-center ">
-                  <div className="w-[40vw] h-[40vh] rounded-2xl overflow-hidden">
-                  <img src={item.image} alt="Dashboard image" className="w-full h-full object-contain" />
+              {item.video && getVimeoId(item.video) && (
+                <div className="w-full md:w-1/2 flex items-center justify-center mt-6 md:mt-0">
+                  <div className="relative w-full pt-[56.25%] rounded-lg md:rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-lg">
+                    <iframe
+                      src={`https://player.vimeo.com/video/${getVimeoId(item.video)}?title=0&byline=0&portrait=0&badge=0&autopause=0&speed=1.25&loop=1&autoplay=1&controls=0&muted=1`}
+                      className="absolute top-0 left-0 w-full h-full"
+                      frameBorder="0"
+                      allow="autoplay; fullscreen; picture-in-picture"
+                      title={item.title}
+                    />
                   </div>
-              </div>
-              </div>
-            ))}
-      </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </TabsContent>
     </Tabs>
   )

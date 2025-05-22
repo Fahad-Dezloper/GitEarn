@@ -1,84 +1,49 @@
-# Turborepo starter
+# 🧠 Git Earn
 
-This Turborepo starter is maintained by the Turborepo core team.
+A decentralized bounty platform for open-source contributions. Powered by GitHub + Solana.
 
-## Using this example
+## 🚀 Overview
 
-Run the following command:
+Git Earn transforms the way developers contribute to open source by enabling **bounty-driven development**. Maintainers can incentivize their issues with bounties, and contributors get rewarded for solving real-world problems — all without the need for traditional freelancing.
 
-```sh
-npx create-turbo@latest
-```
+Whether you're a project maintainer or an open-source enthusiast, Git Earn makes it easy to assign, complete, and reward issues transparently.
 
-## What's inside?
+## 🎯 Features
 
-This Turborepo includes the following packages/apps:
+- 🔗 **GitHub App Integration** – Seamlessly attach bounties to real issues.
+- 💰 **Bounty System** – Fund issues using Solana. Contributors get paid on completion.
+- 👥 **Real-Time Collaboration** – Multiple users can interact on issues with live updates.
+- 🧩 **Immutable Assignments** – Ensure clarity and fairness with a tamper-proof ledger.
+- 🧵 **Issue Activity Feed** – Keep track of discussions, assignments, and completions.
+- 💼 **Dashboard** – Track open bounties, contributions, and payments.
+- 🏆 **Leaderboard** – Recognize top contributors.
+- 💳 **Wallet Integration** – Securely connect and manage your crypto wallet.
+- 🧑‍💻 **GitHub Extension** – View and assign bounties directly within GitHub UI.
 
-### Apps and Packages
+## 📸 Screenshots
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+> *(Add some screenshots or gifs of the dashboard, extension UI, bounty modal, etc.)*
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+## ✨ Tech Stack
 
-### Utilities
+- **Frontend**: Next.js, shadcn/ui, Tailwind CSS (main site), Vanilla CSS (extension)
+- **Backend**: WebSockets, Redis, custom OAuth, Solana integration
+- **Database**: Supabase / PostgreSQL (or your preferred DB)
+- **Auth**: GitHub App + Privy
 
-This Turborepo has some additional tools already setup for you:
+## 🛠 Installation
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+```bash
+# Clone the repo
+git clone https://github.com/your-org/gitearn.git
+cd gitearn
 
-### Build
+# Install dependencies
+pnpm install
 
-To build all apps and packages, run the following command:
+# Set up environment variables
+cp .env.example .env
+# Add your GitHub App credentials, Solana keys, etc.
 
-```
-cd my-turborepo
-pnpm build
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
+# Run locally
 pnpm dev
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)

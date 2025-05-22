@@ -8,10 +8,10 @@
   display: grid;
   justify-items: center;
 }
-@media (min-width: 600px) {
+@media (max-width: 600px) {
   .ExampleDetachedSheet-root {
     /* SELF-LAYOUT */
-    padding-bottom: var(--size-16);
+    padding-inline: 0.5rem;
   }
 }
 
@@ -23,6 +23,7 @@
   margin-top: var(--size-4);
   width: 50px;
   height: 6px;
+  z-index: 50;
 
   /* APPEARANCE */
   border: 0;
@@ -60,6 +61,9 @@
   gap: var(--size-8);
   justify-items: center;
 }
+
+
+
 @media (min-width: 600px) {
   .ExampleDetachedSheet-information {
     /* SELF-LAYOUT */
@@ -83,6 +87,12 @@
   font-weight: var(--font-weight-8);
   color: var(--gray-9);
 }
+
+:is(.dark) .ExampleDetachedSheet-title {
+  color: var(--white);
+}
+
+
 @media (min-width: 600px) {
   .ExampleDetachedSheet-title {
     /* TEXT */

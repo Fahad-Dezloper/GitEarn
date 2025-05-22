@@ -1,122 +1,152 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
-import { ArrowRight, Info, Sparkles } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { Badge } from "@/components/ui/badge"
-import { fetchAndSortGitHubIssues } from '@/lib/getIssues'
-import Link from 'next/link'
-import AddBountyButton from './AddBountyButton'
+"use client";
 
-interface GitHubIssue {
-  id: number;
-  title: string;
-  html_url: string;
-  created_at: string;
-  repository_url: string;
-  state: string;
-  repo: string;
-  pull_request?: any;
-}
+import React, { useMemo, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { ArrowRight, Sparkles, PlusCircle, Info } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatDistanceToNow } from 'date-fns';
+import { useBountyDetails } from '../context/BountyContextProvider';
 
-const AddBounty = ({token}: {token: string}) => {
-  const [issues, setIssues] = useState<GitHubIssue[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchIssues = async () => {
-      const issuess = await fetchAndSortGitHubIssues(token);
-      setIssues(issuess)
-      setLoading(false)
+function formatTimeAgo(dateString: string): string {
+    try {
+        const date = new Date(dateString);
+        return formatDistanceToNow(date, { addSuffix: true });
+    } catch (error) {
+        console.error("Error parsing date:", dateString, error);
+        return "Invalid date";
     }
-    fetchIssues()
-  }, [token])
-
-  function getTimeAgo(dateString: string) {
-    const date = new Date(dateString);
-    const diffTime = Math.abs(Date.now() - date.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return `${diffDays} days ago`;
-  }
-
-  return (
-    <div className='flex flex-col gap-3'>
-      <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0'>
-        <div className='flex items-center gap-2'>
-          <Sparkles className='w-5 h-5 text-[#007AFF] dark:text-[#00D1FF]' />
-          <h2 className='text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-2'>
-            Add Bounty to your latest issues 
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Info size={18} className="cursor-help" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Your issues get solved faster when you add a bounty!</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </h2>
-        </div>
-
-        <Link href="/earn/bounty" className='flex items-center cursor-pointer gap-2 hover:underline hover:text-[#007AFF] duration-150 ease-in-out text-sm sm:text-base'>
-          All Issues <ArrowRight className='w-4 h-4 text-gray-500 dark:text-gray-400' />
-        </Link>
-      </div>
-
-      <div className='w-full flex flex-col gap-3'>
-        {loading ? (
-          <div className="text-center py-4">Loading your issues...</div>
-        ) : issues.length > 0 ? (
-          issues.map((issue) => (
-            <div 
-              key={issue.id} 
-              className='relative flex w-full flex-col p-3 sm:p-4 rounded-xl 
-                bg-white dark:bg-transparent border border-gray-200 dark:hover:bg-blue-100/20 dark:border-gray-800 
-                hover:shadow-md hover:border-[#007AFF]/20 dark:hover:border-[#00D1FF]/20
-                transition-all duration-300 group'
-            >
-              <div className='flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4'>
-                <div className='flex flex-col gap-1 sm:gap-2'>
-                  <Link href={issue.html_url} target='_blank' className='text-base sm:text-lg font-semibold text-gray-800 dark:text-gray-100 
-                    group-hover:text-[#007AFF] dark:group-hover:text-[#00D1FF] transition-colors'>
-                    {issue.title}
-                  </Link>
-                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-                    <span className='font-medium'>{issue.repo}</span>
-                    <span className='hidden sm:inline w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600' />
-                    <span>{getTimeAgo(issue.created_at)}</span>
-                    <span className='hidden sm:inline w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600' />
-                    <Badge 
-                      variant="outline" 
-                      className='text-[#007AFF] dark:text-[#00D1FF] 
-                        border-[#007AFF]/20 dark:border-[#00D1FF]/20
-                        bg-[#007AFF]/5 dark:bg-[#00D1FF]/5
-                        text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full
-                        group-hover:bg-[#007AFF]/10 dark:group-hover:bg-[#00D1FF]/10
-                        transition-colors'
-                    >
-                      {issue.state}
-                    </Badge>
-                  </div>
-                </div>
-                <div className="flex justify-end">
-                  <AddBountyButton title={issue.title} repo={issue.repo} />
-                </div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="text-center py-4">No issues found</div>
-        )}
-      </div>
-    </div>
-  )
 }
 
-export default AddBounty
+const AddBounty = () => {
+    const router = useRouter();
+    const { issuesRepo } = useBountyDetails();
+    const repoData = issuesRepo;
+
+    const latestIssues = useMemo(() => {
+        if (!repoData || repoData.length === 0) {
+            return [];
+        }
+
+        const allIssues = repoData.flatMap(repo =>
+            repo.issues.map((issue: any) => ({
+                ...issue,
+                repoName: repo.name, 
+                repoUrl: repo.html_url 
+            }))
+        );
+
+        allIssues.sort((a, b) => {
+            const dateA = new Date(a.created_at).getTime();
+            const dateB = new Date(b.created_at).getTime();
+            if (isNaN(dateB) || isNaN(dateA)) return 0; 
+            return dateB - dateA; 
+        });
+
+
+        return allIssues.slice(0, 8);
+
+    }, [repoData]); 
+
+    const handleAddBountyClick = () => {
+        router.push('/earn/bounties/add');
+    };
+
+    console.log("latestIssues", latestIssues);
+
+    return (
+      <div className='w-full h-full flex flex-col gap-6'>
+                <div className='flex items-center justify-between'>
+                    <div className='flex items-center gap-3'>
+                        <Sparkles className='w-5 h-5 text-[#007AFF] dark:text-[#00D1FF] ' />
+                        <h2 className='text-xl font-semibold text-gray-900 dark:text-gray-50'>Latest Issues</h2>
+                        <div className="group relative">
+                            <Info className='w-4 h-4 text-gray-400 dark:text-gray-500 cursor-help' />
+                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 dark:bg-gray-800 text-white text-xs rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap">
+                            Give your issue wings—add a bounty!
+                                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 dark:bg-gray-800 rotate-45"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            <CardContent className='p-0'>
+                {latestIssues.length === 0 ? (
+                    <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+                        No issues found in your repositories.
+                    </div>
+                ) : (
+                    <>
+                    {latestIssues.map((item, i) => (
+                      <div key={i} className='w-full h-fit border-b border-gray-200 dark:border-gray-800 last:border-0'>
+                        <div className='w-full p-4 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors'>
+                            <div className='flex items-start justify-between gap-4'>
+                                <div className='flex-1 min-w-0 space-y-2'>
+                                    <div className='flex flex-col gap-1.5'>
+                                        <span className='text-sm font-medium text-gray-900 dark:text-gray-100 line-clamp-2'>
+                                            {item.title}
+                                        </span>
+                                        {item.labels && item.labels.length > 0 && (
+                                            <div className='flex flex-wrap gap-1.5'>
+                                                {item.labels.map((label: any, idx: number) => (
+                                                    <span 
+                                                        key={idx}
+                                                        className='px-2 py-0.5 text-xs rounded-full font-medium'
+                                                        style={{
+                                                            backgroundColor: `#${label.color}20`,
+                                                            color: `#${label.color}`,
+                                                            border: `1px solid #${label.color}40`
+                                                        }}
+                                                    >
+                                                        {label.name}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className='flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400'>
+                                        <span className='font-medium'>{item.repoName}</span>
+                                        <span className='w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600'></span>
+                                        <span>{formatTimeAgo(item.created_at)}</span>
+                                        {item.assignees && item.assignees.length > 0 && (
+                                            <>
+                                                <span className='w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600'></span>
+                                                <span className='flex items-center gap-1'>
+                                                    <span className='w-2 h-2 rounded-full bg-green-500'></span>
+                                                    Assigned
+                                                </span>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                                <Link 
+                                    href={`/earn/bounties/add?issue=${item.id}`}
+                                    className='flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors shrink-0'
+                                >
+                                    <ArrowRight className='w-4 h-4 text-gray-500 dark:text-gray-400' />
+                                </Link>
+                            </div>
+                        </div>
+                      </div>                    
+                    ))}
+                    </>
+                )}
+                {repoData && repoData.flatMap(r => r.issues).length > 8 && (
+                    <div className="mt-6 text-center">
+                        <Link 
+                            href="/earn/bounties/add" 
+                            className='text-base text-[#007AFF] dark:text-[#00D1FF] font-medium'
+                        >
+                            View All Issues <ArrowRight className='w-5 h-5 inline ml-2' />
+                        </Link>
+                    </div>
+                )}
+            </CardContent>
+        </div>
+    );
+};
+
+export default AddBounty;

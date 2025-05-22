@@ -21,8 +21,7 @@ interface UserDetailssContextType {
     setUserDetailss: React.Dispatch<React.SetStateAction<UserDetailss>>;
     wakaTimeDetails: any;
     setWakaTimeDetails: React.Dispatch<React.SetStateAction<any>>;
-    addWalletAdd: (params: { dbWallet: string }) => Promise<void>;
-    walletAdd: any;
+    userPrivyDID: string | undefined;
 }
 
 const UserDetailsContext = createContext<UserDetailssContextType | undefined>(undefined);
@@ -36,44 +35,33 @@ export function UserDetailsProvider({ children }: { children: ReactNode }) {
         avatar_url: undefined
     });
     const [wakaTimeDetails, setWakaTimeDetails] = useState({});
-    const [walletAdd, setWalletAdd] = useState<string | undefined>();
-    const [claimBounties, setClaimBounties] = useState<any[]>([]);
+    const [userPrivyDID, setUserPrivyDID] = useState<string | undefined>();
+    // const [walletAdd, setWalletAdd] = useState<string | undefined>();
 
     async function getUserDets(){
         const res = await axios.get("/api/user/details");
         setUserDetailss(res.data.github);
-        setWakaTimeDetails(res.data.wakatime)
+        setWakaTimeDetails(res.data.wakatime);
+        setUserPrivyDID(res.data.userPrivyId);
     }
 
-    async function addWalletAdd({dbWallet}: {dbWallet: string}){
-        const res = await axios.post("/api/user/wallet/add", {
-            walletAddress: dbWallet
-          });
-    }
+    // async function fetchUserwalletAdd(){
+    //     const res = await axios.get("/api/user/wallet/get");
+    //     // console.log("res for wallet ADD", res.data);
+    //     setWalletAdd(res.data.walletAdd);
+    // }
 
-    async function fetchUserwalletAdd(){
-        const res = await axios.get("/api/user/wallet/get");
-        console.log("res for wallet ADD", res.data);
-        setWalletAdd(res.data.walletAdd);
-    }
-
-    async function fetchUserMoneyClaimed(){
-        const res = await axios.get("/api/user/claim");
-        console.log("fetchUserMoneyClaimed", res.data.claimBounties);
-        setClaimBounties(res.data.claimBounties);
-    };
 
     useEffect(() => {
         try{
             getUserDets();
-            fetchUserwalletAdd();
-            fetchUserMoneyClaimed();
         } catch (e){
             console.log("error fetching user details", e);
         }
     }, []);
+
     return (
-        <UserDetailsContext.Provider value={{ userDetailss, setUserDetailss, wakaTimeDetails, setWakaTimeDetails, addWalletAdd, walletAdd }}>
+        <UserDetailsContext.Provider value={{ userDetailss, setUserDetailss, wakaTimeDetails, setWakaTimeDetails, userPrivyDID }}>
             {children}
         </UserDetailsContext.Provider>
     );

@@ -134,4 +134,70 @@ UI improve /claim page
 UI improve /profile page
 
 
-//instead of Hi there. add avatar logo on click show waleet add also show a icon green if its connected else yellow. keep it clean and simple
+//instead of Hi there. add avatar logo on click show waleet add also show a icon green if its connected else yellow. keep it clean and simple - done
+
+change the ngrok url in both github redirect uri and envs
+
+---? dashboard responsiveness
+/earn/bounty/add -> manage done -> move to add bounty popup and ui. --> done
+
+
+then /profile --> done
+/payment /transactions/claim --> done
+
+
+
+///show data for transaction for claimed and created perfectly with buttons if pending to retry
+
+/// in profile page remove edit button for changing wallet address
+
+/// make the refresh button work on popup
+
+/// show claimed contributor address in transactions page
+
+
+/earn page - done
+
+
+--later--
+/// move to leader board page 
+
+
+delete custom prisma adapter.- done
+
+improve UI for /auth/new-user
+
+write all small problems on paper  -- done
+
+
+// move to main mainnet and recheck the money again
+
+make videos for landing page -- done
+
+
+work on seo
+
+make main video
+
+submit for grant/solana mini hackathon/everything
+
+get it live on gitearn.com
+
+[make final video]
+submit for breakout / other tracks
+solana grant
+solana mini hackathon
+atheos
+
+
+{/* work on notification system */}
+
+
+
+correct wallet popup theme.
+
+support and feed popup colors.
+
+create a escrow contract
+
+and github application

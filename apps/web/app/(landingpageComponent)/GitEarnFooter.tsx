@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
+import { ModeToggle } from "@/components/Toggle";
 import { GithubIcon } from "@/components/ui/github";
+import PoweredBy from "@/components/ui/PoweredBy";
 import { TwitterIcon } from "@/components/ui/twitter";
 import Link from "next/link";
 
@@ -10,7 +12,8 @@ export default function GitEarnFooter() {
         {/* Brand Section */}
         <div className="flex flex-col gap-3">
           <div>
-              <img src="/LOGO/GITEARN.svg" alt="GitEarn Logo" className="h-6 mb-3" />
+              <img src="/LOGO/GITEARN.svg" alt="GitEarn Logo" className="h-6 mb-3 dark:flex hidden" />
+              <img src="/LOGO/GITEARND.svg" alt="GitEarn Logo" className="h-6 mb-3 dark:hidden flex" />
           </div>
           <p className="leading-relaxed text-wrap max-w-md">
             GitEarn is a decentralized bounty platform rewarding open-source contributions.
@@ -56,6 +59,16 @@ export default function GitEarnFooter() {
                 </Link>
               </li>
             </ul>
+          </div>
+
+
+{/* powered by and mode toggle */}
+          <div className="flex flex-col gap-4 items-center md:gap-6">
+            <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 md:mb-2">Porwered By</h3>
+            <div className="flex flex-col gap-6">
+            <PoweredBy />
+            <ModeToggle />
+            </div>
           </div>
         </div>
       </div>

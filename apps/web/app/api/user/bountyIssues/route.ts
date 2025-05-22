@@ -23,11 +23,7 @@ async function getUserByGitHubId(githubId: string){
       }
     },
     include: {
-      user: {
-        include: {
-          wallet: true
-        }
-      }
+      user: true
     }
   });
 
@@ -36,7 +32,11 @@ async function getUserByGitHubId(githubId: string){
     return;
   }
 
-  return res?.user?.wallet?.publicKey;
+  if (!res.user) {
+    return null;
+  }
+
+  return res.user.solanaAddress;
 }
 
 async function fetchGitHubIssueData(htmlUrl: string) {
@@ -186,8 +186,8 @@ export async function GET() {
       }
     })
 
-    console.log("raw user issues", JSON.stringify(issues, (key, value) =>
-      typeof value === 'bigint' ? value.toString() : value, 2));
+    // console.log("raw user issues", JSON.stringify(issues, (key, value) =>
+    //   typeof value === 'bigint' ? value.toString() : value, 2));
 
     // const issues = Rawissues.filter(issue => {
     //   const statuses = issue.transactions.map(tx => tx.status);
@@ -198,7 +198,7 @@ export async function GET() {
     //   return hasAllowedStatus && !hasDisallowedStatus;
     // });
     
-    console.log("filtered issues", issues);
+    // console.log("filtered issues", issues);
 
     if (!issues) {
       return NextResponse.json({ 

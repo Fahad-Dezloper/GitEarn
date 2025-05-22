@@ -22,19 +22,19 @@ export default function NavbarDemo() {
     { name: "Customers", link: "#customers" },
   ];
  
-  const {data: session} = useSession();
-  console.log("session from navbar", session?.user);
+  const {data: session, status} = useSession();
+  // console.log("session from navbar", session?.user);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
  
   return (
-    <div className="relative w-full py-4">
+    <div className="relative w-full py-4 bg-transparent">
       <Navbar>
         {/* Desktop Navigation */}
         <NavBody>
           <NavbarLogo />
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
-          {session?.user ? <><NavbarButton href="/earn" variant="primary" className="flex items-center">Earn <ArrowRightIcon className="hover:bg-transparent !py-0" size={20} /></NavbarButton></> : <>
+          {status === "authenticated" ? <><NavbarButton href="/earn" variant="primary" className="flex items-center">Earn <ArrowRightIcon className="hover:bg-transparent !py-0" size={20} /></NavbarButton></> : <>
             <NavbarButton href="/auth/signin" variant="primary">Sign Up</NavbarButton>
             </>}
           </div>
@@ -65,10 +65,20 @@ export default function NavbarDemo() {
               </a>
             ))}
             <div className="flex w-full flex-col gap-4">
-              {session?.user ? <></> : <>
+              {session?.user ? <>
+                <NavbarButton
+                onClick={() => setIsMobileMenuOpen(false)}
+                href="/earn"
+                variant="primary"
+                className="w-full"
+              >
+                Earn
+              </NavbarButton>
+              </> : <>
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="primary"
+                href="/auth/signin"
                 className="w-full"
               >
                 Sign Up

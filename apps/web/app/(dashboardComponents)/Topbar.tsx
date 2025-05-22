@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
+ 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client"
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import SignIn from "@/components/sign-in";
@@ -13,8 +14,15 @@ import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import WalletMoney from "./WalletMoney";
 import Notification from "./Notification";
 import UserAvatarCircle from "./UserAvatarCircle";
+import BreadcrumbsTop from "./(topbar)/breadcrumbsTop";
+import { useSession } from "next-auth/react";
+import { SupportSheet } from "@/app/components/DetachedSheet/FeedbackSupport"
+import { Send, LifeBuoy } from "lucide-react";
 
 const Topbar = () => {
+  const { data: session, status } = useSession();
+  const user = session?.user;
+
   const router = useRouter();
   const pathname = usePathname();
   const pathSegments = pathname.split("/").filter(Boolean); 
@@ -30,43 +38,50 @@ const Topbar = () => {
       <div className="flex items-center gap-2">
         <SidebarTrigger className="-ml-1 md:hidden flex" />
         <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
-        
         <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
-            </BreadcrumbItem>
+  <BreadcrumbList>
+    {pathSegments.map((segment, index) => {
+      const href = "/" + pathSegments.slice(0, index + 1).join("/");
+      const isLast = index === pathSegments.length - 1;
 
-            {pathSegments.map((segment, index) => {
-              const href = "/" + pathSegments.slice(0, index + 1).join("/");
-              const isLast = index === pathSegments.length - 1;
-              
-              return (
-                <React.Fragment key={href}>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    {isLast ? (
-                      <BreadcrumbPage>{formatSegment(segment)}</BreadcrumbPage>
-                    ) : (
-                      // @ts-ignore
-                      <BreadcrumbLink as={Link} href={href}>
-                        {formatSegment(segment)}
-                      </BreadcrumbLink>
-                    )}
-                  </BreadcrumbItem>
-                </React.Fragment>
-              );
-            })}
-          </BreadcrumbList>
-        </Breadcrumb>
+      // Skip "Home" breadcrumb if first segment is "earn"
+      if (index === 0 && segment === "earn") {
+        return (
+          <BreadcrumbItem key={href}>
+            <Link href="/earn" passHref legacyBehavior>
+              <BreadcrumbLink>Earn</BreadcrumbLink>
+            </Link>
+          </BreadcrumbItem>
+        );
+      }
+
+      return (
+        <React.Fragment key={href}>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            {isLast ? (
+              <BreadcrumbPage>{formatSegment(segment)}</BreadcrumbPage>
+            ) : (
+              <Link href={href} passHref legacyBehavior>
+                <BreadcrumbLink>{formatSegment(segment)}</BreadcrumbLink>
+              </Link>
+            )}
+          </BreadcrumbItem>
+        </React.Fragment>
+      );
+    })}
+  </BreadcrumbList>
+</Breadcrumb>
+
       </div>
       <div className="flex items-center gap-4">
-      <div className="hidden md:flex">
-      <ModeToggle />
-      </div>
-      <WalletMoney />
-      <Notification />
-      <UserAvatarCircle />
+        <div className="hidden md:flex">
+          <ModeToggle />
+        </div>
+        <WalletMoney />
+        {/* work on notification system */}
+        {/* <Notification /> */}
+        {status === "authenticated" && <UserAvatarCircle session={session} />}
       </div>
     </header>
   );

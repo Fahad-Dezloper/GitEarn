@@ -10,16 +10,18 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { GithubIcon } from "@/components/ui/github";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Calendar, ExternalLink } from "lucide-react";
 import { SetStateAction, useEffect, useState } from "react";
 import { format } from "date-fns"
+import Topbar from '@/app/(dashboardComponents)/Topbar';
 
 export default function Page(){
-    const { claimBounties, walletAdd } = useUserDetails();
-    const { claimMoney } = useBountyDetails();
-    // console.log("claim add", walletAdd);   
-
+    const {  walletAdd } = useUserDetails();
+    const { claimMoney, claimBounties  } = useBountyDetails();
+    // console.log("claim BOUNYT", claimBounties);   
+    
     useEffect(() => {
       if (walletAdd) {
         setWalletAddress(walletAdd);
@@ -44,7 +46,7 @@ export default function Page(){
   const handleSubmitClaim = async (contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any) => {
     try{
       setLoading(true);
-      console.log("Claiming bounty", contributorId, walletAdd, bountyAmountInLamports, githubId, htmlUrl);
+      // console.log("Claiming bounty", contributorId, walletAdd, bountyAmountInLamports, githubId, htmlUrl);
       const res = await claimMoney(contributorId, walletAdd, bountyAmountInLamports, githubId, htmlUrl);
       // console.log("done claiming", res);
     } catch(e){
@@ -78,60 +80,74 @@ export default function Page(){
     return format(new Date(dateString), "MMM d, yyyy")
   }
 
+  function getRepoName(url: string): string {
+    // Example: https://github.com/Fahad-Dezloper/100xNotion/issues/2
+    const match = url.match(/^https:\/\/github\.com\/([^/]+)\/([^/]+)/);
+    return match ? `${match[1]}/${match[2]}` : 'Unknown Repo';
+  }
+
   return (
+    <div>
+      <Topbar />
     <div className="container mx-auto py-8 px-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-sora font-bold">Your Claimable Bounties</h1>
       </div>
       {claimBounties && claimBounties.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {claimBounties.map((bounty: SetStateAction<null>) => (
-            <Card key={bounty.id} className="shadow-md hover:shadow-lg transition-shadow">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2">
-                  <GithubIcon />
-                  <span>Issue #{getIssueNumber(bounty.htmlUrl)}</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="border-l-4 border-primary pl-3 py-1">
-                    <h3 className="font-medium text-lg">
-                      {bounty.issueTitle || `Issue #${getIssueNumber(bounty.htmlUrl)}`}
-                    </h3>
-                    <a
-                      href={bounty.htmlUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline mt-1"
-                    >
-                      View on GitHub <ExternalLink className="h-3 w-3" />
-                    </a>
+            <Card key={bounty.id} className="shadow-md hover:shadow-xl transition-shadow border border-border">
+            <CardHeader className="pb-3 flex flex-col gap-1">
+              <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+                <GithubIcon className="" />
+                <span>Issue #{getIssueNumber(bounty.htmlUrl)}</span>
+                <Badge variant="success" className="ml-auto text-xs">Approved</Badge>
+              </CardTitle>
+              <p className="text-sm text-muted-foreground">Repo: {getRepoName(bounty.htmlUrl)}</p>
+              <p className="text-sm text-muted-foreground">Contributor ID: {bounty.contributorId}</p>
+            </CardHeader>
+          
+            <CardContent>
+              <div className="space-y-4">
+                <div className="border-l-4 border-primary pl-3 py-1">
+                  <h3 className="font-medium text-base">
+                    {bounty.issueTitle || `Issue #${getIssueNumber(bounty.htmlUrl)}`}
+                  </h3>
+                  <a
+                    href={bounty.htmlUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline mt-1"
+                  >
+                    View on GitHub <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+          
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Calendar className="h-4 w-4" />
+                  <span>Approved on {formatDate(bounty.updatedAt)}</span>
+                </div>
+          
+                <div className="bg-muted p-3 rounded-lg space-y-1">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Amount (USD):</span>
+                    <span className="font-semibold">${bounty.bountyAmount}</span>
                   </div>
-
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="h-4 w-4" />
-                    <span>Approved on {formatDate(bounty.updatedAt)}</span>
-                  </div>
-
-                  <div className="bg-muted p-3 rounded-md">
-                    <div className="flex justify-between mb-1">
-                      <span className="text-muted-foreground">Amount:</span>
-                      <span className="font-medium">{bounty.bountyAmount} USD</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">SOL:</span>
-                      <span className="font-medium">{formatSol(bounty.bountyAmountInLamports)} SOL</span>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Amount (SOL):</span>
+                    <span className="font-semibold">{formatSol(bounty.bountyAmountInLamports)} SOL</span>
                   </div>
                 </div>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full" onClick={() => handleClaim(bounty)}>
-                  Claim Bounty
-                </Button>
-              </CardFooter>
-            </Card>
+              </div>
+            </CardContent>
+          
+            <CardFooter>
+              <Button className="w-full cursor-pointer" onClick={() => handleClaim(bounty)}>
+                Claim Bounty
+              </Button>
+            </CardFooter>
+          </Card>
+          
           ))}
         </div>
       ) : (
@@ -188,6 +204,7 @@ export default function Page(){
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
     </div>
   )
 }
