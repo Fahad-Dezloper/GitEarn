@@ -25,8 +25,8 @@ model User {
 model BountyIssues {
   id           String          @id @default(cuid())
   userId       String
-  githubId     BigInt          @unique
-  htmlUrl      String          @unique
+  githubId     BigInt          
+  htmlUrl      String          
   status       BountyStatus    @default(PENDING)
   contributorId   String?
   contributorClaimedAdd   String?

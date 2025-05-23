@@ -29,6 +29,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { useWallet } from "@solana/wallet-adapter-react"
 
 // Convert lamports to SOL
 const lamportsToSol = (lamports: number) => {
@@ -42,7 +43,8 @@ const formatSol = (sol: number) => {
 
 export function BountiesCreated() {
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({})
-  const [searchQuery, setSearchQuery] = useState("")
+  const [searchQuery, setSearchQuery] = useState("");
+  const { publicKey } = useWallet();
   const [dateRange, setDateRange] = useState<{
     from: Date | undefined
     to: Date | undefined
@@ -51,10 +53,18 @@ export function BountiesCreated() {
     to: undefined,
   })
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([])
-  const { bountiesCreated, addBounty } = useBountyDetails();
+  const { bountiesCreated, addBounty, removeBounty } = useBountyDetails();
   const [loading, setLoading] = useState(false);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
   const [bountyToConfirm, setBountyToConfirm] = useState<{
+    txnId: string;
+    bountyAmountInLamports: number;
+    htmlUrl: string;
+    githubId: string;
+    bountyAmount: number;
+  } | null>(null);
+  const [bountyToCancel, setBountyToCancel] = useState<{
     txnId: string;
     bountyAmountInLamports: number;
     htmlUrl: string;
@@ -123,7 +133,18 @@ export function BountiesCreated() {
     } finally{
       setLoading(false);
     }
+  }
 
+  async function confirmCancellingBounty(txnId: any, githubId: string,  htmlUrl: string, bountyAmountInLamports: number){
+    try{
+      setLoading(true)
+      const res = await removeBounty({txnId, issueId:githubId,  issueLink:htmlUrl, lamports:bountyAmountInLamports});
+      console.log("res", res);  
+    } catch (e){
+      console.error("Error while confirming pending bounty", e);
+    } finally{
+      setLoading(false);
+    }
   }
 
   const formatter = new Intl.DateTimeFormat('en-GB', {
@@ -346,7 +367,7 @@ export function BountiesCreated() {
                                     </div>
                                     }
 
-                                    {txn.status === "PENDING" && 
+                                    {txn.type === "DEPOSIT" && txn.status === "PENDING" && 
                                       <Button onClick={() => {
                                         setIsConfirmDialogOpen(true);
                                         setBountyToConfirm({
@@ -357,6 +378,19 @@ export function BountiesCreated() {
                                           bountyAmount: bounty.bountyAmount
                                         });
                                       }} className="cursor-pointer">Confirm Payment</Button>
+                                    };
+
+                                    {txn.type === "WITHDRAWAL" && txn.status === "PENDING" && 
+                                    <Button onClick={() => {
+                                      setIsCancelDialogOpen(true);
+                                      setBountyToCancel({
+                                        txnId: txn.id,
+                                        bountyAmountInLamports: bounty.bountyAmountInLamports,
+                                        htmlUrl: bounty.htmlUrl,
+                                        githubId: bounty.githubId,
+                                        bountyAmount: bounty.bountyAmount
+                                      });
+                                    }} className="cursor-pointer">Transfer Back</Button>
                                     }
 
                                   </TableCell>
@@ -375,6 +409,9 @@ export function BountiesCreated() {
         </Table>
       </div>
 
+
+
+      {/* is confirm dialog */}
       <Dialog open={isConfirmDialogOpen} onOpenChange={(open) => {
         setIsConfirmDialogOpen(open);
         if (!open) setBountyToConfirm(null);
@@ -441,6 +478,81 @@ export function BountiesCreated() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+
+
+      {/* is cancel dialog */}
+      <Dialog open={isCancelDialogOpen} onOpenChange={(open) => {
+        setIsCancelDialogOpen(open);
+        if (!open) setBountyToCancel(null);
+      }}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Confirm Payment</DialogTitle>
+            <DialogDescription>
+              Please review the details below before confirming the payment.
+            </DialogDescription>
+          </DialogHeader>
+          {bountyToCancel && (
+            <dl className="bg-muted/30 rounded-md px-4 py-3 space-y-3 border">
+              <div className="flex flex-col gap-1">
+                <dt className="font-semibold text-muted-foreground">Bounty URL</dt>
+                <dd>
+                  <a href={bountyToCancel.htmlUrl} target="_blank" rel="noopener noreferrer" className="text-primary underline break-all">
+                    {bountyToCancel.htmlUrl}
+                  </a>
+                </dd>
+              </div>
+              <div className="flex flex-col gap-1">
+                <dt className="font-semibold text-muted-foreground">GitHub ID</dt>
+                <dd>{bountyToCancel.githubId}</dd>
+              </div>
+              <div className="flex flex-col gap-1">
+                <dt className="font-semibold text-muted-foreground">Bounty Amount</dt>
+                <dd>{bountyToCancel.bountyAmount} <span className="text-xs text-muted-foreground">(SOL)</span></dd>
+              </div>
+              <div className="flex flex-col gap-1">
+                <dt className="font-semibold text-muted-foreground">Bounty Amount (Lamports)</dt>
+                <dd>{bountyToCancel.bountyAmountInLamports}</dd>
+              </div>
+              <div className="flex flex-col gap-1">
+                <dt className="font-semibold text-muted-foreground">Transaction ID</dt>
+                <dd className="break-all">{bountyToCancel.txnId}</dd>
+              </div>
+              <div className="flex flex-col gap-1">
+                <dt className="font-semibold text-muted-foreground">Wallet Address</dt>
+                <dd className="break-all">{publicKey?.toString()}</dd>
+              </div>
+            </dl>
+          )}
+          <DialogFooter className="flex flex-row gap-3 justify-end mt-4">
+            <Button variant="outline" onClick={() => {
+              setIsCancelDialogOpen(false);
+              setBountyToCancel(null);
+            }}>Cancel</Button>
+            <Button
+              type="button"
+              className="cursor-pointer"
+              disabled={loading}
+              onClick={async () => {
+                if (bountyToCancel) {
+                  await confirmCancellingBounty(
+                    bountyToCancel.txnId,
+                    bountyToCancel.githubId,
+                    bountyToCancel.htmlUrl,
+                    bountyToCancel.bountyAmountInLamports
+                  );
+                  setIsCancelDialogOpen(false);
+                  setBountyToCancel(null);
+                }
+              }}
+            >
+              {loading ? "Confirming..." : "Confirm"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </div>
   )
 }

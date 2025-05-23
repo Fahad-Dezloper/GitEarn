@@ -17,10 +17,11 @@
     "dev": "nodemon"
   },
   "dependencies": {
+    "@repo/db": "workspace:*",
+    "axios": "^1.8.4",
     "nodemon": "^3.1.10",
     "pg-protocol": "^1.10.0",
-    "probot": "^13.0.1",
-    "@repo/db": "workspace:*"
+    "probot": "^13.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

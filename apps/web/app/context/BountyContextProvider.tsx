@@ -18,7 +18,7 @@ interface BountyContextType {
   bountyIssues: any[];
   setBountyIssues: React.Dispatch<React.SetStateAction<any[]>>;
   userBountyIssue: any[];
-  removeBounty: ({ issueId, issueLink, lamports }: { issueId: string, issueLink: string, lamports: any }) => Promise<void>;
+  removeBounty: ({txnId, issueId, issueLink, lamports }: {txnId?: any, issueId: string, issueLink: string, lamports: any }) => Promise<void>;
   claimMoney: (contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any) => Promise<void>;
   bountiesCreated: any[];
   bountiesClaimed: any[];
@@ -241,62 +241,104 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
 
 
   // check vulnerablity here
-  async function removeBounty({issueId, issueLink, lamports}: {issueId: string, issueLink: string, lamports: any}){
-    // alert(process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD);
-    // alert(process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY);
-    // alert(`now here ${lamports}`);
-
+  async function removeBounty({txnId, issueId, issueLink, lamports}: {txnId?: any, issueId: string, issueLink: string, lamports: any}){
     if(!process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD){
       return console.error("PRIMARY_WALLET_ADD public key not available");
     }
     if(!process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY){
       return console.error("PRIMARY_WALLET_ADD private key not available");
     }
+
     try {
-      const remove = await axios.post('/api/bounty/remove/pending', {
-        issueId,
-        issueLink,
-        lamports
-      });
-      
-      // console.log("remove log", remove);
-      
-      const transactionIdd = remove.data.transaction.id;
+      if(txnId){
+        alert("this one is happening")
 
-      if(!publicKey){
-        console.error("Wallet not connected");
-        return;
+        const transactionIdd = txnId;
+
+        if(!publicKey){
+          alert("Wallet not connected");
+          console.error("Wallet not connected");
+          return;
+        }
+  
+          const keypair = Keypair.fromSecretKey(bs58.decode(process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY));
+  
+          const transaction = new Transaction().add(
+            SystemProgram.transfer({
+              fromPubkey: keypair.publicKey,
+              toPubkey: publicKey,
+              lamports: lamports,
+            })
+          );
+  
+          const signature = await sendAndConfirmTransaction(
+            connection,
+            transaction,
+            [keypair]
+          );
+  
+        const removeConfirm = await axios.post('/api/bounty/remove', {
+          issueId,
+          issueLink,
+          signature,
+          lamports,
+          to: publicKey,
+          transactionId: transactionIdd
+        })
+  
+        getIssues();
+        getUserBountyIssues();
+      } else {
+        alert("no one is happening")
+        const remove = await axios.post('/api/bounty/remove/pending', {
+          issueId,
+          issueLink,
+          lamports
+        });
+        
+        // console.log("remove log", remove);
+        
+        const transactionIdd = remove.data.transaction.id;
+  
+  
+  
+  
+        if(!publicKey){
+          alert("Wallet not connected");
+          console.error("Wallet not connected");
+          return;
+        }
+  
+          const keypair = Keypair.fromSecretKey(bs58.decode(process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY));
+  
+          const transaction = new Transaction().add(
+            SystemProgram.transfer({
+              fromPubkey: keypair.publicKey,
+              toPubkey: publicKey,
+              lamports: lamports,
+            })
+          );
+  
+          const signature = await sendAndConfirmTransaction(
+            connection,
+            transaction,
+            [keypair]
+          );
+  
+          // console.log("Transaction Signature:", signature);
+  
+        const removeConfirm = await axios.post('/api/bounty/remove', {
+          issueId,
+          issueLink,
+          signature,
+          lamports,
+          to: publicKey,
+          transactionId: transactionIdd
+        })
+  
+        getIssues();
+        getUserBountyIssues();
       }
-
-        const keypair = Keypair.fromSecretKey(bs58.decode(process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY));
-
-        const transaction = new Transaction().add(
-          SystemProgram.transfer({
-            fromPubkey: keypair.publicKey,
-            toPubkey: publicKey,
-            lamports: lamports,
-          })
-        );
-
-        const signature = await sendAndConfirmTransaction(
-          connection,
-          transaction,
-          [keypair]
-        );
-
-        // console.log("Transaction Signature:", signature);
-
-      const removeConfirm = await axios.post('/api/bounty/remove', {
-        issueId,
-        issueLink,
-        signature,
-        lamports,
-        to: publicKey,
-        transactionId: transactionIdd
-      })
-
-      getIssues();
-      getUserBountyIssues();
     } catch (error) {
       console.log("in context provider cancel bounty error", error); 
     }
