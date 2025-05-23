@@ -1,23 +1,9 @@
-<div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-          </div>
-          <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
-        </div>
 
 steps
 https://chatgpt.com/c/67e3d4a6-293c-800c-b4e0-dd2cbdfb25d4
 
 {/* <MainPage /> */}
 
-
-owner can select which github users can assign the bounties to the issue
-or
-still allow all the people to put the bounty money in contract
-
-request a feature and add a bounty when devloper adds the feature he/she gets the bounty in there project
 
 check out this platforms
 
@@ -29,66 +15,9 @@ https://oss.issuehunt.io/r/new?welcome=true
 
 based on multiple grants website let ai decide which grants suits you the best
 
-next steps
-
---> all bounties section show all current bounties with github links
---> Add bounty to your repo. take the user to the page where they can see their repositories and when clicked they go to the repository issues. and can add bounty there. save the bounty in db also
---> create a extention to show bounties on github also add a tag on there github issue
---> show users solana id. to the all the people who have extention
-
-then work on extention
-
-
-------------------------------------------------
-profile page
-
-https://21st.dev/originui/button/user-button-with-username
-
-
-next make the add bounty button work for db save the bounty in db fetch in explore page hide it. make changes in github issue page by adding label. in add bounty page make change.
-
-bounty is being saved to db and being fetched from db  -- done
-
-when add bounty in github issue page add label of how much bounty is added with description -- done
-
 
 design schemax
 https://chatgpt.com/c/6807de56-d908-800c-8112-ec1dca86fa9d
-
-
-
-
-///issues
--- landing page how it works section show steps and video for both. [[steps][video]]
--- On-Chain Rewards for Dev Contributions give opacity in background of it to maket it look better
--- heading section
--- landing page responsive
--- work on /earn page
-
-
-
---add more money to the bounty
-
-
-
-///ts issues
-
-issueList.tsx
-customPrismaAdapter.tsx
-
-
-
-///web3 bits
-wallet creation done
-move to approve bounty show wallet address of assignee if doesn't exist dont let the user select that assignee
-
---> add bounty with devnet money from one account to the parent account
---> after approval and pr raised or merged. check if the user amount locked is there in db then make transaction call from parent wallet using its private key and move to the public key of the user if the user is not signed up keep the amount locked with its github id and let him request
-
-
-/////make it better
-use privy to generate wallets
-https://docs.privy.io/wallets/wallets/create/pregenerate-wallets
 
 
 [bounty context provider]
@@ -98,82 +27,15 @@ https://chatgpt.com/c/681629b3-0f00-800c-81c0-c599989241d9
 
 https://www.heroui.com/
 
-
-//next
---> update manage bounty to include only issues which are confirmed status
---> approve bounty functionality
---> once the bounty of issue is been cancelled and it exist in transaction or bountyIssue. its not letting me readding thatw issue
-
-
-appproving bounty state to pending move to approved also. do you want to add claim functionality for contributor to take there money. if yes make it better
-
-
-
 --> withdraw to diffrent account improve top bar side bar use civic or better auth.
---> Show user transactions/payment history
---> Improve overall UX/UI
---> minimal access in starting github then later move to configure github access according to the issues addeding
---> claim bounty not refreshing nicely after being approved
---> on github after approving bounty show the name or tag the person
-
---> add civic auth and make it ready for v1 launch
-
---> move to github application for /bounty /tip
-
---//--
-create auth page -- done
-clean ui with hero ui design. -- done landing page
-
-Dashboaord sidebar UI improve for launch
-UI improve /main page
-UI improve /explore page
-UI improve /add page
-UI improve /payment history page
-UI improve /deposit page
-UI improve /claim page
-UI improve /profile page
-
-
-//instead of Hi there. add avatar logo on click show waleet add also show a icon green if its connected else yellow. keep it clean and simple - done
-
-change the ngrok url in both github redirect uri and envs
-
----? dashboard responsiveness
-/earn/bounty/add -> manage done -> move to add bounty popup and ui. --> done
-
-
-then /profile --> done
-/payment /transactions/claim --> done
-
-
-
-///show data for transaction for claimed and created perfectly with buttons if pending to retry
-
-/// in profile page remove edit button for changing wallet address
-
-/// make the refresh button work on popup
-
-/// show claimed contributor address in transactions page
-
-
-/earn page - done
-
 
 --later--
 /// move to leader board page 
 
 
-delete custom prisma adapter.- done
-
-improve UI for /auth/new-user
-
-write all small problems on paper  -- done
-
-
 // move to main mainnet and recheck the money again
 
-make videos for landing page -- done
-
+make videos for landing page with github app
 
 work on seo
 
@@ -192,21 +54,10 @@ atheos
 
 {/* work on notification system */}
 
-
-
-correct wallet popup theme. -- done
-
-support and feed popup colors. -- done
-
 create a escrow contract
 and github application -- done [ left with db call and connecting it with fe ];
 
 same issue not able to add twice.
-
-
-
-
-
 
 ///vulnerablity
 cancel bounty private key exposed

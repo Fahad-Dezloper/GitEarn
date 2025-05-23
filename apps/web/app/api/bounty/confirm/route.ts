@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'User not found' }, { status: 404 });
     }
 
-    const bountyIssueId = await prisma.bountyIssues.findUnique({
+    const bountyIssueId = await prisma.bountyIssues.findFirst({
       where: { githubId: issueId },
       include: { transactions: true },
     });
