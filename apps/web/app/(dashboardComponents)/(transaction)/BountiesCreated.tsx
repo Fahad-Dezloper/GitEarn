@@ -30,6 +30,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 // Convert lamports to SOL
 const lamportsToSol = (lamports: number) => {
@@ -92,12 +93,11 @@ export function BountiesCreated() {
       bounty.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       bounty.htmlUrl.toLowerCase().includes(searchQuery.toLowerCase())
 
-    // Date filter
+
     const bountyDate = new Date(bounty.createdAt)
     const matchesDateFrom = !dateRange.from || bountyDate >= dateRange.from
     const matchesDateTo = !dateRange.to || bountyDate <= dateRange.to
 
-    // Status filter
     const matchesStatus = selectedStatuses.length === 0 || selectedStatuses.includes(bounty.status)
 
     return matchesSearch && matchesDateFrom && matchesDateTo && matchesStatus
@@ -120,14 +120,13 @@ export function BountiesCreated() {
     try{
       setLoading(true)
       const res = await addBounty(
-        bountyAmount,            // Matching order
-        githubId,                // Matching order
-        htmlUrl,                 // Matching order
-        bountyAmountInLamports,  // Matching order
-        undefined,               // Optional 'title', passing undefined if not needed
-        txnId                    // Matching order
+        bountyAmount,           
+        githubId,               
+        htmlUrl,                
+        bountyAmountInLamports, 
+        undefined,              
+        txnId                   
       );
-      // console.log("res", res);  
     } catch (e){
       console.error("Error while confirming pending bounty", e);
     } finally{
@@ -269,7 +268,8 @@ export function BountiesCreated() {
               <TableHead className="w-[300px]">Bounty Title</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Funded Amount</TableHead>
-              <TableHead className="text-right">Claimed Amount</TableHead>
+              {/* remove maybe no point of keeping */}
+              {/* <TableHead className="text-right">Claimed Amount</TableHead> */}
               <TableHead>Created Date</TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
@@ -292,17 +292,18 @@ export function BountiesCreated() {
                         rel="noopener noreferrer"
                         className="text-primary hover:underline"
                       >
-                        {formatIssueTitle(bounty.htmlUrl)};
+                        {formatIssueTitle(bounty.htmlUrl)}
                       </a>
                     </TableCell>
                     <TableCell>
                       <StatusBadge status={bounty.status} />
                     </TableCell>
                     {/* for lamports to sol */}
-                    <TableCell className="text-right">{bounty.bountyAmountInLamports} SOL</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right">{(bounty.bountyAmountInLamports / 1e9).toFixed(4)} SOL</TableCell>
+                    {/* remove maybe no point of keeping */}
+                    {/* <TableCell className="text-right">
                       {bounty.claimedAmount ? `${bounty.bountyAmountInLamports} SOL` : "-"}
-                    </TableCell>
+                    </TableCell> */}
                     {/* <TableCell>2nd April</TableCell> */}
                     <TableCell>{formatter.format(new Date(bounty.createdAt))}</TableCell>
                     <TableCell>
@@ -341,12 +342,12 @@ export function BountiesCreated() {
                                   </TableCell>
                                   <TableCell className="text-right">
                                     {/* convert lamports to sol and then in dollars */}
-                                    {txn.bountyAmountInLamports} SOL
+                                    {(txn.bountyAmountInLamports / 1e9).toFixed(4)}
                                   </TableCell>
                                   <TableCell>
                                     {/* {txn.type === "PENDING"} */}
                                     {txn.txnHash !== null && 
-                                      <div className="flex space-x-2">
+                                      <div className="flex space-x-2 whitespace-nowrap">
                                       <a
                                         href={`https://explorer.solana.com/tx/${txn.txnHash}`}
                                         target="_blank"
@@ -378,7 +379,7 @@ export function BountiesCreated() {
                                           bountyAmount: bounty.bountyAmount
                                         });
                                       }} className="cursor-pointer">Confirm Payment</Button>
-                                    };
+                                    }
 
                                     {txn.type === "WITHDRAWAL" && txn.status === "PENDING" && 
                                     <Button onClick={() => {
@@ -416,7 +417,7 @@ export function BountiesCreated() {
         setIsConfirmDialogOpen(open);
         if (!open) setBountyToConfirm(null);
       }}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] dark:bg-[#171717]">
           <DialogHeader>
             <DialogTitle>Confirm Payment</DialogTitle>
             <DialogDescription>
@@ -424,7 +425,7 @@ export function BountiesCreated() {
             </DialogDescription>
           </DialogHeader>
           {bountyToConfirm && (
-            <dl className="bg-muted/30 rounded-md px-4 py-3 space-y-3 border">
+            <dl className="bg-muted/30 dark:bg-black rounded-md px-4 py-3 space-y-3 border">
               <div className="flex flex-col gap-1">
                 <dt className="font-semibold text-muted-foreground">Bounty URL</dt>
                 <dd>
@@ -439,12 +440,34 @@ export function BountiesCreated() {
               </div>
               <div className="flex flex-col gap-1">
                 <dt className="font-semibold text-muted-foreground">Bounty Amount</dt>
-                <dd>{bountyToConfirm.bountyAmount} <span className="text-xs text-muted-foreground">(SOL)</span></dd>
+                <dd>${bountyToConfirm.bountyAmount} <span className="text-xs text-muted-foreground"></span></dd>
               </div>
-              <div className="flex flex-col gap-1">
-                <dt className="font-semibold text-muted-foreground">Bounty Amount (Lamports)</dt>
-                <dd>{bountyToConfirm.bountyAmountInLamports}</dd>
-              </div>
+
+
+               <div className="flex flex-col gap-1">
+                  <dt className="font-semibold text-muted-foreground">Bounty Amount (SOL)</dt>
+                  <dd className="flex items-center gap-2">
+                    {(bountyToConfirm.bountyAmountInLamports / 1e9).toLocaleString(undefined, {
+                      minimumFractionDigits: 4,
+                      maximumFractionDigits: 4,
+                    })} SOL
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span
+                          className="text-muted-foreground cursor-pointer hover:underline"
+                          // onClick={copyToClipboard}
+                        >
+                          - {bountyToConfirm.bountyAmountInLamports.toLocaleString()} LAMPORTS
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>1 SOL = 1,000,000,000 lamports.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </dd>
+                </div>
+1
+
               <div className="flex flex-col gap-1">
                 <dt className="font-semibold text-muted-foreground">Transaction ID</dt>
                 <dd className="break-all">{bountyToConfirm.txnId}</dd>
@@ -467,7 +490,7 @@ export function BountiesCreated() {
                     bountyToConfirm.htmlUrl,
                     bountyToConfirm.githubId,
                     bountyToConfirm.bountyAmount
-                  );
+                  )
                   setIsConfirmDialogOpen(false);
                   setBountyToConfirm(null);
                 }
@@ -486,7 +509,7 @@ export function BountiesCreated() {
         setIsCancelDialogOpen(open);
         if (!open) setBountyToCancel(null);
       }}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] dark:bg-[#171717]x">
           <DialogHeader>
             <DialogTitle>Confirm Payment</DialogTitle>
             <DialogDescription>
@@ -494,7 +517,7 @@ export function BountiesCreated() {
             </DialogDescription>
           </DialogHeader>
           {bountyToCancel && (
-            <dl className="bg-muted/30 rounded-md px-4 py-3 space-y-3 border">
+            <dl className="bg-muted/30 dark:bg-black rounded-md px-4 py-3 space-y-3 border">
               <div className="flex flex-col gap-1">
                 <dt className="font-semibold text-muted-foreground">Bounty URL</dt>
                 <dd>
@@ -541,7 +564,7 @@ export function BountiesCreated() {
                     bountyToCancel.githubId,
                     bountyToCancel.htmlUrl,
                     bountyToCancel.bountyAmountInLamports
-                  );
+                  )
                   setIsCancelDialogOpen(false);
                   setBountyToCancel(null);
                 }

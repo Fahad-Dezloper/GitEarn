@@ -65,7 +65,7 @@ export function UpgradeGithubAccess() {
     );
   }
 
-  const redirectAfterInstall = encodeURIComponent("http://localhost:3000/earn/bounties/add");
+  const redirectAfterInstall = encodeURIComponent(window.location.origin + "/earn/bounties/add");
   const GITHUB_APP_INSTALL_URL = `https://github.com/apps/gitearn-hq/installations/new?state=${redirectAfterInstall}`;
 
   return (

@@ -134,7 +134,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
       setLoading(true);
       // @ts-ignore
       // console.log("lamports here", lamports)
-      alert(`from here ${lamports}`)
+      // alert(`from here ${lamports}`)
       const res = await removeBounty({issueId, issueLink, lamports});
     } catch(e){
       console.log("error occured while cancelling the bounty");

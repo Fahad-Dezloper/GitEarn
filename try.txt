@@ -3,8 +3,6 @@ steps
 https://chatgpt.com/c/67e3d4a6-293c-800c-b4e0-dd2cbdfb25d4
 
 {/* <MainPage /> */}
-
-
 check out this platforms
 
 important - https://github.com/orgs/community/discussions/4517
@@ -63,3 +61,27 @@ same issue not able to add twice.
 cancel bounty private key exposed
 
 //work on optimisation
+
+
+//add sol price at the time of creating
+Store conversion metadata:
+
+usd_amount: original bounty in USD.
+
+sol_price_at_creation: e.g. $1 = 0.02 SOL.
+
+lamports: actual amount to transfer (locked).
+
+Optional: timestamp of price lock.
+
+
+/////issues to let users solve
+move to pyth instead of coingeko
+
+bounties can be cancelled only after confirming. its wrong with confirm show cancel button also
+
+tip functionality needs to be added
+
+change bounty label color when added to light blue
+
+

@@ -145,7 +145,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
               alert(`Transaction failed: ${confirmationResult.value.err}`);
               return;
           } else {
-              alert(`Transaction ${signature} confirmed with status: ${commitment}`);
+              // alert(`Transaction ${signature} confirmed with status: ${commitment}`);
               const confirm = await axios.post("/api/bounty/confirm", {
                   bountyAmt,
                   issueId,
@@ -156,7 +156,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
                   transactionId
               });
 
-              console.log("Backend confirmation response:", confirm);
+              // console.log("Backend confirmation response:", confirm);
               setBountyIssues(confirm.data.bountyIssues);
               getIssues();
               getUserBountyIssues();
@@ -212,7 +212,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
               alert(`Transaction failed: ${confirmationResult.value.err}`);
               return;
           } else {
-              alert(`Transaction ${signature} confirmed with status: ${commitment}`);
+              // alert(`Transaction ${signature} confirmed with status: ${commitment}`);
               const confirm = await axios.post("/api/bounty/confirm", {
                   bountyAmt,
                   issueId,
@@ -251,7 +251,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
 
     try {
       if(txnId){
-        alert("this one is happening")
+        // alert("this one is happening")
 
         const transactionIdd = txnId;
 
@@ -289,7 +289,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
         getIssues();
         getUserBountyIssues();
       } else {
-        alert("no one is happening")
+        // alert("no one is happening")
         const remove = await axios.post('/api/bounty/remove/pending', {
           issueId,
           issueLink,
@@ -421,7 +421,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
           alert(`Transaction failed: ${confirmationResult.value.err}`);
           return;
       } else {
-        alert(`Transaction ${signature} confirmed with status: ${commitment}`);
+        // alert(`Transaction ${signature} confirmed with status: ${commitment}`);
         const claimConfirm = await axios.post("/api/user/claim/approve", {
           transactionId: transactionIdd,
           to: walletAdd,
