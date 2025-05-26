@@ -380,3 +380,7 @@ To claim your tip, please visit: [gitearn.vercel.app/earn/claim](https://gitearn
   });
   
 };
+
+console.log("APP_ID:", process.env.APP_ID);
+console.log("PRIVATE_KEY:", process.env.PRIVATE_KEY ? "Loaded" : "Missing");
+console.log("WEBHOOK_SECRET:", process.env.WEBHOOK_SECRET ? "Loaded" : "Missing");

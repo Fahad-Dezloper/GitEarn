@@ -13,12 +13,13 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "start": "PORT=3000 pnpm run build && probot run ./lib/index.js",
-    "dev": "PORT=3000 pnpm run build && pnpm run start"
+    "start": "node lib/server.js",
+    "dev": "pnpm run build && pnpm run start"
   },
   "dependencies": {
     "@repo/db": "workspace:*",
     "axios": "^1.8.4",
+    "dotenv": "^16.4.7",
     "nodemon": "^3.1.10",
     "pg-protocol": "^1.10.0",
     "probot": "^13.0.1"
