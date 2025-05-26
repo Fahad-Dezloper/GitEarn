@@ -50,13 +50,6 @@ const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
     return (
     <div className="w-full grid md:grid-cols-3 grid-cols-1 gap-4">
         {bounties.map((bounty: Bounty, index: number) => (
-      //   <motion.div
-      //   key={bounty.title}
-      //   initial={{ opacity: 0, y: 20 }}
-      //   animate={{ opacity: 1, y: 0 }}
-      //   transition={{ duration: 0.3, delay: index * 0.05 }}
-      //   className="bg-white flex flex-col justify-between dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-all"
-      // >
         <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
