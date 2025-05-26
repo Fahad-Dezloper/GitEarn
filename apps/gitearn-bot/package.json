@@ -13,8 +13,8 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "start": "npm run build && probot run ./lib/index.js",
-    "dev": "nodemon"
+    "start": "pnpm run build && probot run ./lib/index.js",
+    "dev": "pnpm run build && pnpm run start"
   },
   "dependencies": {
     "@repo/db": "workspace:*",
