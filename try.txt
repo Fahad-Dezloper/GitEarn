@@ -84,5 +84,5 @@ tip functionality needs to be added
 
 change bounty label color when added to light blue
 
-deploy probot app seperately on railway or someplace else
+deploy probot app seperately on railway or someplace else -- done
 
