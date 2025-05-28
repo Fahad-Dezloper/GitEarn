@@ -1,15 +1,16 @@
 // server.js
 import app from './index.js'
 import dotenv from 'dotenv';
-import {
-    createLambdaFunction,
-    createProbot,
-  } from "@probot/adapter-aws-lambda-serverless";
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { createNodeMiddleware, createProbot } from "probot";
+import {run} from 'probot'
 
 
 dotenv.config();
 
-export const handler = createLambdaFunction(app, {
-    probot: createProbot(),
-}) as (event: APIGatewayProxyEvent) => Promise<APIGatewayProxyResult>;
+
+run(app);
+
+export default createNodeMiddleware(app, {
+  probot: createProbot(),
+  webhooksPath: "/api/github/webhooks",
+});
