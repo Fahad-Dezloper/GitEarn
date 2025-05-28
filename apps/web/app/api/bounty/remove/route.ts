@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'GitHub token is required' }, { status: 401 });
     }
 
-    const bounty = await prisma.bountyIssues.findUnique({
+    const bounty = await prisma.bountyIssues.findFirst({
       where: {
         githubId: issueId,
         htmlUrl: issueLink,

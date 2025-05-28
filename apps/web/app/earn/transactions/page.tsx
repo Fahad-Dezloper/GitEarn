@@ -15,8 +15,8 @@ export default function Page(){
 
                 <Tabs defaultValue="claimed" className="space-y-4">
                     <TabsList className="grid w-full max-w-md grid-cols-2">
-                        <TabsTrigger value="created">Bounties I Created</TabsTrigger>
                         <TabsTrigger value="claimed">Bounties I Claimed</TabsTrigger>
+                        <TabsTrigger value="created">Bounties I Created</TabsTrigger>
                     </TabsList>
                     <TabsContent value="created" className="space-y-4">
                         <BountiesCreated />

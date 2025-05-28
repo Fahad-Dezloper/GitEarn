@@ -51,16 +51,29 @@ const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
     <div className="w-full grid md:grid-cols-3 grid-cols-1 gap-4">
         {bounties.map((bounty: Bounty, index: number) => (
         <motion.div
-        key={bounty.title}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: index * 0.05 }}
-        className="bg-white flex flex-col justify-between dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-all"
-      >
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+              className="bg-white flex flex-col justify-between dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm hover:shadow-md cursor-pointer transition-all"
+              style={{
+                '--cursor-color': 'rgb(0, 122, 255)',
+                '--cursor-color-dark': 'rgb(0, 209, 255)',
+              } as React.CSSProperties}
+              onMouseEnter={(e) => {
+                const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${document.documentElement.classList.contains('dark') ? 'rgb(0, 209, 255)' : 'rgb(0, 122, 255)'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m4 4 7.07 17 2.51-7.39L21 11.07z"/></svg>`;
+                e.currentTarget.style.cursor = `url('data:image/svg+xml;base64,${btoa(svg)}'), pointer`;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.cursor = 'pointer';
+              }}
+            >
         <div className="flex items-start justify-between mb-3">
           <div className="flex flex-col gap-1">
             <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{bounty.repo}</p>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{bounty.title}</h3>
+            <a href={bounty.htmlUrl} target="_blank">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white hover:underline">{bounty.title}</h3>
+            </a>
           </div>
           <div className="relative group">
             <span

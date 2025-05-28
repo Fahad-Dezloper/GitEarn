@@ -11,7 +11,7 @@ export function ModeToggle() {
 
   return (
 
-<Tabs defaultValue="System" className="w-full !z-0 rounded-full">
+<Tabs defaultValue="light" className="w-full !z-0 rounded-full">
 <TabsList className="rounded-full w-full flex justify-between">
   <TabsTrigger onClick={() => setTheme("light")} value="Sun"><Sun size={18} /></TabsTrigger>
   <TabsTrigger onClick={() => setTheme("dark")} value="Moon"><Moon size={18} /></TabsTrigger>

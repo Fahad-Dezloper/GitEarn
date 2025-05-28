@@ -55,24 +55,7 @@ const AddBounty = () => {
         router.push('/earn/bounties/add');
     };
 
-    console.log("latestIssues", latestIssues);
-
     return (
-      <div className='w-full h-full flex flex-col gap-6'>
-                <div className='flex items-center justify-between'>
-                    <div className='flex items-center gap-3'>
-                        <Sparkles className='w-5 h-5 text-[#007AFF] dark:text-[#00D1FF] ' />
-                        <h2 className='text-xl font-semibold text-gray-900 dark:text-gray-50'>Latest Issues</h2>
-                        <div className="group relative">
-                            <Info className='w-4 h-4 text-gray-400 dark:text-gray-500 cursor-help' />
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 dark:bg-gray-800 text-white text-xs rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 whitespace-nowrap">
-                            Give your issue wings—add a bounty!
-                                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 dark:bg-gray-800 rotate-45"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             <CardContent className='p-0'>
                 {latestIssues.length === 0 ? (
                     <div className="text-center py-12 text-gray-500 dark:text-gray-400">
@@ -145,7 +128,6 @@ const AddBounty = () => {
                     </div>
                 )}
             </CardContent>
-        </div>
     );
 };
 
