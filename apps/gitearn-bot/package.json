@@ -17,6 +17,7 @@
     "dev": "pnpm run build && pnpm run start"
   },
   "dependencies": {
+    "@probot/adapter-aws-lambda-serverless": "^4.0.3",
     "@repo/db": "workspace:*",
     "axios": "^1.8.4",
     "dotenv": "^16.4.7",
@@ -25,6 +26,7 @@
     "probot": "^13.0.1"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.149",
     "@types/node": "^20.0.0",
     "nock": "^14.0.0-beta.5",
     "smee-client": "^2.0.0",

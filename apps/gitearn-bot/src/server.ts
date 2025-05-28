@@ -1,11 +1,15 @@
 // server.js
-import { run } from "probot";
 import app from './index.js'
 import dotenv from 'dotenv';
+import {
+    createLambdaFunction,
+    createProbot,
+  } from "@probot/adapter-aws-lambda-serverless";
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+
 
 dotenv.config();
-console.log("APP_ID:", process.env.APP_ID);
-console.log("PRIVATE_KEY:", process.env.PRIVATE_KEY ? "Loaded" : "Missing");
-console.log("WEBHOOK_SECRET:", process.env.WEBHOOK_SECRET ? "Loaded" : "Missing");
 
-run(app);
+export const handler = createLambdaFunction(app, {
+    probot: createProbot(),
+}) as (event: APIGatewayProxyEvent) => Promise<APIGatewayProxyResult>;

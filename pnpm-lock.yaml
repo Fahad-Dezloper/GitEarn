@@ -20,6 +20,9 @@ importers:
 
   apps/gitearn-bot:
     dependencies:
+      '@probot/adapter-aws-lambda-serverless':
+        specifier: ^4.0.3
+        version: 4.0.3
       '@repo/db':
         specifier: workspace:*
         version: link:../../packages/db
@@ -39,6 +42,9 @@ importers:
         specifier: ^13.0.1
         version: 13.4.5
     devDependencies:
+      '@types/aws-lambda':
+        specifier: ^8.10.149
+        version: 8.10.149
       '@types/node':
         specifier: ^20.0.0
         version: 20.17.28
@@ -2574,6 +2580,9 @@ packages:
         optional: true
       permissionless:
         optional: true
+
+  '@probot/adapter-aws-lambda-serverless@4.0.3':
+    resolution: {integrity: sha512-0KGFM4TSqcyG3ol9m6Ybgo1MgZmVv+TAD5LYrBkM2X9PFQegf/UDdl9APB9MQjeaFxMFjrbtewLjBPp7TQ4WhQ==}
 
   '@probot/get-private-key@1.1.2':
     resolution: {integrity: sha512-yVgyCdTyooGX6+czDLkJahEcwgBWZsKH9xbjvjDNVFjY3QtiI/tHRiB3zjgJCQMZehXxv2CFHZQSpWRXdr6CeQ==}
@@ -9531,6 +9540,10 @@ packages:
     resolution: {integrity: sha512-G2Lj61tXDnVFFOi8VZds+SoQjtQC3dgokKdDG2mTm1tx4m50NUHBOZSBwQQHyy0V12A0JTG4icfZQH+xPyh8VA==}
     engines: {node: '>=0.10.0'}
 
+  lowercase-keys@2.0.0:
+    resolution: {integrity: sha512-tqNXrS78oMOE73NMxK4EMLQsQowWf8jKooH9g7xPavRT706R6bkQJ6DY2Te7QukaZsulxa30wQ7bk0pm4XiHmA==}
+    engines: {node: '>=8'}
+
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
@@ -16013,6 +16026,14 @@ snapshots:
       - use-sync-external-store
       - utf-8-validate
       - zod
+
+  '@probot/adapter-aws-lambda-serverless@4.0.3':
+    dependencies:
+      '@types/aws-lambda': 8.10.149
+      lowercase-keys: 2.0.0
+      probot: 13.4.5
+    transitivePeerDependencies:
+      - supports-color
 
   '@probot/get-private-key@1.1.2': {}
 
@@ -25718,6 +25739,8 @@ snapshots:
       tslib: 2.8.1
 
   lowercase-keys@1.0.1: {}
+
+  lowercase-keys@2.0.0: {}
 
   lru-cache@10.4.3: {}
 
