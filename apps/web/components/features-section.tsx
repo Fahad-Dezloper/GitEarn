@@ -8,7 +8,7 @@ import {
   IconTerminal2,
 } from "@tabler/icons-react";
 
-export default function FeaturesSectionDemo() {
+export default function FeaturesSection() {
   const features = [
     {
       title: "Open Source First",

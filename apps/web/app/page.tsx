@@ -11,7 +11,7 @@ import {
 import Marquee from "react-fast-marquee";
 import { useState } from "react";
 import { HowItWorks } from "./(landingpageComponent)/HowItWorks";
-import FeaturesSectionDemo from "@/components/features-section-demo-2";
+import FeaturesSection from "@/components/features-section";
 import { Testimonials } from "./(landingpageComponent)/Testimonials";
 import ExploreButton from "@/components/fancyComponents/page";
 import GitEarnFooter from "./(landingpageComponent)/GitEarnFooter";
@@ -122,12 +122,12 @@ export default function Home() {
         <h1 className="md:text-[4rem] text-[2rem] w-full text-left font-sora dark:text-white text-black font-semibold">
           Features
         </h1>
-        <FeaturesSectionDemo />
+        <FeaturesSection />
       </div>
 
       <div id="customers" className="w-full h-full md:px-18 px-4">
         <div className="flex flex-col items-center">
-          <h1 className="md:text-sm text-sm font-roboto dark:text-[#00BCFF] text-black font-semibold text-center">TESTIMONIALS</h1>
+          <h1 className="md:text-sm text-sm font-roboto !text-[#00BCFF] dark:text-[#00BCFF] text-black font-semibold text-center">TESTIMONIALS</h1>
           <h2 className="text-lg md:text-6xl font-sora text-neutral-700 dark:text-neutral-300 mb-6 text-center">Hear Others</h2>
           <Testimonials />
           <button
