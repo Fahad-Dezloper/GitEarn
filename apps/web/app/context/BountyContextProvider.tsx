@@ -24,6 +24,7 @@ interface BountyContextType {
   bountiesClaimed: any[];
   isLoading: boolean;
   claimBounties: any[];
+  tip: (bountyAmt: any, issueId: any, issueLink: any, lamports: any, title?: any, transactionId?: any) => Promise<void>;
 }
 
 type SendSolanaTxProps = {
@@ -104,7 +105,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     }, 15000);
 
     return () => clearInterval(interval);
-  }, [bountyIssues.length]);
+  }, [bountyIssues?.length]);
 
   async function addBounty(bountyAmt: any, issueId: any, issueLink: any, lamports: any, title?: any, transactionId?: any) {
     try {
@@ -240,6 +241,72 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   }
 
 
+  async function tip(bountyAmt: any, issueId: any, issueLink: any, lamports: any, title?: any, transactionId?: any) {
+    try {
+      if(transactionId){
+
+        if (!publicKey) {
+          console.error("Wallet not connected");
+          alert("Error: Wallet not connected")
+          return;
+        }  
+
+        const transaction = new Transaction();
+        const sendSolInstruction = SystemProgram.transfer({
+          fromPubkey: publicKey,
+          toPubkey: new PublicKey('6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz'),
+          lamports: lamports,
+        });
+  
+        transaction.add(sendSolInstruction);
+        
+        const signature = await sendTransaction(transaction, connection);
+
+        try {
+          console.log(`Waiting for transaction confirmation (${signature})...`);
+          const commitment = 'confirmed';
+          const latestBlockHash = await connection.getLatestBlockhash(commitment);
+
+          const confirmationResult = await connection.confirmTransaction(
+              {
+                  signature: signature,
+                  blockhash: latestBlockHash.blockhash,
+                  lastValidBlockHeight: latestBlockHash.lastValidBlockHeight
+              },
+              commitment
+          );
+
+          if (confirmationResult.value.err) {
+              alert(`Transaction failed: ${confirmationResult.value.err}`);
+              return;
+          } else {
+              // alert(`Transaction ${signature} confirmed with status: ${commitment}`);
+              const confirm = await axios.post("/api/bounty/tip", {
+                  signature,
+                  transactionId
+              });
+
+              // console.log("Backend confirmation response:", confirm);
+              setBountyIssues(confirm.data.bountyIssues);
+              getIssues();
+              getUserBountyIssues();
+              getBountiesCreated();
+          }
+      } catch (error) {
+          console.error("Error confirming transaction:", error);
+          alert(`Error confirming transaction: ${error || 'Timeout or RPC error'}`);
+          return;
+      }
+      } else {
+        alert("there is no transaction created for this tip.");
+        return;
+      }
+  } catch(e){
+    console.log("Error Tipping to the issue", e);
+  }
+  }
+
+
   // check vulnerablity here
   async function removeBounty({txnId, issueId, issueLink, lamports}: {txnId?: any, issueId: string, issueLink: string, lamports: any}){
     if(!process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD){
@@ -368,7 +435,8 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
 
 
   // user claiming money
-  async function claimMoney(contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any){
+  // vulnerablity
+  async function claimMoney(contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any, status: string){
       try {
     if(!process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD){
       return console.error("PRIMARY_WALLET_ADD public key not available");
@@ -377,12 +445,15 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
       return console.error("PRIMARY_WALLET_ADD private key not available");
     }
 
+    alert(`${contributorId} ${walletAdd} ${bountyAmountInLamports} ${githubId} ${htmlUrl} ${status}`)
+
     const claiming = await axios.post("/api/user/claim/pending", {
         contributorId,
         walletAdd,
         bountyAmountInLamports,
         githubId,
-        htmlUrl
+        htmlUrl,
+        status
     });
 
     const transactionIdd = claiming.data.transaction.id;
@@ -422,16 +493,29 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
           return;
       } else {
         // alert(`Transaction ${signature} confirmed with status: ${commitment}`);
-        const claimConfirm = await axios.post("/api/user/claim/approve", {
-          transactionId: transactionIdd,
-          to: walletAdd,
-          signature: signature,
-          lamports: bountyAmountInLamports,
-          issueLink: htmlUrl,
-          issueId: githubId
-        });
+        alert(`status here ${status}`)
+        let claimConfirm;
+        if(status === "TIPPED"){
+          claimConfirm = await axios.post("/api/user/claim/tip", {
+            transactionId: transactionIdd,
+            to: walletAdd,
+            signature: signature,
+            lamports: bountyAmountInLamports,
+            issueLink: htmlUrl,
+            issueId: githubId
+          });
+        } else {
+          claimConfirm = await axios.post("/api/user/claim/approve", {
+            transactionId: transactionIdd,
+            to: walletAdd,
+            signature: signature,
+            lamports: bountyAmountInLamports,
+            issueLink: htmlUrl,
+            issueId: githubId
+          });
+        }
 
-        console.log("claim confirm", claimConfirm);
+        // console.log("claim confirm", claimConfirm);
     
         getBountiesCreated();
         getBountiesClaimed();    
@@ -482,7 +566,8 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
       bountiesCreated, 
       bountiesClaimed, 
       claimBounties,
-      isLoading 
+      isLoading,
+      tip 
     }}>
       {children}
     </BountyDetailsContext.Provider>

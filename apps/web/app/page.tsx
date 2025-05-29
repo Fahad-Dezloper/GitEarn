@@ -130,7 +130,7 @@ export default function Home() {
 
       <div id="customers" className="w-full h-full md:px-18 px-4 md:mt-8">
         <div className="flex flex-col items-center">
-          <h1 className="md:text-sm text-sm font-roboto !text-[#00BCFF] dark:text-[#00BCFF] text-black font-semibold text-center">TESTIMONIALS</h1>
+          <h1 className="md:text-sm text-sm font-roboto !text-[#00BCFF] dark:text-[#00BCFF] font-semibold text-center">TESTIMONIALS</h1>
           <h2 className="text-lg md:text-6xl font-sora text-neutral-700 dark:text-neutral-300 mb-6 text-center">Hear Others</h2>
           <Testimonials />
           <button

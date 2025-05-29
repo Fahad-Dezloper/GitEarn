@@ -233,3 +233,108 @@ export async function isMaintainer(context: any, _userId: number, repoOwner: str
         return false;
     }
 }
+
+export async function TipUser(issueId: number, htmlUrl: string, senderId: number, recipientId: number, amount: number) {
+    try {
+        // Validate maximum tip amount
+        if (amount > 5000) {
+            return {
+                success: false,
+                message: "Maximum tip amount cannot exceed $5000."
+            };
+        }
+
+        // @ts-ignore
+        const sender = await prisma.account.findUnique({
+            where: {
+                provider_providerAccountId: {
+                    provider: "github",
+                    providerAccountId: senderId.toString(),
+                }
+            },
+            include: {
+                user: true
+            }
+        });
+
+        if (!sender) {
+            return {
+                success: false,
+                message: "Sender needs to sign up on GitEarn first before sending tips."
+            };
+        }
+
+        // @ts-ignore
+        const recipient = await prisma.account.findUnique({
+            where: {
+                provider_providerAccountId: {
+                    provider: "github",
+                    providerAccountId: recipientId.toString(),
+                }
+            },
+            include: {
+                user: true
+            }
+        });
+
+        // console.log('recipient', recipient);
+
+        if (!recipient) {
+            return {
+                success: false,
+                message: "Recipient needs to sign up on GitEarn first to receive tips."
+            };
+        }
+
+        // Fetch current SOL price in USD from CoinGecko
+        const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+        const solPrice = response.data.solana.usd;
+        // Convert USD to SOL, then to lamports
+        const solAmount = amount / solPrice;
+        const lamports = Math.round(solAmount * 1e9);
+
+        // @ts-ignore
+        const { bountyIssue, transaction } = await prisma.$transaction(async (tx: any) => {
+            // Create a bounty issue for the tip
+            const bountyIssue = await tx.bountyIssues.create({
+                data: {
+                    userId: sender.user.id,
+                    githubId: issueId,
+                    htmlUrl: htmlUrl,
+                    status: 'TIPPING',
+                    contributorId: recipient.providerAccountId,
+                    bountyAmount: amount,
+                    bountyAmountInLamports: lamports
+                }
+            });
+
+            // Create the transaction linked to the bounty issue
+            const transaction = await tx.transaction.create({
+                data: {
+                    bountyIssueId: bountyIssue.id,
+                    type: 'PAYOUT',
+                    status: 'PENDING',
+                    bountyAmount: amount,
+                    bountyAmountInLamports: lamports
+                }
+            });
+
+            return { bountyIssue, transaction };
+        });
+
+        return {
+            success: true,
+            data: {
+                amount,
+                transactionId: transaction.id
+            }
+        };
+
+    } catch (error) {
+        console.error("Error while processing tip:", error);
+        return {
+            success: false,
+            message: "An error occurred while processing the tip. Please try again later."
+        };
+    }
+}
