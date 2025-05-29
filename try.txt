@@ -80,7 +80,7 @@ move to pyth instead of coingeko
 
 bounties can be cancelled only after confirming. its wrong with confirm show cancel button also
 
-tip functionality needs to be added
+tip functionality needs to be added - complete it in bounties created show pending and then confirm
 
 change bounty label color when added to light blue
 

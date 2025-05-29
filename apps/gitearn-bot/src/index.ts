@@ -1,5 +1,5 @@
 import { Probot } from "probot";
-import { addBounty, approveBounty, cancelBounty, isMaintainer } from "./utils.js";
+import { addBounty, approveBounty, cancelBounty, isMaintainer, TipUser } from "./utils.js";
 
 export default (app: Probot) => {
 
@@ -361,22 +361,43 @@ Example: /tip $50 @username`
             body: `⚠️ Please provide a valid amount greater than 0.`
           });
           return;
-        }
+        };
 
-        // TODO: Add DB integration to handle the tip transaction
-        // TODO: Add validation for sender's balance
-        // TODO: Add validation for minimum/maximum tip amounts
-        // TODO: Add validation to ensure recipient exists
+        // Get sender's GitHub ID
+        const senderData = await context.octokit.users.getByUsername({
+          username: sender
+        });
+
+        // Get recipient's GitHub ID
+        const recipientData = await context.octokit.users.getByUsername({
+          username: recipient
+        });
+
+        const databaseCall = await TipUser(
+          context.payload.issue.id,
+          context.payload.issue.html_url,
+          senderData.data.id,
+          recipientData.data.id,
+          amount
+        );
+
+        if (!databaseCall.success) {
+          await context.octokit.issues.createComment({
+            ...issue,
+            body: `❌ ${databaseCall.message}`
+          });
+          return;
+        }
 
         await context.octokit.issues.createComment({
           ...issue,
           body: `💝 @${sender} has sent a tip of $${amount} to @${recipient}! 
-To claim your tip, please visit: [gitearn.vercel.app/earn/claim](https://gitearn.vercel.app/earn/claim)`
+To complete your tip payment, please visit: [gitearn.vercel.app/earn/transactions](https://gitearn.vercel.app/earn/transactions)`
         });
       }
     } catch (error) {
       console.error("Error in tip processing:", error);
     }
   });
-  
 };
+

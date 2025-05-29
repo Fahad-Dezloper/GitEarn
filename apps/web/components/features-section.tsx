@@ -8,7 +8,7 @@ import {
   IconTerminal2,
 } from "@tabler/icons-react";
 
-export default function FeaturesSectionDemo() {
+export default function FeaturesSection() {
   const features = [
     {
       title: "Open Source First",
@@ -19,7 +19,7 @@ export default function FeaturesSectionDemo() {
     {
       title: "Zero Platform Fees",
       description:
-        "GitEarn doesn’t take a cut. Contributors get 100% of what they earn. Always.",
+        "GitEarn doesn't take a cut. Contributors get 100% of what they earn. Always.",
       icon: <IconHelp />,
     },
     {
@@ -27,6 +27,7 @@ export default function FeaturesSectionDemo() {
       description:
         "Your GitHub contributions are tracked and verified on-chain, forever.",
       icon: <IconCloud />,
+      label: "Coming Soon"
     },
     {
       title: "Crypto Payouts",
@@ -62,11 +63,13 @@ const Feature = ({
   description,
   icon,
   index,
+  label
 }: {
   title: string;
   description: string;
   icon: React.ReactNode;
   index: number;
+  label?:string;
 }) => {
   return (
     <div
@@ -90,6 +93,11 @@ const Feature = ({
         <span className="group-hover/feature:translate-x-2 font-sora transition duration-200 inline-block text-neutral-800 dark:text-neutral-100">
           {title}
         </span>
+        {label && (
+          <div className="inline-flex items-center ml-2 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 animate-pulse">
+            {label}
+          </div>
+        )}
       </div>
       <p className="text-sm text-neutral-600  dark:text-neutral-300 max-w-xs relative z-10 px-10">
         {description}

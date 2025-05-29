@@ -21,13 +21,14 @@ export function HowItWorks() {
     },
     {
       title: "Earn Instantly",
-      desc: "Once your pull request is reviewed and merged, Check your claim bounty section to claim your bounty. Just merge and earn.",
-      video: "https://vimeo.com/1084637159"
+      desc: "Once your pull request is reviewed and merged, Check claim your bounty. Just merge and earn.",
+      video: "https://vimeo.com/1084637159",
+      bot: "https://vimeo.com/1088419517"
     },
     {
       title: "Track Wallet",
       desc: "Once you claim your bounty the money will be shown in your wallet.",
-      video: "https://vimeo.com/1084637306"
+      video: "https://vimeo.com/1088419557"
     },
   ]
 
@@ -35,8 +36,9 @@ export function HowItWorks() {
   const MaintainerSteps=[
     {
       title: "Add a Bounty",
-      desc: "Easily attach a crypto bounty to any GitHub issue from the GitEarn dashboard or browser extension. Set the amount in USD and pay in SOL, and let contributors take it from there.",
-      video: "https://vimeo.com/1084637017"
+      desc: "Easily attach a crypto bounty to any GitHub issue from the GitEarn dashboard or GitEarn Github Bot. Set the amount in USD and pay in SOL, and let contributors take it from there.",
+      video: "https://vimeo.com/1084637017",
+      bot: "https://vimeo.com/1088419586"
     },
     {
       title: "Track Submissions",
@@ -45,8 +47,9 @@ export function HowItWorks() {
     },
     {
       title: "Merge & Reward",
-      desc: "Once your pull request is reviewed and merged, approve the bounty to the contributor through GitEarn dashboard.",
-      video: "https://vimeo.com/1084637096"
+      desc: "Once pull request is reviewed and merged, approve the bounty to the contributor through GitEarn dashboard or via Github bot.",
+      video: "https://vimeo.com/1084637096",
+      bot: "https://vimeo.com/1088419464"
     }
   ]
 
@@ -58,7 +61,7 @@ export function HowItWorks() {
         <TabsTrigger value="Maintainers" className="text-base md:text-base px-4 md:px-8 py-2 md:py-3">For Maintainers</TabsTrigger>
       </TabsList>
       <TabsContent className="w-full" value="Contributors">
-        <div className="w-full flex flex-col gap-8 md:gap-16">
+        <div className="w-full flex flex-col gap-8 md:gap-16 max-h-[70vh] scrolll overflow-y-auto">
           {ContributorSteps.map((item, i) => (
             <div
               key={i}
@@ -70,6 +73,13 @@ export function HowItWorks() {
               </div>
               {item.video && getVimeoId(item.video) && (
                 <div className="w-full md:w-1/2 flex items-center justify-center mt-6 md:mt-0">
+                  {item.bot ? 
+                  <Tabs defaultValue="Dashboard" className="w-full flex flex-col items-center">
+                  <TabsList className="">
+                    <TabsTrigger value="Dashboard" className="">Dashboard</TabsTrigger>
+                    <TabsTrigger value="Bot" className="">GitEarn Bot</TabsTrigger>
+                  </TabsList>
+                  <TabsContent className="w-full" value="Dashboard">
                   <div className="relative w-full pt-[56.25%] rounded-lg md:rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-lg">
                     <iframe
                       src={`https://player.vimeo.com/video/${getVimeoId(item.video)}?title=0&byline=0&portrait=0&badge=0&autopause=0&speed=1.25&loop=1&autoplay=1&controls=0&muted=1`}
@@ -79,13 +89,34 @@ export function HowItWorks() {
                       title={item.title}
                     />
                   </div>
+                  </TabsContent>
+                  <TabsContent className="w-full" value="Bot">
+                  <div className="relative w-full pt-[56.25%] rounded-lg md:rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-lg">
+                    <iframe
+                      src={`https://player.vimeo.com/video/${getVimeoId(item.bot)}?title=0&byline=0&portrait=0&badge=0&autopause=0&speed=1.25&loop=1&autoplay=1&controls=0&muted=1`}
+                      className="absolute top-0 left-0 w-full h-full"
+                      frameBorder="0"
+                      allow="autoplay; fullscreen; picture-in-picture"
+                      title={item.title}
+                    />
+                  </div>
+                  </TabsContent>
+                  </Tabs> : <div className="relative w-full pt-[56.25%] rounded-lg md:rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-lg">
+                    <iframe
+                      src={`https://player.vimeo.com/video/${getVimeoId(item.video)}?title=0&byline=0&portrait=0&badge=0&autopause=0&speed=1.25&loop=1&autoplay=1&controls=0&muted=1`}
+                      className="absolute top-0 left-0 w-full h-full"
+                      frameBorder="0"
+                      allow="autoplay; fullscreen; picture-in-picture"
+                      title={item.title}
+                    />
+                  </div> }
                 </div>
               )}
             </div>
           ))}
         </div>
       </TabsContent>
-      <TabsContent value="Maintainers">
+      <TabsContent value="Maintainers" className="max-h-[70vh] scrolll">
         <div className="w-full flex flex-col gap-8 md:gap-16">
           {MaintainerSteps.map((item, i) => (
             <div
@@ -97,7 +128,14 @@ export function HowItWorks() {
                 <p className="text-base md:text-lg lg:text-xl text-zinc-600 dark:text-zinc-300 leading-relaxed">{item.desc}</p>
               </div>
               {item.video && getVimeoId(item.video) && (
-                <div className="w-full md:w-1/2 flex items-center justify-center mt-6 md:mt-0">
+                <div className="w-full md:w-1/2 flex flex-col items-center justify-center mt-4 md:mt-0">
+                  {item.bot ? 
+                  <Tabs defaultValue="Dashboard" className="w-full flex flex-col items-center">
+                  <TabsList className="">
+                    <TabsTrigger value="Dashboard" className="">Dashboard</TabsTrigger>
+                    <TabsTrigger value="Bot" className="">GitEarn Bot</TabsTrigger>
+                  </TabsList>
+                  <TabsContent className="w-full" value="Dashboard">
                   <div className="relative w-full pt-[56.25%] rounded-lg md:rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-lg">
                     <iframe
                       src={`https://player.vimeo.com/video/${getVimeoId(item.video)}?title=0&byline=0&portrait=0&badge=0&autopause=0&speed=1.25&loop=1&autoplay=1&controls=0&muted=1`}
@@ -107,6 +145,27 @@ export function HowItWorks() {
                       title={item.title}
                     />
                   </div>
+                  </TabsContent>
+                  <TabsContent className="w-full" value="Bot">
+                  <div className="relative w-full pt-[56.25%] rounded-lg md:rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-lg">
+                    <iframe
+                      src={`https://player.vimeo.com/video/${getVimeoId(item.bot)}?title=0&byline=0&portrait=0&badge=0&autopause=0&speed=1.25&loop=1&autoplay=1&controls=0&muted=1`}
+                      className="absolute top-0 left-0 w-full h-full"
+                      frameBorder="0"
+                      allow="autoplay; fullscreen; picture-in-picture"
+                      title={item.title}
+                    />
+                  </div>
+                  </TabsContent>
+                  </Tabs> : <div className="relative w-full pt-[56.25%] rounded-lg md:rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 shadow-lg">
+                    <iframe
+                      src={`https://player.vimeo.com/video/${getVimeoId(item.video)}?title=0&byline=0&portrait=0&badge=0&autopause=0&speed=1.25&loop=1&autoplay=1&controls=0&muted=1`}
+                      className="absolute top-0 left-0 w-full h-full"
+                      frameBorder="0"
+                      allow="autoplay; fullscreen; picture-in-picture"
+                      title={item.title}
+                    />
+                  </div> }
                 </div>
               )}
             </div>

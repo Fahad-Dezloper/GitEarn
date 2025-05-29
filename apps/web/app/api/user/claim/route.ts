@@ -26,12 +26,22 @@ export async function GET(){
 
         const money = await prisma.bountyIssues.findMany({
             where: {
-                contributorId: userGitId,
-                status: {
-                    in: ['APPROVED', 'CLAIMING']
-                },
+              contributorId: userGitId,
+              OR: [
+                { status: 'APPROVED' },
+                { status: 'CLAIMING' },
+                {
+                  status: 'TIPPED',
+                  transactions: {
+                    some: {
+                      type: 'CLAIM',
+                      status: 'PENDING'
+                    }
+                  }
+                }
+              ]
             }
-        })
+          });          
 
         // console.log("this money i have found", money);
 

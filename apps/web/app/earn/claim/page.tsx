@@ -20,7 +20,7 @@ import Topbar from '@/app/(dashboardComponents)/Topbar';
 export default function Page(){
     const {  walletAdd } = useUserDetails();
     const { claimMoney, claimBounties  } = useBountyDetails();
-    // console.log("claim BOUNYT", claimBounties);   
+    console.log("claim BOUNYT", claimBounties);   
     
     useEffect(() => {
       if (walletAdd) {
@@ -32,22 +32,63 @@ export default function Page(){
   const [walletAddress, setWalletAddress] = useState(walletAdd);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [solToUsd, setSolToUsd] = useState(0);
+  const [priceLoading, setPriceLoading] = useState(true);
+  const [priceError, setPriceError] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
 
+  // Fetch SOL to USD price from CoinGecko API
+  const fetchSolPrice = async () => {
+    try {
+      setPriceLoading(true);
+      setPriceError(false);
+      
+      const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch price');
+      }
+      
+      const data = await response.json();
+      const price = data.solana?.usd;
+      
+      if (price) {
+        setSolToUsd(price);
+        setLastUpdated(new Date());
+      } else {
+        throw new Error('Invalid price data');
+      }
+    } catch (error) {
+      console.error('Error fetching SOL price:', error);
+      setPriceError(true);
+      // Fallback to a reasonable default if API fails
+      setSolToUsd(145.32);
+    } finally {
+      setPriceLoading(false);
+    }
+  };
 
-  // Conversion rate SOL to USD (example rate)
-  const solToUsd = 145.32 // Current SOL to USD rate
+  // Fetch price on component mount
+  useEffect(() => {
+    fetchSolPrice();
+    
+    // Set up interval to refresh price every 5 seconds
+    const interval = setInterval(fetchSolPrice, 5 * 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   const handleClaim = (bounty: SetStateAction<null>) => {
     setSelectedBounty(bounty)
     setOpen(true)
   }
 
-  const handleSubmitClaim = async (contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any) => {
+  const handleSubmitClaim = async (contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any, status: string) => {
     try{
       setLoading(true);
       // console.log("Claiming bounty", contributorId, walletAdd, bountyAmountInLamports, githubId, htmlUrl);
-      const res = await claimMoney(contributorId, walletAdd, bountyAmountInLamports, githubId, htmlUrl);
+      const res = await claimMoney(contributorId, walletAdd, bountyAmountInLamports, githubId, htmlUrl, status);
       // console.log("done claiming", res);
     } catch(e){
       console.error("Error while claiming bounty", e)
@@ -89,7 +130,7 @@ export default function Page(){
   return (
     <div>
       <Topbar />
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-sora font-bold">Your Claimable Bounties</h1>
       </div>
@@ -101,7 +142,16 @@ export default function Page(){
               <CardTitle className="flex items-center gap-2 text-lg font-semibold">
                 <GithubIcon className="" />
                 <span>Issue #{getIssueNumber(bounty.htmlUrl)}</span>
-                <Badge variant="success" className="ml-auto text-xs">Approved</Badge>
+                <span 
+                  // variant={bounty.status === "TIPPED" ? "secondary" : "success"} 
+                  className={`ml-auto text-xs font-medium px-2 py-0.5 rounded-full ${
+                    bounty.status === "TIPPED" 
+                      ? "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300" 
+                      : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+                  }`}
+                >
+                  {bounty.status === "TIPPED" ? "TIP" : "Bounty"}
+                </span>
               </CardTitle>
               <p className="text-sm text-muted-foreground">Repo: {getRepoName(bounty.htmlUrl)}</p>
               <p className="text-sm text-muted-foreground">Contributor ID: {bounty.contributorId}</p>
@@ -131,7 +181,10 @@ export default function Page(){
                 <div className="bg-muted p-3 rounded-lg space-y-1">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Amount (USD):</span>
-                    <span className="font-semibold">${bounty.bountyAmount}</span>
+                    <span className="font-semibold">
+                      ${priceLoading ? "..." : calculateUsd(bounty.bountyAmountInLamports)}
+                      {priceError && <span className="text-xs text-orange-600 ml-1">(Est.)</span>}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Amount (SOL):</span>
@@ -157,7 +210,7 @@ export default function Page(){
       )}
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] dark:bg-[#171717]">
           <DialogHeader>
             <DialogTitle>Claim Your Bounty</DialogTitle>
             <DialogDescription>Confirm your wallet address to receive the bounty payment.</DialogDescription>
@@ -179,7 +232,10 @@ export default function Page(){
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Amount in USD:</span>
-                  <span className="font-bold">${calculateUsd(selectedBounty.bountyAmountInLamports)}</span>
+                  <span className="font-bold">
+                    ${priceLoading ? "..." : calculateUsd(selectedBounty.bountyAmountInLamports)}
+                    {priceError && <span className="text-xs text-orange-600 ml-1">(Est.)</span>}
+                  </span>
                 </div>
               </div>
 
@@ -198,7 +254,7 @@ export default function Page(){
           )}
 
           <DialogFooter>
-            <Button type="submit" className="cursor-pointer" onClick={() => handleSubmitClaim(selectedBounty.contributorId, walletAddress, selectedBounty.bountyAmountInLamports, selectedBounty.githubId, selectedBounty.htmlUrl)} disabled={!walletAddress}>
+            <Button type="submit" className="cursor-pointer" onClick={() => handleSubmitClaim(selectedBounty.contributorId, walletAddress, selectedBounty.bountyAmountInLamports, selectedBounty.githubId, selectedBounty.htmlUrl, selectedBounty.status)} disabled={!walletAddress || loading}>
               {loading ? 'Confirming' : 'Confirm Claim'}
             </Button>
           </DialogFooter>
