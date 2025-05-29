@@ -112,4 +112,4 @@ We welcome all kinds of contributions! Please read our `CONTRIBUTING.md` for gui
 
 ## 📄 License
 
-MIT © [Your Name / Org]
+MIT © Fahad-Dezloper/GitEarn
