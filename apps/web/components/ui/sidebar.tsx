@@ -40,8 +40,6 @@ type SidebarContextProps = {
   setOpenMobile: (open: boolean) => void
   isMobile: boolean
   toggleSidebar: () => void
-  manuallyOpened: boolean
-  setManuallyOpened: (opened: boolean) => void
 }
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
@@ -71,21 +69,13 @@ function SidebarProvider({
   const isMobile = useIsMobile()
   const [openMobile, setOpenMobile] = React.useState(false)
 
-  // Track whether sidebar was manually opened
-  const [manuallyOpened, setManuallyOpened] = React.useState(false)
-
   // This is the internal state of the sidebar.
+  // We use openProp and setOpenProp for control from outside the component.
   const [_open, _setOpen] = React.useState(defaultOpen)
   const open = openProp ?? _open
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
       const openState = typeof value === "function" ? value(open) : value
-      
-      // Set manually opened flag when explicitly opened
-      if (typeof value === "boolean" && value === true) {
-        setManuallyOpened(true)
-      }
-
       if (setOpenProp) {
         setOpenProp(openState)
       } else {
@@ -100,19 +90,8 @@ function SidebarProvider({
 
   // Helper to toggle the sidebar.
   const toggleSidebar = React.useCallback(() => {
-    if (isMobile) {
-      setOpenMobile((prevOpen) => !prevOpen)
-      return prevOpen ? false : true
-    } else {
-      const newState = !open
-      setOpen(newState)
-      // If explicitly opened, mark as manually opened
-      if (newState) {
-        setManuallyOpened(true)
-      }
-      return newState
-    }
-  }, [isMobile, setOpen, open])
+    return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open)
+  }, [isMobile, setOpen, setOpenMobile])
 
   // Adds a keyboard shortcut to toggle the sidebar.
   React.useEffect(() => {
@@ -143,10 +122,8 @@ function SidebarProvider({
       openMobile,
       setOpenMobile,
       toggleSidebar,
-      manuallyOpened,
-      setManuallyOpened,
     }),
-    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar, manuallyOpened, setManuallyOpened]
+    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
   )
 
   return (
@@ -176,7 +153,7 @@ function SidebarProvider({
 
 function Sidebar({
   side = "left",
-  variant = "floating", // Changed default to 'floating'
+  variant = "sidebar",
   collapsible = "offcanvas",
   className,
   children,
@@ -186,40 +163,7 @@ function Sidebar({
   variant?: "sidebar" | "floating" | "inset"
   collapsible?: "offcanvas" | "icon" | "none"
 }) {
-  const { 
-    isMobile, 
-    state, 
-    openMobile, 
-    setOpenMobile, 
-    open, 
-    setOpen, 
-    manuallyOpened 
-  } = useSidebar()
-
-  // Hover state handler
-  const [isHovering, setIsHovering] = React.useState(false)
-
-  // Auto-open/close on hover when sidebar is collapsed
-  React.useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    
-    // Only handle hover if not manually opened and not mobile
-    if (!isMobile && !manuallyOpened && state === "collapsed") {
-      if (isHovering) {
-        timeoutId = setTimeout(() => {
-          setOpen(true)
-        }, 200) // Short delay to prevent accidental triggers
-      } else {
-        timeoutId = setTimeout(() => {
-          setOpen(false)
-        }, 200)
-      }
-    }
-
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId)
-    }
-  }, [isHovering, state, isMobile, manuallyOpened, setOpen])
+  const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
 
   if (collapsible === "none") {
     return (
@@ -269,10 +213,8 @@ function Sidebar({
       data-variant={variant}
       data-side={side}
       data-slot="sidebar"
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
     >
-      {/* Sidebar gap handling */}
+      {/* This is what handles the sidebar gap on desktop */}
       <div
         data-slot="sidebar-gap"
         className={cn(
@@ -291,9 +233,9 @@ function Sidebar({
           side === "left"
             ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
             : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
-          // Adjust padding for floating and inset variants with rounded borders
+          // Adjust the padding for floating and inset variants.
           variant === "floating" || variant === "inset"
-            ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)] rounded-xl shadow-md"
+            ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]"
             : "group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l",
           className
         )}
@@ -302,11 +244,7 @@ function Sidebar({
         <div
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
-          className={cn(
-            "bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col",
-            variant === "floating" &&
-              "rounded-lg border shadow-sm group-data-[state=collapsed]:w-[3rem]"
-          )}
+          className="bg-sidebar group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm"
         >
           {children}
         </div>

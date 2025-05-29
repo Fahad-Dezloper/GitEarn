@@ -1,32 +1,32 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @next/next/no-img-element */
 "use client"
 
-import * as React from "react"
+import type * as React from "react"
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
+  Home,
+  LifeBuoy,
+  PiggyBank,
+  Scroll,
+  Send,
   SquareTerminal,
+  Trophy,
+  User,
 } from "lucide-react"
 
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
+import { NavMain } from "./nav-main"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarRail,
+  SidebarMenu,
+  SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { useSession } from "next-auth/react"
+import AnnouncementFooter from "@/app/(dashboardComponents)/AnnouncementFooter"
+import { usePrivy } from "@privy-io/react-auth"
 
-// This is sample data.
 const data = {
   user: {
     name: "shadcn",
@@ -35,121 +35,89 @@ const data = {
   },
   navMain: [
     {
-      title: "My Bounties",
-      url: "#",
-      icon: SquareTerminal,
+      title: "Dashboard",
+      url: "/earn",
+      icon: Home,
       isActive: true,
+    },
+    {
+      title: "Bounties",
+      url: "/earn/bounties/explore",
+      icon: SquareTerminal,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Explore Bounties",
+          url: "/earn/bounties/explore",
         },
         {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
+          title: "Add Bounty",
+          url: "/earn/bounties/add",
         },
       ],
     },
     {
-      title: "Transaction",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
+      title: "Transactions",
+      url: "/earn/transactions",
+      icon: Scroll,
+    },
+    // {
+    //   title: "Leaderboard",
+    //   url: "/earn/leaderboard",
+    //   icon: Trophy,
+    // },
+    {
+      title: "Claim",
+      url: "/earn/claim",
+      icon: PiggyBank
     },
     {
-      title: "Leaderboard",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
+      title: "Profile",
+      url: "/earn/profile",
+      icon: User
+    }
   ],
-  projects: [
+  navSecondary: [
     {
-      name: "Git Analyzer",
+      title: "Support",
       url: "#",
-      icon: Frame,
+      icon: LifeBuoy,
     },
     {
-      name: "Cool Platforms",
+      title: "Feedback",
       url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
+      icon: Send,
     },
   ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const {data: session} = useSession();
+  const { user } = usePrivy();
+  // console.log("user privy", user);
+  // console.log(session?.user);
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar variant="floating" className="md:!z-0" {...props}>
       <SidebarHeader>
-        <NavUser user={data.user} />
+        <SidebarMenu>
+          <SidebarMenuItem>
+              <a href="#" className="w-full flex items-center pt-3 justify-center h-full overflow-hidden">
+                <div className="scale-90">
+                  <img src="/LOGO/GITEARN.svg" className="dark:flex hidden w-full h-full object-cover" alt="GITEARN LOGO" />
+                  <img src="/LOGO/GITEARND.svg" className="flex dark:hidden w-full h-full object-cover" alt="GITEARN LOGO" />
+                </div>
+              </a>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
       </SidebarContent>
-      <SidebarRail />
+      <SidebarFooter>
+        {/* {session?.user ? <NavUser user={session?.user} /> : <div></div>} */}
+        <AnnouncementFooter />
+        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
+        {/* <SupportSheet items={data.navSecondary} /> */}
+      </SidebarFooter>
     </Sidebar>
   )
 }

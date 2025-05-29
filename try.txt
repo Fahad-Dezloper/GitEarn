@@ -1,0 +1,88 @@
+
+steps
+https://chatgpt.com/c/67e3d4a6-293c-800c-b4e0-dd2cbdfb25d4
+
+{/* <MainPage /> */}
+check out this platforms
+
+important - https://github.com/orgs/community/discussions/4517
+
+https://app.opire.dev/
+https://github.com/fossjobs/fossjobs/wiki/resources#bounties
+https://oss.issuehunt.io/r/new?welcome=true
+
+based on multiple grants website let ai decide which grants suits you the best
+
+
+design schemax
+https://chatgpt.com/c/6807de56-d908-800c-8112-ec1dca86fa9d
+
+
+[bounty context provider]
+use state approach. first state it to pending then transaction then state it to complete with txn id for verification.
+https://chatgpt.com/c/681629b3-0f00-800c-81c0-c599989241d9
+
+
+https://www.heroui.com/
+
+--> withdraw to diffrent account improve top bar side bar use civic or better auth.
+
+--later--
+/// move to leader board page 
+
+
+// move to main mainnet and recheck the money again
+
+make videos for landing page with github app
+
+work on seo
+
+make main video
+
+submit for grant/solana mini hackathon/everything
+
+get it live on gitearn.com
+
+[make final video]
+submit for breakout / other tracks
+solana grant
+solana mini hackathon
+atheos
+
+
+{/* work on notification system */}
+
+create a escrow contract
+and github application -- done [ left with db call and connecting it with fe ];
+
+same issue not able to add twice.
+
+///vulnerablity
+cancel bounty private key exposed
+
+//work on optimisation
+
+
+//add sol price at the time of creating
+Store conversion metadata:
+
+usd_amount: original bounty in USD.
+
+sol_price_at_creation: e.g. $1 = 0.02 SOL.
+
+lamports: actual amount to transfer (locked).
+
+Optional: timestamp of price lock.
+
+
+/////issues to let users solve
+move to pyth instead of coingeko
+
+bounties can be cancelled only after confirming. its wrong with confirm show cancel button also
+
+tip functionality needs to be added
+
+change bounty label color when added to light blue
+
+deploy probot app seperately on railway or someplace else -- done
+
