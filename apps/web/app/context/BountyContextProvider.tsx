@@ -19,7 +19,7 @@ interface BountyContextType {
   setBountyIssues: React.Dispatch<React.SetStateAction<any[]>>;
   userBountyIssue: any[];
   removeBounty: ({txnId, issueId, issueLink, lamports }: {txnId?: any, issueId: string, issueLink: string, lamports: any }) => Promise<void>;
-  claimMoney: (contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any) => Promise<void>;
+  claimMoney: (contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any, status: string) => Promise<void>;
   bountiesCreated: any[];
   bountiesClaimed: any[];
   isLoading: boolean;

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import prisma from "@repo/db/client";
 import { getInstallationOctokit } from "@/lib/(GitEarnBotComments)/AddBountyComment";
-import { getInstallationToken } from "@/lib/githubAppAuth";
 
 function extractGitHubIssueInfo(url: string) {
     const match = url.match(/github\.com\/([^/]+)\/([^/]+)\/issues\/(\d+)/);
