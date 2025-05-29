@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { Octokit } from '@octokit/rest';
 import axios from 'axios';
+import { getInstallationOctokit } from '@/lib/(GitEarnBotComments)/AddBountyComment';
 
 function extractGitHubIssueInfo(url: string) {
   const match = url.match(/github\.com\/([^/]+)\/([^/]+)\/issues\/(\d+)/);
@@ -108,9 +109,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'GitHub token is required' }, { status: 401 });
     }
 
-    const octokit = new Octokit({ auth: token });
-
-    const bounty = await prisma.bountyIssues.findUnique({
+    const bounty = await prisma.bountyIssues.findFirst({
       where: {
         githubId: issueId,
         htmlUrl: issueLink,
@@ -147,6 +146,8 @@ export async function POST(req: NextRequest) {
     })
 
     const { owner, repo, issue_number } = extractGitHubIssueInfo(issueLink);
+    const baseUrl = req.headers.get('origin') || 'http://localhost:3000';
+    const octokit = await getInstallationOctokit(owner, repo);
 
     await octokit.issues.createComment({
       owner,

@@ -72,7 +72,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
 
   const {  removeBounty, approveBounty } = useBountyDetails();
 
-  // console.log("assignees", assignees)
+  console.log("assignees", assignees);
   // console.log("latestComment", latestComment);
 
   const getActivityIcon = (type: string) => {
@@ -111,15 +111,12 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
     if (selectedAssignee) {
       // console.log("Approving payment to:", selectedAssignee.id);
       const contributorId = selectedAssignee.id;
+      const contributorUserName = selectedAssignee.login;
       try{
-        const res = await approveBounty(issueId, issueLink, contributorId );
+        const res = await approveBounty(issueId, issueLink, contributorId, contributorUserName );
       } catch(e){
         console.error("Error while approving the bounty to the user");
       }
-      // Call your API, function, whatever you want with selectedAssignee
-      // const res = await axios.post('/api/contributor/approve', {
-
-      // })
       
     } else {
       console.error("No assignee selected");
@@ -137,7 +134,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
       setLoading(true);
       // @ts-ignore
       // console.log("lamports here", lamports)
-      alert(`from here ${lamports}`)
+      // alert(`from here ${lamports}`)
       const res = await removeBounty({issueId, issueLink, lamports});
     } catch(e){
       console.log("error occured while cancelling the bounty");

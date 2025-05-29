@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import GithubProvider from "next-auth/providers/github";
 import { NextAuthOptions } from "next-auth";
 import prisma from '@repo/db/client';
@@ -23,6 +24,22 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt",
+  },
+  callbacks: {
+    async jwt({ token, account, profile }) {
+      if (account && profile) {
+        // @ts-ignore
+        token.githubUsername = profile.login;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token.githubUsername) {
+        // @ts-ignore
+        session.user.githubUsername = token.githubUsername;
+      }
+      return session;
+    }
   },
   pages: {
     signIn: '/auth/signin',

@@ -4,6 +4,7 @@ import { Octokit } from "@octokit/rest";
 import prisma from "@repo/db/client";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { getInstallationOctokit } from '@/lib/(GitEarnBotComments)/AddBountyComment';
 
 function extractGitHubIssueInfo(url: string) {
     const match = url.match(/github\.com\/([^/]+)\/([^/]+)\/issues\/(\d+)/);
@@ -16,7 +17,7 @@ export async function POST(req: NextRequest){
     try{
         const session = await getServerSession();
         const body = await req.json();
-        const {issueId, issueLink, contributorId} = body;
+        const {issueId, issueLink, contributorId, contributorUserName} = body;
 
         // const confirmTransaction = await confirmTxt(signature, from, to)
 
@@ -38,7 +39,6 @@ export async function POST(req: NextRequest){
           return NextResponse.json({ error: 'GitHub token is required' }, { status: 401 });
         }
     
-        const octokit = new Octokit({ auth: token });
     
         const bounty = await prisma.bountyIssues.findFirst({
           where: {
@@ -87,12 +87,14 @@ export async function POST(req: NextRequest){
     });
       
           const { owner, repo, issue_number } = extractGitHubIssueInfo(issueLink);
+          const baseUrl = req.headers.get('origin') || 'http://localhost:3000';
+          const octokit = await getInstallationOctokit(owner, repo);
       
           await octokit.issues.createComment({
             owner,
             repo,
             issue_number,
-            body: `✅ **$${bounty.bountyAmount} bounty approved** for this issue via GitEarn.\n\n🏆 This bounty has been won by this person.`
+            body: `🎉 Congratulations @${contributorUserName}! This bounty of amount $${bounty.bountyAmount} has been awarded to you. To claim your reward, please visit: gitearn.vercel.app/earn/claim.`
         });
       
           const labelsToRemove = [`💎 Bounty`, `$${bounty.bountyAmount}`];

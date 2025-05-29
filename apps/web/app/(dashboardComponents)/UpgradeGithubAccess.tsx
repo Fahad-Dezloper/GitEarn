@@ -1,79 +1,109 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-"use client"
-import { signIn, useSession } from "next-auth/react";
+"use client";
+
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import Mainbounties from "./(/bounties/etc)/mainbounties";
 import Topbar from "./Topbar";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 
 export function UpgradeGithubAccess() {
-  const { data: session } = useSession();
-  const [isLoading, setIsLoading] = useState(false);
+  const { data: session, status } = useSession();
+  const [hasRepoAccess, setHasRepoAccess] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Type assertion for session scope
-  // const hasRepoAccess = (session as any)?.scope?.includes("public_repo");
-  const hasRepoAccess = true;
+  useEffect(() => {
+    let isMounted = true;
 
-  const handleUpgradeAccess = async () => {
-    setIsLoading(true);
-    try {
-      await signIn("github", { 
-        callbackUrl: "/earn/bounties/add", 
-        redirect: true,
-        scope: "read:user user:email public_repo repo",
-        prompt: "consent",
-      });
-    } catch (error) {
-      console.error("Failed to upgrade access:", error);
+    async function checkInstallation() {
+      if (!session?.user?.email) return;
+      
+      try {
+        const res = await fetch("/api/github/check-installation", { method: "GET" });
+        if (!res.ok) throw new Error("Failed to check installation");
+        const data = await res.json();
+        if (isMounted) {
+          setHasRepoAccess(data.installed);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Error checking GitHub app installation:", error);
+        if (isMounted) {
+          setHasRepoAccess(false);
+          setIsLoading(false);
+        }
+      }
+    }
+
+    if (status === "authenticated") {
+      checkInstallation();
+    } else if (status === "unauthenticated") {
+      setHasRepoAccess(false);
       setIsLoading(false);
     }
-  };
-  
-  if (hasRepoAccess) {
+
+    return () => {
+      isMounted = false;
+    };
+  }, [status]);
+
+  if (status === "loading" || isLoading || hasRepoAccess === null) {
     return (
-      <div className="">
-        <Topbar />
-        <Mainbounties />
+      <div className="min-h-[50vh] flex flex-col items-center justify-center p-6">
+        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+        <p className="text-lg text-gray-600 dark:text-gray-300">Checking GitHub App installation...</p>
       </div>
     );
   }
-  
+
+  if (hasRepoAccess) {
+    return (
+      <>
+        <Topbar />
+        <Mainbounties />
+      </>
+    );
+  }
+
+  const redirectAfterInstall = encodeURIComponent(window.location.origin + "/earn/bounties/add");
+  const GITHUB_APP_INSTALL_URL = `https://github.com/apps/gitearn-hq/installations/new?state=${redirectAfterInstall}`;
+
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-      <div className="flex items-start space-x-4">
-        <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-full">
-          <AlertCircle className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-        </div>
-        <div className="flex-1">
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">Enhance Your Experience</h3>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
-            To fully utilize GitEarn&apos;s features, we need access to your public repositories. This allows you to:
-          </p>
-          <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 mb-6 space-y-2">
-            <li>Create and manage bounties</li>
-            <li>Track repository activity</li>
-            <li>Interact with other developers</li>
-          </ul>
-          <Button
-            onClick={handleUpgradeAccess}
-            disabled={isLoading}
-            className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white transition-colors duration-200"
-          >
-            {isLoading ? (
-              <span className="flex items-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Upgrading Access...
-              </span>
-            ) : (
-              "Grant Repository Access"
-            )}
-          </Button>
-        </div>
+    <div className="min-h-[100vh]  flex items-center justify-center p-4 sm:p-6">
+      <div className="w-full max-w-md mx-auto bg-white dark:bg-[#171717] rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors">
+  <div className="p-6 sm:p-8 space-y-6">
+    <div className="flex justify-center">
+      <div className="p-4 bg-red-100 dark:bg-red-900/30 rounded-full">
+        <AlertCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
       </div>
+    </div>
+    <div className="text-center space-y-2">
+      <h2 className="text-2xl flex flex-col items-center font-bold font-sora text-gray-900 dark:text-white">
+        <span className="text-lg">Install</span>
+         GitEarn GitHub App
+      </h2>
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        To add bounties to your GitHub issues, install the GitEarn GitHub App on your account or organization.
+      </p>
+    </div>
+    <div className="flex justify-center">
+      <Button
+        asChild
+        className="w-full sm:w-auto hover:bg-primary/90 text-white transition-colors"
+      >
+        <a
+          href={GITHUB_APP_INSTALL_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          role="button"
+          className="flex items-center dark:text-black justify-center gap-2 px-4 py-2"
+        >
+          Install GitEarn App
+        </a>
+      </Button>
+    </div>
+  </div>
+</div>
     </div>
   );
 }
