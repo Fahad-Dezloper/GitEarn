@@ -7,7 +7,7 @@ export default (app: Probot) => {
   app.on("issues.opened", async (context) => {
     try {
       const issueComment = context.issue({
-        body: "Thanks for opening this issue!",
+        body: "Thanks for opening this issue! \n\n To Start interacting with the bot, please use the following commands: \n\n /help",
       });
       await context.octokit.issues.createComment(issueComment);
     } catch (error) {
