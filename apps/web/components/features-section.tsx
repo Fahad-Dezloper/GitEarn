@@ -1,107 +1,130 @@
-import { cn } from "@/lib/utils";
-import {
-  IconCloud,
-  IconCurrencyDollar,
-  IconEaseInOut,
-  IconHelp,
-  IconRouteAltLeft,
-  IconTerminal2,
-} from "@tabler/icons-react";
+// import { IconCloud, IconCurrencyDollar, IconEaseInOut, IconHelp, IconRouteAltLeft, IconTerminal2 } from "@tabler/icons-react";
+import Image from "next/image";
+import { GithubIcon } from "./ui/github";
+import { MoveHorizontal, PercentIcon } from "lucide-react";
+import { BoxesIcon } from "./ui/boxes";
+import { CursorClickIcon } from "./ui/cursor-click";
+import { AnimatedListMain } from "@/app/(landingpageComponent)/AnimatedListMain"; 
 
 export default function FeaturesSection() {
-  const features = [
-    {
-      title: "Open Source First",
-      description:
-        "Built for open-source contributors who want to get paid doing what they love.",
-      icon: <IconTerminal2 />,
-    },
-    {
-      title: "Zero Platform Fees",
-      description:
-        "GitEarn doesn't take a cut. Contributors get 100% of what they earn. Always.",
-      icon: <IconHelp />,
-    },
-    {
-      title: "On-Chain Reputation",
-      description:
-        "Your GitHub contributions are tracked and verified on-chain, forever.",
-      icon: <IconCloud />,
-      label: "Coming Soon"
-    },
-    {
-      title: "Crypto Payouts",
-      description:
-        "Earn crypto instantly when your PR gets merged. No middlemen. No delays.",
-      icon: <IconCurrencyDollar />,
-    },
-    {
-      title: "One-Click Bounty Setup",
-      description:
-        "Maintainers can attach bounties to any GitHub issue in seconds — no code changes required.",
-      icon: <IconEaseInOut />,
-    },
-    {
-      title: "Fully Decentralized",
-      description:
-        "No central authority. Everything — from bounty assignment to payout — runs on Solana.",
-      icon: <IconRouteAltLeft />,
-    },
-  ];  
-  
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 relative z-10 md:py-10 py-4 w-full">
-      {features.map((feature, index) => (
-        <Feature key={feature.title} {...feature} index={index} />
-      ))}
-    </div>
+    <section className="w-full py-16 bg-neutral-50 dark:bg-transparent">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 px-4 md:px-8 items-start">
+        {/* Left: Heading, Subheading, Main Card */}
+        <div className="flex flex-col gap-8">
+          <div>
+            <h2 className="text-4xl md:text-5xl font-sora font-bold text-neutral-900 dark:text-white mb-2">
+              Monetize your <br /> Contributions.
+            </h2>
+            <p className="text-lg text-neutral-600 dark:text-neutral-300">
+              Wherever you Contribute.
+            </p>
+          </div>
+          {/* Main Illustration Card */}
+          <div className="bg-white dark:bg-[#171717] rounded-3xl shadow-lg md:pt-8 pt-4 flex flex-col items-center justify-center md:max-h-[64vh] max-h-[33vh] relative overflow-hidden">
+            <AnimatedListMain />
+          </div>
+        </div>
+
+
+
+
+        {/* Right: Feature Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Card 1 */}
+          <div className="bg-neutral-100 dark:bg-[#171717] rounded-2xl shadow p-6 flex flex-col items-start min-h-[160px]">
+            <div className="mb-4 w-full flex justify-center">
+              <div className="bg-white dark:bg-neutral-700 rounded-xl p-2 shadow">
+                  <GithubIcon size={28} className="hover:bg-transparent text-neutral-900 dark:text-neutral-100" />
+              </div>
+            </div>
+            <h3 className=" leading-tight text-md mb-2 text-neutral-900 dark:text-neutral-100 w-full text-center">
+                Built for <span className="text-[#00BCFF] font-bold">open-source</span> <span className=" whitespace-nowrap">contributors & maintainers.</span>
+            </h3>
+          </div>
+
+
+          {/* Card 2: Instant Payments */}
+          <div className="bg-neutral-100 dark:bg-[#171717] rounded-2xl shadow p-6 flex flex-col items-start min-h-[160px]">
+            <div className="mb-4 w-full flex justify-center">
+              <div className="bg-white dark:bg-neutral-700 rounded-xl p-3 shadow">
+                <PercentIcon size={28} className="hover:bg-transparent text-neutral-900 dark:text-neutral-100" />
+              </div>
+            </div>
+            <div className="w-full flex flex-col items-center">
+              <div className="bg-white dark:bg-neutral-700 rounded-lg px-4 py-2 mb-2 shadow text-center">
+                <div className="text-xs text-green-600 dark:text-green-400 font-medium mb-1">Payment received</div>
+                <div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">$5,000</div>
+              </div>
+              <span className="text-neutral-700 dark:text-neutral-200 text-center">Zero Platform Fees</span>
+            </div>
+          </div>
+
+
+          {/* Card 3: on chain reputation */}
+          <div className="bg-neutral-100 dark:bg-[#171717] rounded-2xl shadow p-6 flex flex-col items-start min-h-[160px]">
+            <div className="mb-4 w-full flex justify-center">
+              <div className="bg-white dark:bg-neutral-700 rounded-xl p-2 shadow">
+                <BoxesIcon size={28} className="hover:bg-transparent text-neutral-900 dark:text-neutral-100" />
+              </div>
+            </div>
+            <div className="w-full flex flex-col items-center">
+              <div className="bg-white dark:bg-neutral-700 rounded-lg px-4 py-2 mb-2 shadow flex items-center gap-2">
+                <span className="ml-auto bg-blue-100 dark:bg-blue-900/30 text-[#00BCFF] dark:text-blue-300 px-3 py-1 rounded font-semibold text-xs">Coming Soon</span>
+              </div>
+              <span className="text-neutral-700 dark:text-neutral-200 flex flex-col items-center text-center">Your GitHub contributions are tracked and verified 
+                <span className="flex items-center gap-2"><span className="font-bold text-[#00BCFF] whitespace-nowrap">on-chain</span> <MoveHorizontal size={16} /> <span className="font-bold text-[#00BCFF] whitespace-nowrap">forever.</span></span></span>
+            </div>
+          </div>
+
+
+          {/* Card 4: Calendar & Scheduling */}
+          <div className="bg-neutral-100 dark:bg-[#171717] rounded-2xl shadow p-6 flex flex-col items-start min-h-[160px]">
+            <div className="mb-4 w-full flex justify-center">
+              <div className="bg-white dark:bg-neutral-700 rounded-xl p-2 shadow">
+                <CursorClickIcon size={28} className="hover:bg-transparent text-neutral-900 dark:text-neutral-100" />
+              </div>
+            </div>
+            <div className="w-full flex flex-col items-center">
+              <div className="bg-white dark:bg-neutral-700 rounded-lg px-4 py-2 mb-2 shadow text-center">
+              One-Click Bounty Setup
+              </div>
+              <span className="text-neutral-700 dark:text-neutral-200 text-center">Attach bounties to any GitHub issue in seconds.</span>
+            </div>
+          </div>
+
+          
+          {/* Card 5: Collaboration Workflows */}
+          <div className="bg-neutral-100 dark:bg-[#171717] rounded-2xl shadow p-4 sm:p-6 flex flex-col items-start min-h-[160px] md:col-span-2">
+            <div className="mb-4 w-full flex justify-center">
+              <div className="bg-white dark:bg-neutral-700 rounded-xl p-2 sm:p-3 shadow">
+                  <Image src="/LOGO/solana-sol-logo.svg" height={24} width={30} alt="solana logo" />
+              </div>
+            </div>
+            <div className="w-full flex flex-col items-center">
+              <div className="bg-white dark:bg-neutral-700 rounded-lg px-3 sm:px-4 py-2 mb-2 shadow flex flex-col gap-1 w-full">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-2 sm:gap-0">
+                  <span className="font-semibold text-neutral-900 dark:text-neutral-100 text-sm sm:text-base">💸 Fix authentication flow</span>
+                  <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded px-2 py-0.5 text-xs font-medium">$1,000</span>
+                </div>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2 mt-1">
+                  <a href="https://github.com/fahad-Dezloper/Crowdify/" target="_blank" className="text-[#00BCFF] font-semibold rounded px-2 hover:underline cursor-pointer py-0.5 text-xs">Crowdify</a>
+                  <span className="text-xs text-neutral-500 dark:text-neutral-400">Paid to @alexdev on 14/3/2024</span>
+                </div>
+              </div>
+              <span className="text-neutral-700 dark:text-neutral-200 text-center text-sm sm:text-base">No central authority. Everything — from bounty assignment to payout — runs on <span className="text-[#9945FF] font-semibold">Solana</span>.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
-const Feature = ({
-  title,
-  description,
-  icon,
-  index,
-  label
-}: {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  index: number;
-  label?:string;
-}) => {
-  return (
-    <div
-      className={cn(
-        "flex flex-col lg:border-r  py-10 relative group/feature dark:border-neutral-800",
-        (index === 0 || index === 3) && "lg:border-l dark:border-neutral-800",
-        index < 3 && "lg:border-b dark:border-neutral-800"
-      )}
-    >
-      {index < 3 && (
-        <div className="opacity-0 group-hover/feature:opacity-100 transition duration-200 absolute inset-0 h-full w-full bg-gradient-to-t from-neutral-100 dark:from-neutral-800 to-transparent pointer-events-none" />
-      )}
-      {index >= 3 && (
-        <div className="opacity-0 group-hover/feature:opacity-100 transition duration-200 absolute inset-0 h-full w-full bg-gradient-to-b from-neutral-100 dark:from-neutral-800 to-transparent pointer-events-none" />
-      )}
-      <div className="mb-4 relative z-10 px-10 text-neutral-600 dark:text-neutral-400">
-        {icon}
-      </div>
-      <div className="text-lg font-bold mb-2 relative z-10 px-10">
-        <div className="absolute left-0 inset-y-0 h-6 group-hover/feature:h-8 w-1 rounded-tr-full rounded-br-full bg-neutral-300 dark:bg-neutral-700 group-hover/feature:bg-blue-500 transition-all duration-200 origin-center" />
-        <span className="group-hover/feature:translate-x-2 font-sora transition duration-200 inline-block text-neutral-800 dark:text-neutral-100">
-          {title}
-        </span>
-        {label && (
-          <div className="inline-flex items-center ml-2 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 animate-pulse">
-            {label}
-          </div>
-        )}
-      </div>
-      <p className="text-sm text-neutral-600  dark:text-neutral-300 max-w-xs relative z-10 px-10">
-        {description}
-      </p>
-    </div>
-  );
-};
+// auth-library
+
+// +$180
+
+// Paid to @alexdev on 14/3/2024
+

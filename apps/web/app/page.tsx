@@ -117,9 +117,6 @@ export default function Home() {
       </div>
 
       <div id="features" className="w-full h-full md:px-34 p-4 md:py-4">
-        <h1 className="md:text-[4rem] text-[2rem] w-full text-left font-sora dark:text-white text-black font-semibold">
-          Features
-        </h1>
         <FeaturesSection />
       </div>
 

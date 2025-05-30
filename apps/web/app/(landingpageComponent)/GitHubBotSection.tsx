@@ -45,7 +45,7 @@ function RotatingCommand() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
             transition={{ duration: 0.3 }}
-            className="text-[#00BCFF] font-mono text-lg md:text-xl transition-all duration-300"
+            className="text-[#00BCFF]  font-sora text-lg md:text-xl transition-all duration-300"
           >
             {commands[index]}
           </motion.span>
@@ -58,7 +58,7 @@ function RotatingCommand() {
 export const GitHubBotSection = () => {
   return (
     <motion.section
-      className="w-full h-full md:px-34 p-4 md:py-4 flex flex-col md:gap-3 gap-2"
+      className="w-full h-full md:px-34 p-4 md:py-4 flex flex-col md:gap-3 gap-2 mb-8 md:mb-0"
     >
       <motion.h2
         className="text-3xl md:text-5xl font-sora font-bold mb-2 text-black dark:text-white"
@@ -123,7 +123,7 @@ export const GitHubBotSection = () => {
             </div>
             
             {/* Mobile Overlay Text - More Compact */}
-            <div className="md:hidden absolute -bottom-6 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/50 to-transparent h-32">
+            <div className="md:hidden absolute -bottom-6 left-0 right-0 p-4 bg-gradient-to-t from-white/90 via-white/50 to-transparent dark:from-black/90 dark:via-black/50 h-32">
               <div className="flex flex-col items-center justify-end h-full">
                 <p className=" text-white/90 mb-2 text-center">
                   Try <span className="text-[#00BCFF] font-sora"><RotatingCommand /></span>
