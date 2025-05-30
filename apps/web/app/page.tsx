@@ -113,9 +113,6 @@ export default function Home() {
         id="howitworks"
         className="w-full h-full md:px-34 p-4 md:py-4 flex flex-col gap-3"
       >
-        <h1 className="md:text-[4rem] text-[2rem] font-sora dark:text-white text-black font-semibold">
-          How it Works
-        </h1>
         <HowItWorks />
       </div>
 

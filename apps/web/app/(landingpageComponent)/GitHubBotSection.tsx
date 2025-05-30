@@ -9,6 +9,7 @@ const commands = [
   "/attempt",
   "/approve",
   "/cancel",
+  "/help"
 ];
 
 function RotatingCommand() {
@@ -57,93 +58,85 @@ function RotatingCommand() {
 export const GitHubBotSection = () => {
   return (
     <motion.section
-      className="w-full h-full md:px-34 p-4 md:py-4 flex flex-col gap-3"
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, ease: "easeOut" }}
+      className="w-full h-full md:px-34 p-4 md:py-4 flex flex-col md:gap-3 gap-2"
     >
       <motion.h2
         className="text-3xl md:text-5xl font-sora font-bold mb-2 text-black dark:text-white"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
       >
         Did you know?
       </motion.h2>
       <motion.p
-        className="text-lg md:text-2xl text-neutral-600 dark:text-neutral-300 mb-8"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3, duration: 0.6 }}
+        className="text-sm md:text-2xl text-neutral-600 dark:text-neutral-300 mb-8"
       >
         You can manage bounties and reward open source contributors directly from GitHub comments!
       </motion.p>
       <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-        {/* Left Card */}
+        {/* Left Card - Hidden on mobile */}
         <motion.div
-          className="flex-1 bg-white dark:bg-neutral-900 rounded-2xl shadow-lg p-8 md:p-10 border border-neutral-200 dark:border-neutral-800 max-w-xl w-full mb-8 md:mb-0"
-          initial={{ opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="hidden md:flex flex-1 bg-white dark:bg-neutral-900 rounded-2xl dark::shadow-lg p-8 md:dark:p-10 dark:border border-neutral-200 dark:border-neutral-800 max-w-xl w-full mb-8 md:mb-0"
         >
-          <h3 className="text-xl md:text-3xl font-semibold mb-2 text-black dark:text-white">
-            Use the GitEarn bot <span className="text-[#00BCFF]">instantly</span>
-          </h3>
-          <p className="text-base md:text-lg text-neutral-600 dark:text-neutral-400 mb-6">
-            Add, Attempt, Tip Bounties is now as easy as <br /> <RotatingCommand />
-          </p>
-          <ul className="mb-8 space-y-2">
-            <li className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300 text-base md:text-lg">
-              <span className="text-[#00BCFF] text-lg">✓</span> Add bounties with a single comment
-            </li>
-            <li className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300 text-base md:text-lg">
-              <span className="text-[#00BCFF] text-lg">✓</span> Claim, check status, and more
-            </li>
-            <li className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300 text-base md:text-lg">
-              <span className="text-[#00BCFF] text-lg">✓</span> GitEarn handles rewards and payouts
-            </li>
-          </ul>
-          <Link href="/auth/signin">
-            <Button
-              size="lg"
-              className="w-full cursor-pointer bg-[#00BCFF] hover:bg-[#0099cc] text-white text-lg rounded-full transition-all shadow-md"
-            >
-              Install GitHub App
-            </Button>
-          </Link>
+          <div className="w-full">
+            <h3 className="text-xl md:text-3xl font-semibold mb-2 text-black dark:text-white">
+              Use the GitEarn bot <span className="text-[#00BCFF]">instantly</span>
+            </h3>
+            <p className="text-base md:text-lg text-neutral-600 dark:text-neutral-400 mb-6">
+              Add, Attempt, Tip Bounties is now as easy as <br /> <RotatingCommand />
+            </p>
+            <ul className="mb-8 space-y-2">
+              <li className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300 text-base md:text-lg">
+                <span className="text-[#00BCFF] text-lg">✓</span> Add bounties with a single comment
+              </li>
+              <li className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300 text-base md:text-lg">
+                <span className="text-[#00BCFF] text-lg">✓</span> Claim, check status, and more
+              </li>
+              <li className="flex items-center gap-2 text-neutral-700 dark:text-neutral-300 text-base md:text-lg">
+                <span className="text-[#00BCFF] text-lg">✓</span> GitEarn handles rewards and payouts
+              </li>
+            </ul>
+            <Link href="/auth/signin" className="w-full flex items-center justify-center">
+              <Button
+                size="lg"
+                className="w-fit cursor-pointer bg-[#00BCFF] hover:bg-[#0099cc] text-white text-lg rounded-full transition-all shadow-md"
+              >
+                Install GitHub App
+              </Button>
+            </Link>
+          </div>
         </motion.div>
 
-        {/* Right Chat Bubbles */}
+        {/* Right Chat Bubbles with Mobile Overlay */}
         <motion.div
-          className="flex-1 flex flex-col gap-6 w-full max-w-lg"
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
+          className="flex-1 flex relative"
         >
-          {/* User comment bubble */}
-          <div className="flex items-start gap-3">
-            <img
-              src="https://avatars.githubusercontent.com/u/1?v=4"
-              alt="User avatar"
-              className="w-10 h-10 rounded-full border border-neutral-300 dark:border-neutral-700"
+          <div className="relative w-full">
+            <img 
+              src="/github-bot-image.png" 
+              className="h-full w-full md:scale-110 hidden dark:block rounded-2xl shadow-lg" 
+              alt="GitHub Bot" 
             />
-            <div className="bg-[#181C20] dark:bg-[#23272b] border border-neutral-800 rounded-xl px-5 py-4 text-white w-full shadow-md">
-              <div className="font-semibold text-base mb-1 text-[#00BCFF]">You commented</div>
-              <div className="text-base">Wow, awesome work! <span role="img" aria-label="clap">👏</span> <br/>/bounty $50</div>
+            <div className="dark:hidden flex p-2 w-full h-full rounded-2xl bg-[#0D1117] md:scale-110 shadow-lg">
+              <img 
+                src="/github-bot-image-white.png" 
+                className="h-full w-full object-cover rounded-2xl" 
+                alt="GitHub Bot" 
+              />
             </div>
-          </div>
-          {/* Bot response bubble */}
-          <div className="flex items-start gap-3">
-            <img
-              src="/LOGO/solana-sol-logo.svg"
-              alt="Bot avatar"
-              className="w-10 h-10 rounded-full border border-[#00BCFF] bg-white dark:bg-black"
-            />
-            <div className="bg-[#23272b] dark:bg-[#181C20] border border-[#00BCFF] rounded-xl px-5 py-4 text-white w-full shadow-md">
-              <div className="font-semibold text-base mb-1 text-[#00BCFF]">GitEarn bot</div>
-              <div className="text-base">🎉 <span className="font-bold">@contributor</span> has been awarded <span className="font-bold">$50</span>! 🚀</div>
+            
+            {/* Mobile Overlay Text - More Compact */}
+            <div className="md:hidden absolute -bottom-6 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/50 to-transparent h-32">
+              <div className="flex flex-col items-center justify-end h-full">
+                <p className=" text-white/90 mb-2 text-center">
+                  Try <span className="text-[#00BCFF] font-sora"><RotatingCommand /></span>
+                </p>
+                <Link href="/auth/signin" className="w-full flex items-center justify-center">
+                  <Button
+                    size="sm"
+                    className="w-fit cursor-pointer bg-[#00BCFF] hover:bg-[#0099cc] text-white text-sm rounded-full transition-all shadow-md"
+                  >
+                    Install GitHub App
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </motion.div>

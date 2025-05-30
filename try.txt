@@ -86,3 +86,29 @@ change bounty label color when added to light blue
 
 deploy probot app seperately on railway or someplace else -- done
 
+vulnerablity in bounty context provider solve it
+
+
+
+
+how it works section
+
+{/* {step.bot && (
+                      <Tabs defaultValue="video" className="" onValueChange={(value) => setActiveVideos({...activeVideos, [index]: value as "video" | "bot"})}>
+                        <div className="flex flex-col w-full items-center justify-center">
+                        <TabsList className="">
+                          <TabsTrigger value="video">Video</TabsTrigger>
+                          <TabsTrigger value="bot">Bot</TabsTrigger>
+                        </TabsList>
+
+                        <TabsContent value="video" className="">
+                          <VideoPlayer videoUrl={step.video} />
+                        </TabsContent>
+                        <TabsContent value="bot" className="">
+                          <VideoPlayer videoUrl={step.bot} />
+                        </TabsContent>
+                        </div>
+                      </Tabs>
+                    )}
+                    {!step.bot && <VideoPlayer videoUrl={step.video} />} */}
+
