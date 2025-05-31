@@ -13,6 +13,7 @@ interface Technology {
 }
 
 interface BountyIssuess {
+  technologies: Technology[];
   id: string;
   title: string;
   htmlUrl: string;
@@ -75,6 +76,7 @@ const SuggestedBounties = () => {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
 
+  // @ts-ignore
   const suggestedBounties: BountyIssuess[] = bountyIssues?.slice(0, 3) || [];
 
   return (
@@ -134,7 +136,8 @@ const SuggestedBounties = () => {
 
               <div className="flex flex-col gap-3">
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {issue.technologies?.map((tech, i) => (
+                    {/* @ts-ignore */}
+                    {issue.technologies.map((tech, i) => (
                       <span
                         key={i}
                         style={{backgroundColor: hexToRgba(tech.color, 0.4)}}

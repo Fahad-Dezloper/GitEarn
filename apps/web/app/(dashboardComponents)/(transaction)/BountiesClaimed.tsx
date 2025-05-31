@@ -19,9 +19,9 @@ import { Input } from "@/components/ui/input"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
+import { mockClaimedBounties } from "@/lib/mock-data"
 import { useBountyDetails } from "@/app/context/BountyContextProvider"
-
-type TransactionStatus = 'PENDING' | 'CONFIRMED' | 'FAILED';
+import Link from "next/link"
 
 // Convert lamports to SOL
 const lamportsToSol = (lamports: number) => {
@@ -43,9 +43,8 @@ export function BountiesClaimedPage() {
     from: undefined,
     to: undefined,
   })
-  const [selectedStatuses, setSelectedStatuses] = useState<TransactionStatus[]>([])
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([])
   const { bountiesClaimed } = useBountyDetails();
-
   const toggleRow = (id: string) => {
     setExpandedRows((prev) => ({
       ...prev,
@@ -53,19 +52,23 @@ export function BountiesClaimedPage() {
     }))
   }
 
+  // console.log("claim bounties", bountiesClaimed);
+
   // Calculate summary stats
   const totalClaimed = bountiesClaimed.length
-  const totalEarned = bountiesClaimed.reduce((sum, bounty) => sum + bounty.bountyAmountInLamports, 0)
+  const totalEarned = mockClaimedBounties.claimed.reduce((sum, bounty) => sum + bounty.claimedAmount, 0)
   const pendingPayouts = bountiesClaimed
-    .filter((bounty) => bounty.status === "PENDING")
-    .reduce((sum, bounty) => sum + bounty.bountyAmountInLamports, 0)
+  // @ts-ignore
+    .filter((bounty) => bounty.status === "CLAIMED" && !bounty.status.includes("APPROVED"))
+    .reduce((sum, bounty) => sum + bounty.bountyAmount, 0)
 
   // Filter bounties based on search, date range, and status
   const filteredBounties = bountiesClaimed.filter((bounty) => {
     // Search filter
     const matchesSearch =
       searchQuery === "" ||
-      bounty.txnHash?.toLowerCase().includes(searchQuery.toLowerCase())
+      (bounty.title?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false) ||
+      (bounty.htmlUrl?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
 
     // Date filter
     const bountyDate = new Date(bounty.createdAt)
@@ -77,6 +80,20 @@ export function BountiesClaimedPage() {
 
     return matchesSearch && matchesDateFrom && matchesDateTo && matchesStatus
   })
+
+  function formatIssueTitle(url: string): string {
+    try {
+      const match = url.match(/github\.com\/[^/]+\/([^/]+)\/issues\/(\d+)/);
+      if (!match) return 'Invalid GitHub Issue URL';
+      
+      const repo = match[1];
+      const issueNumber = match[2];
+      return `Issue #${issueNumber} · ${repo}`;
+    } catch {
+      return 'Error formatting issue title';
+    }
+  }
+
 
   return (
     <div className="space-y-4">
@@ -111,16 +128,12 @@ export function BountiesClaimedPage() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {["PENDING", "CONFIRMED", "FAILED"].map((status) => (
+              {["CLAIMING", "CLAIMED", "APPROVED"].map((status) => (
                 <DropdownMenuCheckboxItem
                   key={status}
-                  checked={selectedStatuses.includes(status as TransactionStatus)}
+                  checked={selectedStatuses.includes(status)}
                   onCheckedChange={(checked) => {
-                    setSelectedStatuses((prev) => 
-                      checked 
-                        ? [...prev, status as TransactionStatus]
-                        : prev.filter((s) => s !== status)
-                    )
+                    setSelectedStatuses((prev) => (checked ? [...prev, status] : prev.filter((s) => s !== status)))
                   }}
                 >
                   {status}
@@ -176,7 +189,7 @@ export function BountiesClaimedPage() {
         <div className="flex items-center">
           <Search className="mr-2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search transactions..."
+            placeholder="Search bounties..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="h-8 w-[150px] lg:w-[250px]"
@@ -188,10 +201,10 @@ export function BountiesClaimedPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Transaction Type</TableHead>
+              <TableHead className="w-[300px]">Bounty Title</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
-              <TableHead>Transaction Hash</TableHead>
+              <TableHead className="text-right">Claimed Amount</TableHead>
+              <TableHead>Claim Address</TableHead>
               <TableHead>Created Date</TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
@@ -200,38 +213,105 @@ export function BountiesClaimedPage() {
             {filteredBounties.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="h-24 text-center">
-                  No transactions found.
+                  No bounties found.
                 </TableCell>
               </TableRow>
             ) : (
               filteredBounties.map((bounty) => (
-                <TableRow key={bounty.id}>
-                  <TableCell>{bounty.type}</TableCell>
-                  <TableCell>
-                    <StatusBadge status={bounty.status} />
-                  </TableCell>
-                  <TableCell className="text-right">{formatSol(lamportsToSol(bounty.bountyAmountInLamports))} SOL</TableCell>
-                  <TableCell className="font-mono text-xs">
-                    {bounty.txnHash ? (
+                <>
+                  <TableRow key={bounty.id}>
+                    <TableCell className="font-medium">
+                      <a
+                        href={bounty.htmlUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        {formatIssueTitle(bounty.htmlUrl || '')}
+                      </a>
+                    </TableCell>
+                    <TableCell>
+                      <StatusBadge status={bounty.status} />
+                    </TableCell>
+                    <TableCell className="text-right">{bounty.bountyAmountInLamports} SOL</TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {/* @ts-ignore */}
+                      {bounty.contributorClaimedAdd === null ? <Link href={"/earn/claim"} className="text-blue-300 text-base font-semibold hover:underline">Claim Now</Link> : 
                       <div>
-                        {bounty.txnHash.substring(0, 6)}...
-                        {bounty.txnHash.substring(bounty.txnHash.length - 4)}
-                      </div>
-                    ) : (
-                      "Pending"
-                    )}
-                  </TableCell>
-                  <TableCell>{format(new Date(bounty.createdAt), "MMM dd, yyyy")}</TableCell>
-                  <TableCell>
-                    <Button variant="ghost" size="sm" onClick={() => toggleRow(bounty.id)}>
-                      {expandedRows[bounty.id] ? (
-                        <ChevronUp className="h-4 w-4" />
-                      ) : (
-                        <ChevronDown className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </TableCell>
-                </TableRow>
+                        {/* @ts-ignore */}
+                        {bounty.contributorClaimedAdd.substring(0, 6)}...
+                        {/* @ts-ignore */}
+                        {bounty.contributorClaimedAdd.substring(bounty.contributorClaimedAdd.length - 4)}
+                      </div>}
+                    </TableCell>
+                    <TableCell>{format(new Date(bounty.createdAt), "MMM dd, yyyy")}</TableCell>
+                    <TableCell>
+                      <Button variant="ghost" size="sm" onClick={() => toggleRow(bounty.id)}>
+                        {expandedRows[bounty.id] ? (
+                          <ChevronUp className="h-4 w-4" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                  {expandedRows[bounty.id] && (
+                    <TableRow className="bg-muted/50">
+                      <TableCell colSpan={6} className="p-0">
+                        <div className="p-4">
+                          <h4 className="mb-2 font-semibold">Transaction Timeline</h4>
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Date</TableHead>
+                                <TableHead>Transaction Type</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead className="text-right">Amount</TableHead>
+                                <TableHead>Transaction Hash</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {/* @ts-ignore */}
+                              {bounty.transactions.map((transaction: any, index: number) => (
+                                <TableRow key={index}>
+                                  <TableCell>{format(new Date(bounty.createdAt), "MMM dd, yyyy")}</TableCell>
+                                  <TableCell>{transaction.type}</TableCell>
+                                  <TableCell>
+                                    <StatusBadge status={transaction.status} />
+                                  </TableCell>
+                                  <TableCell className="text-right">
+                                    {transaction.bountyAmountInLamports} SOL
+                                  </TableCell>
+                                  <TableCell>
+                                    <div className="flex space-x-2">
+                                      <a
+                                        href={`https://explorer.solana.com/tx/${transaction.txnHash}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-xs text-primary hover:underline"
+                                      >
+                                        Explorer
+                                      </a>
+                                      <span className="text-xs text-muted-foreground">|</span>
+                                      <a
+                                        href={`https://solscan.io/tx/${transaction.txnHash}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-xs text-primary hover:underline"
+                                      >
+                                        Solscan
+                                      </a>
+                                    </div>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </>
               ))
             )}
           </TableBody>
@@ -241,12 +321,24 @@ export function BountiesClaimedPage() {
   )
 }
 
-function StatusBadge({ status }: { status: TransactionStatus }) {
+function StatusBadge({ status }: { status: string }) {
   let variant: "default" | "secondary" | "destructive" | "outline" | null | undefined = "default"
 
   switch (status) {
     case "PENDING":
       variant = "outline"
+      break
+    case "ACTIVE":
+      variant = "default"
+      break
+    case "CLAIMING":
+      variant = "secondary"
+      break
+    case "CLAIMED":
+      variant = "secondary"
+      break
+    case "APPROVED":
+      variant = "default"
       break
     case "CONFIRMED":
       variant = "default"
