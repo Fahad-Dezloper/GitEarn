@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import ExploreButton from '@/components/fancyComponents/page';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import React from 'react'
@@ -7,19 +8,21 @@ import { motion } from 'motion/react';
 import { GithubIcon } from '@/components/ui/github';
 
 interface Technology {
-  name: string;
+  name: string; 
   color: string;
 }
 
-interface BountyIssue {
+interface BountyIssuess {
+  technologies: Technology[];
   id: string;
   title: string;
-  repo: string;
-  createdAt: string;
-  bountyAmount: number;
-  status: string;
-  technologies: Technology[];
   htmlUrl: string;
+  status: 'PENDING' | 'ACTIVE' | 'CLAIMING' | 'CLAIMED' | 'APPROVED' | 'CANCELLING' | 'CANCELED' | 'FAILED' | 'TIPPING' | 'TIPPED';
+  bountyAmount: number;
+  bountyAmountInLamports: number;
+  createdAt: Date;
+  repo?: string;
+  tags?: Technology[];
 }
 
 const SkeletonCard = () => (
@@ -45,11 +48,12 @@ const SkeletonCard = () => (
 
 const SuggestedBounties = () => {
   const { bountyIssues, isLoading } = useBountyDetails()
+  console.log("bounty issues", bountyIssues);
 
-  const getTimeAgo = (dateString: string) => {
-    const date = new Date(dateString);
+  const getTimeAgo = (dateString: Date | string) => {
     const now = new Date();
-    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    const dateObj = new Date(dateString);
+    const seconds = Math.floor((now.getTime() - dateObj.getTime()) / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
@@ -65,13 +69,15 @@ const SuggestedBounties = () => {
   };
 
   function hexToRgba(hex: string, alpha: number) {
+    if (!hex) return `rgba(128, 128, 128, ${alpha})`; // Default to gray if no color provided
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
 
-  const suggestedBounties = bountyIssues?.slice(0, 3) || [];
+  // @ts-ignore
+  const suggestedBounties: BountyIssuess[] = bountyIssues?.slice(0, 3) || [];
 
   return (
     <div className='flex flex-col gap-6'>
@@ -93,13 +99,13 @@ const SuggestedBounties = () => {
           ))
         ) : suggestedBounties.length > 0 ? (
           // Show actual bounties
-          suggestedBounties.map((issue: BountyIssue, index: number) => (
+          suggestedBounties.map((issue, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.05 }}
-              className="bg-white flex min-w-[20vw] flex-col justify-between dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+              className="bg-white flex md:max-w-[20vw] w-full shrink-0 max-w-[80vw] flex-col justify-between dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-all cursor-pointer group"
               style={{
                 '--cursor-color': 'rgb(0, 122, 255)',
                 '--cursor-color-dark': 'rgb(0, 209, 255)',
@@ -114,8 +120,8 @@ const SuggestedBounties = () => {
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex flex-col gap-1">
-                  <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{issue.repo}</p>
-                  <Link href={issue.htmlUrl} target="_blank" className="text-lg hover:underline font-semibold text-gray-900 dark:text-white">{issue.title}</Link>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{issue.repo || 'Unknown Repository'}</p>
+                  <Link href={issue.htmlUrl} target="_blank" className="text-md hover:underline font-semibold text-gray-900 dark:text-white">{issue.title}</Link>
                 </div>
                 <div className="relative group">
                   <span
@@ -127,30 +133,34 @@ const SuggestedBounties = () => {
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-2 mb-4">
-                {issue.technologies.map((tech, i: React.Key) => (
-                  <span
-                    key={i}
-                    style={{backgroundColor:  hexToRgba(tech.color, 0.4)}}
-                    className={`text-xs font-medium px-2 py-0.5 rounded-full`}
-                  >
-                    {tech.name}
-                  </span>
-                ))}
+
+              <div className="flex flex-col gap-3">
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {/* @ts-ignore */}
+                    {issue.technologies.map((tech, i) => (
+                      <span
+                        key={i}
+                        style={{backgroundColor: hexToRgba(tech.color, 0.4)}}
+                        className="text-xs font-medium px-2 py-0.5 rounded-full"
+                      >
+                        {tech.name}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                    <span>{getTimeAgo(issue.createdAt)}</span>
+                    <div className="flex items-center gap-3">
+                      <Link
+                        href={issue.htmlUrl}
+                        target="_blank"
+                        className="transition-colors"
+                      >
+                        <GithubIcon className="hover:text-blue-600 dark:hover:text-blue-400 hover:bg-transparent" />
+                      </Link>
+                    </div>
+                  </div>
               </div>
 
-              <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                <span>{getTimeAgo(issue.createdAt)}</span>
-                <div className="flex items-center gap-3">
-                  <Link
-                    href={issue.htmlUrl}
-                    target="_blank"
-                    className="transition-colors"
-                  >
-                    <GithubIcon className="hover:text-blue-600 dark:hover:text-blue-400 hover:bg-transparent" />
-                  </Link>
-                </div>
-              </div>
             </motion.div>
           ))
         ) : (

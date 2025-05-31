@@ -1,78 +1,153 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-'use client'
-import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { Keypair, LAMPORTS_PER_SOL, PublicKey, Connection, clusterApiUrl, sendAndConfirmTransaction, SystemProgram, Transaction, Cluster } from '@solana/web3.js';
-import axios from 'axios';
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import bs58 from 'bs58'
-import crypto from 'crypto'
+"use client";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import {
+  Keypair,
+  PublicKey,
+  Connection,
+  clusterApiUrl,
+  sendAndConfirmTransaction,
+  SystemProgram,
+  Transaction as SolanaTransaction,
+} from "@solana/web3.js";
+import axios from "axios";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import bs58 from "bs58";
+import { toast } from "sonner";
 
-
-interface BountyContextType {
-  issuesRepo: any[];
-  setIssuesRepo: React.Dispatch<React.SetStateAction<any[]>>;
-  addBounty: (bountyAmt: any, issueId: any, issueLink: any, lamports: any, title?: any, transactionId?: any) => Promise<void>;
-  approveBounty: (issueId: any, issueLink: string, contributorId: number, contributorUserName: string) => Promise<void>;
-  bountyIssues: any[];
-  setBountyIssues: React.Dispatch<React.SetStateAction<any[]>>;
-  userBountyIssue: any[];
-  removeBounty: ({txnId, issueId, issueLink, lamports }: {txnId?: any, issueId: string, issueLink: string, lamports: any }) => Promise<void>;
-  claimMoney: (contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any, status: string) => Promise<void>;
-  bountiesCreated: any[];
-  bountiesClaimed: any[];
-  isLoading: boolean;
-  claimBounties: any[];
-  tip: (bountyAmt: any, issueId: any, issueLink: any, lamports: any, title?: any, transactionId?: any) => Promise<void>;
+interface BountyIssue {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  html_url: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  issues: any;
+  name: string;
+  id: string;
+  userId: string;
+  githubId: bigint;
+  htmlUrl: string;
+  status: 'PENDING' | 'ACTIVE' | 'CLAIMING' | 'CLAIMED' | 'APPROVED' | 'CANCELLING' | 'CANCELED' | 'FAILED' | 'TIPPING' | 'TIPPED';
+  contributorId?: string;
+  contributorClaimedAdd?: string;
+  bountyAmount: number;
+  bountyAmountInLamports: number;
+  createdAt: Date;
+  updatedAt: Date;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  repo?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  tags?: any;
 }
 
-type SendSolanaTxProps = {
-  walletId: string;
-  from: string;
-  to: string;
-  amount: number;
-  network?: 'devnet' | 'mainnet' | 'testnet';
-};
+interface BountyTransaction {
+  id: string;
+  bountyIssueId: string;
+  type: 'DEPOSIT' | 'WITHDRAWAL' | 'PAYOUT' | 'CLAIM';
+  status: 'PENDING' | 'CONFIRMED' | 'FAILED';
+  txnHash?: string;
+  bountyAmount: number;
+  bountyAmountInLamports: number;
+  createdAt: Date;
+  title?: string;
+  htmlUrl?: string;
+  transactions?: unknown[];
+  githubId?: string;
+}
 
-const PRIVY_API_URL = 'https://api.privy.io/v1/wallets';
+interface BountyContextType {
+  issuesRepo: BountyIssue[];
+  setIssuesRepo: React.Dispatch<React.SetStateAction<BountyIssue[]>>;
+  addBounty: (
+    bountyAmt: number,
+    issueId: string,
+    issueLink: string,
+    lamports: number,
+    title?: string,
+    transactionId?: string
+  ) => Promise<void>;
+  approveBounty: (
+    issueId: string,
+    issueLink: string,
+    contributorId: string,
+    contributorUserName: string
+  ) => Promise<void>;
+  bountyIssues: BountyIssue[];
+  setBountyIssues: React.Dispatch<React.SetStateAction<BountyIssue[]>>;
+  userBountyIssue: BountyIssue[];
+  removeBounty: ({
+    txnId,
+    issueId,
+    issueLink,
+    lamports,
+  }: {
+    txnId?: string;
+    issueId: string;
+    issueLink: string;
+    lamports: number;
+  }) => Promise<void>;
+  claimMoney: (
+    contributorId: string,
+    walletAdd: string,
+    bountyAmountInLamports: number,
+    githubId: string,
+    htmlUrl: string,
+    status: string
+  ) => Promise<void>;
+  bountiesCreated: BountyTransaction[];
+  bountiesClaimed: BountyTransaction[];
+  isLoading: boolean;
+  claimBounties: BountyIssue[];
+  tip: (
+    bountyAmt: number,
+    issueId: string,
+    issueLink: string,
+    lamports: number,
+    title?: string,
+    transactionId?: string
+  ) => Promise<void>;
+}
 
-const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
-const BountyDetailsContext = createContext<BountyContextType | undefined>(undefined);
+const BountyDetailsContext = createContext<BountyContextType | undefined>(
+  undefined
+);
 
 export function BountyContextProvder({ children }: { children: ReactNode }) {
-  const [issuesRepo, setIssuesRepo] = useState<any[]>([]);
-  const [bountyIssues, setBountyIssues] = useState<any[]>([]);
-  const [userBountyIssue, setUserBountyIssue] = useState<any[]>([]);
+  const [issuesRepo, setIssuesRepo] = useState<BountyIssue[]>([]);
+  const [bountyIssues, setBountyIssues] = useState<BountyIssue[]>([]);
+  const [userBountyIssue, setUserBountyIssue] = useState<BountyIssue[]>([]);
   const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
-  const [bountiesCreated, setBountiesCreated] = useState<any[]>([]);
-  const [bountiesClaimed, setBountiesClaimed] = useState<any[]>([]);
-  const [claimBounties, setClaimBounties] = useState<any[]>([]);
+  const [bountiesCreated, setBountiesCreated] = useState<BountyTransaction[]>([]);
+  const [bountiesClaimed, setBountiesClaimed] = useState<BountyTransaction[]>([]);
+  const [claimBounties, setClaimBounties] = useState<BountyIssue[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  // const { fetchUserMoneyClaimed } = useUserDetails();
-
-  // console.log("public key", publicKey);
-  // console.log("connection", connection);
 
   async function getIssues() {
     try {
       const res = await axios.get(`/api/issues/get`);
-      const reposWithIssues = res.data.filter((repo: { issues: string | any[]; }) => repo.issues && repo.issues.length > 0);
-      // console.log("res is here", reposWithIssues);
+      const reposWithIssues = res.data.filter(
+        (repo: { issues: BountyIssue[] }) =>
+          repo.issues && repo.issues.length > 0
+      );
       setIssuesRepo(reposWithIssues);
-    } catch (e) {
-      console.error("Error while fetching:", e);
+    } catch {
+      toast.error("Error fetching issues");
     }
   }
 
-  async function getUserBountyIssues(){
-    try{
-      const res = await axios.get('/api/user/bountyIssues');
+  async function getUserBountyIssues() {
+    try {
+      const res = await axios.get("/api/user/bountyIssues");
       setUserBountyIssue(res.data.UsersBountyIssues);
-    } catch(e) {
-      console.log("Error fetching user bounty issues");
+    } catch {
+      toast.error("Error fetching user bounty issues");
     }
   }
 
@@ -81,10 +156,12 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
       if (bountyIssues.length === 0) {
         setIsLoading(true);
       }
-      const res = await axios.get(`${window.location.origin}/api/issues/bounty`);
+      const res = await axios.get(
+        `${window.location.origin}/api/issues/bounty`
+      );
       setBountyIssues(res.data.BountyIssues);
-    } catch (e) {
-      console.log("Error fetching Bounty Issues", e);
+    } catch {
+      toast.error("Error fetching bounty issues");
     } finally {
       setIsLoading(false);
     }
@@ -107,468 +184,489 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     return () => clearInterval(interval);
   }, [bountyIssues?.length]);
 
-  async function addBounty(bountyAmt: any, issueId: any, issueLink: any, lamports: any, title?: any, transactionId?: any) {
+  async function addBounty(
+    bountyAmt: number,
+    issueId: string,
+    issueLink: string,
+    lamports: number,
+    title?: string,
+    transactionId?: string
+  ) {
     try {
-      if(transactionId){
-
+      if (transactionId) {
         if (!publicKey) {
-          console.error("Wallet not connected");
-          alert("Error: Wallet not connected")
+          toast.error("Wallet not connected");
           return;
-        }  
+        }
 
-        const transaction = new Transaction();
+        const transaction = new SolanaTransaction();
         const sendSolInstruction = SystemProgram.transfer({
           fromPubkey: publicKey,
-          toPubkey: new PublicKey('6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz'),
+          toPubkey: new PublicKey(
+            "6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz"
+          ),
           lamports: lamports,
         });
-  
+
         transaction.add(sendSolInstruction);
-        
+
         const signature = await sendTransaction(transaction, connection);
 
         try {
-          console.log(`Waiting for transaction confirmation (${signature})...`);
-          const commitment = 'confirmed';
-          const latestBlockHash = await connection.getLatestBlockhash(commitment);
+          const commitment = "confirmed";
+          const latestBlockHash =
+            await connection.getLatestBlockhash(commitment);
 
           const confirmationResult = await connection.confirmTransaction(
-              {
-                  signature: signature,
-                  blockhash: latestBlockHash.blockhash,
-                  lastValidBlockHeight: latestBlockHash.lastValidBlockHeight
-              },
-              commitment
+            {
+              signature: signature,
+              blockhash: latestBlockHash.blockhash,
+              lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+            },
+            commitment
           );
 
           if (confirmationResult.value.err) {
-              alert(`Transaction failed: ${confirmationResult.value.err}`);
-              return;
+            toast.error(`Transaction failed: ${confirmationResult.value.err}`);
+            return;
           } else {
-              // alert(`Transaction ${signature} confirmed with status: ${commitment}`);
-              const confirm = await axios.post("/api/bounty/confirm", {
-                  bountyAmt,
-                  issueId,
-                  issueLink,
-                  signature,
-                  from: publicKey.toString(),
-                  lamports,
-                  transactionId
-              });
+            const confirm = await axios.post("/api/bounty/confirm", {
+              bountyAmt,
+              issueId,
+              issueLink,
+              signature,
+              from: publicKey.toString(),
+              lamports,
+              transactionId,
+            });
 
-              // console.log("Backend confirmation response:", confirm);
-              setBountyIssues(confirm.data.bountyIssues);
-              getIssues();
-              getUserBountyIssues();
-              getBountiesCreated();
+            setBountyIssues(confirm.data.bountyIssues);
+            getIssues();
+            getUserBountyIssues();
+            getBountiesCreated();
+            toast.success("Bounty added successfully");
           }
-      } catch (error) {
-          console.error("Error confirming transaction:", error);
-          alert(`Error confirming transaction: ${error || 'Timeout or RPC error'}`);
-          return;
-      }
-      } else {
-        if (!publicKey) {
-          console.error("Wallet not connected");
-          alert("Error: Wallet not connected")
+        } catch {
+          toast.error("Error confirming transaction");
           return;
         }
-        
+      } else {
+        if (!publicKey) {
+          toast.error("Wallet not connected");
+          return;
+        }
+
         const add = await axios.post("/api/bounty/add", {
           bountyAmt,
           issueId,
           issueLink,
-          lamports: lamports
+          lamports: lamports,
         });
-  
-        console.log(add.data.transaction.id)
+
         const transactionIdd = add.data.transaction.id;
-        
-        const transaction = new Transaction();
+
+        const transaction = new SolanaTransaction();
         const sendSolInstruction = SystemProgram.transfer({
           fromPubkey: publicKey,
-          toPubkey: new PublicKey('6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz'),
+          toPubkey: new PublicKey(
+            "6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz"
+          ),
           lamports: lamports,
         });
-  
+
         transaction.add(sendSolInstruction);
-        
+
         const signature = await sendTransaction(transaction, connection);
-  
+
         try {
-          const commitment = 'confirmed';
-          const latestBlockHash = await connection.getLatestBlockhash(commitment);
+          const commitment = "confirmed";
+          const latestBlockHash =
+            await connection.getLatestBlockhash(commitment);
 
           const confirmationResult = await connection.confirmTransaction(
-              {
-                  signature: signature,
-                  blockhash: latestBlockHash.blockhash,
-                  lastValidBlockHeight: latestBlockHash.lastValidBlockHeight
-              },
-              commitment
+            {
+              signature: signature,
+              blockhash: latestBlockHash.blockhash,
+              lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+            },
+            commitment
           );
 
           if (confirmationResult.value.err) {
-              alert(`Transaction failed: ${confirmationResult.value.err}`);
-              return;
+            toast.error(`Transaction failed: ${confirmationResult.value.err}`);
+            return;
           } else {
-              // alert(`Transaction ${signature} confirmed with status: ${commitment}`);
-              const confirm = await axios.post("/api/bounty/confirm", {
-                  bountyAmt,
-                  issueId,
-                  issueLink,
-                  signature,
-                  from: publicKey.toString(),
-                  lamports,
-                  transactionId: transactionIdd
-              });
+            const confirm = await axios.post("/api/bounty/confirm", {
+              bountyAmt,
+              issueId,
+              issueLink,
+              signature,
+              from: publicKey.toString(),
+              lamports,
+              transactionId: transactionIdd,
+            });
 
-              console.log("Backend confirmation response:", confirm);
-              setBountyIssues(confirm.data.bountyIssues);
-              getIssues();
-              getUserBountyIssues();
+            setBountyIssues(confirm.data.bountyIssues);
+            getIssues();
+            getUserBountyIssues();
+            toast.success("Bounty added successfully");
           }
-      } catch (error) {
-          console.error("Error confirming transaction:", error);
-          alert(`Error confirming transaction: ${error || 'Timeout or RPC error'}`);
+        } catch {
+          toast.error("Error confirming transaction");
           return;
+        }
       }
-      }
-  } catch(e){
-    console.log("Error adding bounty to the issue", e);
-  }
+    } catch {
+      toast.error("Error adding bounty to the issue");
+    }
   }
 
-
-  async function tip(bountyAmt: any, issueId: any, issueLink: any, lamports: any, title?: any, transactionId?: any) {
+  async function tip(
+    bountyAmt: number,
+    issueId: string,
+    issueLink: string,
+    lamports: number,
+    title?: string,
+    transactionId?: string
+  ) {
     try {
-      if(transactionId){
-
+      if (transactionId) {
         if (!publicKey) {
-          console.error("Wallet not connected");
-          alert("Error: Wallet not connected")
+          toast.error("Wallet not connected");
           return;
-        }  
+        }
 
-        const transaction = new Transaction();
+        const transaction = new SolanaTransaction();
         const sendSolInstruction = SystemProgram.transfer({
           fromPubkey: publicKey,
-          toPubkey: new PublicKey('6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz'),
+          toPubkey: new PublicKey(
+            "6ZDPeVxyRyxQubevCKTM56tUhFq1PRib2BZ66kEp8zrz"
+          ),
           lamports: lamports,
         });
-  
+
         transaction.add(sendSolInstruction);
-        
+
         const signature = await sendTransaction(transaction, connection);
 
         try {
-          console.log(`Waiting for transaction confirmation (${signature})...`);
-          const commitment = 'confirmed';
-          const latestBlockHash = await connection.getLatestBlockhash(commitment);
+          const commitment = "confirmed";
+          const latestBlockHash =
+            await connection.getLatestBlockhash(commitment);
 
           const confirmationResult = await connection.confirmTransaction(
-              {
-                  signature: signature,
-                  blockhash: latestBlockHash.blockhash,
-                  lastValidBlockHeight: latestBlockHash.lastValidBlockHeight
-              },
-              commitment
+            {
+              signature: signature,
+              blockhash: latestBlockHash.blockhash,
+              lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+            },
+            commitment
           );
 
           if (confirmationResult.value.err) {
-              alert(`Transaction failed: ${confirmationResult.value.err}`);
-              return;
+            toast.error(`Transaction failed: ${confirmationResult.value.err}`);
+            return;
           } else {
-              // alert(`Transaction ${signature} confirmed with status: ${commitment}`);
-              const confirm = await axios.post("/api/bounty/tip", {
-                  signature,
-                  transactionId
-              });
+            const confirm = await axios.post("/api/bounty/tip", {
+              signature,
+              transactionId,
+            });
 
-              // console.log("Backend confirmation response:", confirm);
-              setBountyIssues(confirm.data.bountyIssues);
-              getIssues();
-              getUserBountyIssues();
-              getBountiesCreated();
+            setBountyIssues(confirm.data.bountyIssues);
+            getIssues();
+            getUserBountyIssues();
+            getBountiesCreated();
+            toast.success("Tip sent successfully");
           }
-      } catch (error) {
-          console.error("Error confirming transaction:", error);
-          alert(`Error confirming transaction: ${error || 'Timeout or RPC error'}`);
+        } catch {
+          toast.error("Error confirming transaction");
           return;
-      }
+        }
       } else {
-        alert("there is no transaction created for this tip.");
+        toast.error("No transaction created for this tip");
         return;
       }
-  } catch(e){
-    console.log("Error Tipping to the issue", e);
-  }
-  }
-
-
-  // check vulnerablity here
-  async function removeBounty({txnId, issueId, issueLink, lamports}: {txnId?: any, issueId: string, issueLink: string, lamports: any}){
-    if(!process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD){
-      return console.error("PRIMARY_WALLET_ADD public key not available");
+    } catch {
+      toast.error("Error tipping to the issue");
     }
-    if(!process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY){
-      return console.error("PRIMARY_WALLET_ADD private key not available");
+  }
+
+  async function removeBounty({
+    txnId,
+    issueId,
+    issueLink,
+    lamports,
+  }: {
+    txnId?: string;
+    issueId: string;
+    issueLink: string;
+    lamports: number;
+  }) {
+    if (!process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD) {
+      toast.error("PRIMARY_WALLET_ADD public key not available");
+      return;
+    }
+    if (!process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY) {
+      toast.error("PRIMARY_WALLET_ADD private key not available");
+      return;
     }
 
     try {
-      if(txnId){
-        // alert("this one is happening")
-
+      if (txnId) {
         const transactionIdd = txnId;
 
-        if(!publicKey){
-          alert("Wallet not connected");
-          console.error("Wallet not connected");
+        if (!publicKey) {
+          toast.error("Wallet not connected");
           return;
         }
-  
-          const keypair = Keypair.fromSecretKey(bs58.decode(process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY));
-  
-          const transaction = new Transaction().add(
-            SystemProgram.transfer({
-              fromPubkey: keypair.publicKey,
-              toPubkey: publicKey,
-              lamports: lamports,
-            })
-          );
-  
-          const signature = await sendAndConfirmTransaction(
-            connection,
-            transaction,
-            [keypair]
-          );
-  
-        const removeConfirm = await axios.post('/api/bounty/remove', {
+
+        const keypair = Keypair.fromSecretKey(
+          bs58.decode(process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY)
+        );
+
+        const transaction = new SolanaTransaction().add(
+          SystemProgram.transfer({
+            fromPubkey: keypair.publicKey,
+            toPubkey: publicKey,
+            lamports: lamports,
+          })
+        );
+
+        const signature = await sendAndConfirmTransaction(
+          connection,
+          transaction,
+          [keypair]
+        );
+
+        await axios.post("/api/bounty/remove", {
           issueId,
           issueLink,
           signature,
           lamports,
           to: publicKey,
-          transactionId: transactionIdd
-        })
-  
-        getIssues();
-        getUserBountyIssues();
-      } else {
-        // alert("no one is happening")
-        const remove = await axios.post('/api/bounty/remove/pending', {
-          issueId,
-          issueLink,
-          lamports
+          transactionId: transactionIdd,
         });
-        
-        // console.log("remove log", remove);
-        
+
+        getIssues();
+        getUserBountyIssues();
+        toast.success("Bounty removed successfully");
+      } else {
+        const remove = await axios.post("/api/bounty/remove/pending", {
+          issueId,
+          issueLink,
+          lamports,
+        });
+
         const transactionIdd = remove.data.transaction.id;
-  
-  
-  
-  
-        if(!publicKey){
-          alert("Wallet not connected");
-          console.error("Wallet not connected");
+
+        if (!publicKey) {
+          toast.error("Wallet not connected");
           return;
         }
-  
-          const keypair = Keypair.fromSecretKey(bs58.decode(process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY));
-  
-          const transaction = new Transaction().add(
-            SystemProgram.transfer({
-              fromPubkey: keypair.publicKey,
-              toPubkey: publicKey,
-              lamports: lamports,
-            })
-          );
-  
-          const signature = await sendAndConfirmTransaction(
-            connection,
-            transaction,
-            [keypair]
-          );
-  
-          // console.log("Transaction Signature:", signature);
-  
-        const removeConfirm = await axios.post('/api/bounty/remove', {
+
+        const keypair = Keypair.fromSecretKey(
+          bs58.decode(process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY)
+        );
+
+        const transaction = new SolanaTransaction().add(
+          SystemProgram.transfer({
+            fromPubkey: keypair.publicKey,
+            toPubkey: publicKey,
+            lamports: lamports,
+          })
+        );
+
+        const signature = await sendAndConfirmTransaction(
+          connection,
+          transaction,
+          [keypair]
+        );
+
+        await axios.post("/api/bounty/remove", {
           issueId,
           issueLink,
           signature,
           lamports,
           to: publicKey,
-          transactionId: transactionIdd
-        })
-  
+          transactionId: transactionIdd,
+        });
+
         getIssues();
         getUserBountyIssues();
+        toast.success("Bounty removed successfully");
       }
-    } catch (error) {
-      console.log("in context provider cancel bounty error", error); 
+    } catch {
+      toast.error("Error removing bounty");
     }
   }
 
-
-  // check vulnerablity its happening on client side
-  async function approveBounty( issueId: any, issueLink: string, contributorId: number, contributorUserName: string){
-    // console.log("here reached here", issueId, issueLink, contributorId);
-    // approved
-    try{
-      const res = await axios.post("/api/bounty/approve", {
+  async function approveBounty(
+    issueId: string,
+    issueLink: string,
+    contributorId: string,
+    contributorUserName: string
+  ) {
+    try {
+      await axios.post("/api/bounty/approve", {
         issueId,
         issueLink,
         contributorId,
-        contributorUserName
+        contributorUserName,
       });
-
-      // console.log("after approving", res);
 
       getIssues();
       getUserBountyIssues();
-    } catch(e){
-      console.log("Error while approving the transaction");
+      toast.success("Bounty approved successfully");
+    } catch {
+      toast.error("Error approving the transaction");
     }
   }
 
+  async function claimMoney(
+    contributorId: string,
+    walletAdd: string,
+    bountyAmountInLamports: number,
+    githubId: string,
+    htmlUrl: string,
+    status: string
+  ) {
+    try {
+      if (!process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD) {
+        toast.error("PRIMARY_WALLET_ADD public key not available");
+        return;
+      }
+      if (!process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY) {
+        toast.error("PRIMARY_WALLET_ADD private key not available");
+        return;
+      }
 
-  // user claiming money
-  // vulnerablity
-  async function claimMoney(contributorId: any, walletAdd: any, bountyAmountInLamports: any, githubId: any, htmlUrl: any, status: string){
-      try {
-    if(!process.env.NEXT_PUBLIC_PRIMARY_WALLET_ADD){
-      return console.error("PRIMARY_WALLET_ADD public key not available");
-    }
-    if(!process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY){
-      return console.error("PRIMARY_WALLET_ADD private key not available");
-    }
-
-    alert(`${contributorId} ${walletAdd} ${bountyAmountInLamports} ${githubId} ${htmlUrl} ${status}`)
-
-    const claiming = await axios.post("/api/user/claim/pending", {
+      const claiming = await axios.post("/api/user/claim/pending", {
         contributorId,
         walletAdd,
         bountyAmountInLamports,
         githubId,
         htmlUrl,
-        status
-    });
+        status,
+      });
 
-    const transactionIdd = claiming.data.transaction.id;
+      const transactionIdd = claiming.data.transaction.id;
 
-    const keypair = Keypair.fromSecretKey(bs58.decode(process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY));
-    
-    const transaction = new Transaction().add(
-      SystemProgram.transfer({
-        fromPubkey: keypair.publicKey,
-        toPubkey: walletAdd,
-        lamports: bountyAmountInLamports,
-      })
-    );
-
-    const signature = await sendAndConfirmTransaction(
-      connection,
-      transaction,
-      [keypair]
-    );
-
-    try {
-      console.log(`Waiting for transaction confirmation (${signature})...`);
-      const commitment = 'confirmed';
-      const latestBlockHash = await connection.getLatestBlockhash(commitment);
-
-      const confirmationResult = await connection.confirmTransaction(
-          {
-              signature: signature,
-              blockhash: latestBlockHash.blockhash,
-              lastValidBlockHeight: latestBlockHash.lastValidBlockHeight
-          },
-          commitment
+      const keypair = Keypair.fromSecretKey(
+        bs58.decode(process.env.NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY)
       );
 
-      if (confirmationResult.value.err) {
-          alert(`Transaction failed: ${confirmationResult.value.err}`);
+      const transaction = new SolanaTransaction().add(
+        SystemProgram.transfer({
+          fromPubkey: keypair.publicKey,
+          toPubkey: new PublicKey(walletAdd),
+          lamports: bountyAmountInLamports,
+        })
+      );
+
+      const signature = await sendAndConfirmTransaction(
+        connection,
+        transaction,
+        [keypair]
+      );
+
+      try {
+        const commitment = "confirmed";
+        const latestBlockHash = await connection.getLatestBlockhash(commitment);
+
+        const confirmationResult = await connection.confirmTransaction(
+          {
+            signature: signature,
+            blockhash: latestBlockHash.blockhash,
+            lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+          },
+          commitment
+        );
+
+        if (confirmationResult.value.err) {
+          toast.error(`Transaction failed: ${confirmationResult.value.err}`);
           return;
-      } else {
-        // alert(`Transaction ${signature} confirmed with status: ${commitment}`);
-        alert(`status here ${status}`)
-        let claimConfirm;
-        if(status === "TIPPED"){
-          claimConfirm = await axios.post("/api/user/claim/tip", {
-            transactionId: transactionIdd,
-            to: walletAdd,
-            signature: signature,
-            lamports: bountyAmountInLamports,
-            issueLink: htmlUrl,
-            issueId: githubId
-          });
         } else {
-          claimConfirm = await axios.post("/api/user/claim/approve", {
-            transactionId: transactionIdd,
-            to: walletAdd,
-            signature: signature,
-            lamports: bountyAmountInLamports,
-            issueLink: htmlUrl,
-            issueId: githubId
-          });
+          if (status === "TIPPED") {
+            await axios.post("/api/user/claim/tip", {
+              transactionId: transactionIdd,
+              to: walletAdd,
+              signature: signature,
+              lamports: bountyAmountInLamports,
+              issueLink: htmlUrl,
+              issueId: githubId,
+            });
+            toast.success("Tip claimed successfully");
+          } else {
+            await axios.post("/api/user/claim/approve", {
+              transactionId: transactionIdd,
+              to: walletAdd,
+              signature: signature,
+              lamports: bountyAmountInLamports,
+              issueLink: htmlUrl,
+              issueId: githubId,
+            });
+            toast.success("Bounty claimed successfully");
+          }
+
+          getBountiesCreated();
+          getBountiesClaimed();
+          fetchUserMoneyClaimed();
         }
-
-        // console.log("claim confirm", claimConfirm);
-    
-        getBountiesCreated();
-        getBountiesClaimed();    
-        fetchUserMoneyClaimed();
+      } catch {
+        toast.error("Error confirming transaction");
+        return;
       }
-    } catch (error) {
-      console.log("Error confirming transaction:", error);
-      alert(`Error confirming transaction: ${error || 'Timeout or RPC error'}`);
-      return;
-    } 
-        
-      } catch (error) {
-        console.log("Claiming bounty error", error);
-      }
-      }
-
-  async function fetchUserMoneyClaimed(){
-    const res = await axios.get("/api/user/claim");
-    // console.log("fetchUserMoneyClaimed", res.data.claimBounties);
-    setClaimBounties(res.data.claimBounties);
-  };
-
-  // created bounties
-  async function getBountiesCreated(){
-    const res = await axios.get('/api/user/transaction/created');
-    // console.log("bounties createdd", res.data);
-    setBountiesCreated(res.data.data);
+    } catch {
+      toast.error("Error claiming bounty");
+    }
   }
 
-  // claimed bounties
-  async function getBountiesClaimed(){
-    const res = await axios.get('/api/user/transaction/claimed');
-    // console.log("bounties claimed", res.data);
-    setBountiesClaimed(res.data.data);
+  async function fetchUserMoneyClaimed() {
+    try {
+      const res = await axios.get("/api/user/claim");
+      setClaimBounties(res.data.claimBounties);
+    } catch {
+      toast.error("Error fetching claimed money");
+    }
   }
+
+  async function getBountiesCreated() {
+    try {
+      const res = await axios.get("/api/user/transaction/created");
+      setBountiesCreated(res.data.data);
+    } catch {
+      toast.error("Error fetching created bounties");
+    }
+  }
+
+  async function getBountiesClaimed() {
+    try {
+      const res = await axios.get("/api/user/transaction/claimed");
+      setBountiesClaimed(res.data.data);
+    } catch {
+      toast.error("Error fetching claimed bounties");
+    }
+  }
+
   return (
-    // @ts-ignore
-    <BountyDetailsContext.Provider value={{ 
-      issuesRepo, 
-      setIssuesRepo, 
-      addBounty, 
-      bountyIssues, 
-      setBountyIssues, 
-      userBountyIssue, 
-      removeBounty, 
-      approveBounty, 
-      claimMoney, 
-      bountiesCreated, 
-      bountiesClaimed, 
-      claimBounties,
-      isLoading,
-      tip 
-    }}>
+    <BountyDetailsContext.Provider
+      value={{
+        issuesRepo,
+        setIssuesRepo,
+        addBounty,
+        bountyIssues,
+        setBountyIssues,
+        userBountyIssue,
+        removeBounty,
+        approveBounty,
+        claimMoney,
+        bountiesCreated,
+        bountiesClaimed,
+        claimBounties,
+        isLoading,
+        tip,
+      }}
+    >
       {children}
     </BountyDetailsContext.Provider>
   );
@@ -577,11 +675,9 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
 export function useBountyDetails() {
   const context = useContext(BountyDetailsContext);
   if (context === undefined) {
-    throw new Error('useBountyDetails must be used within a BountyContextProvder');
+    throw new Error(
+      "useBountyDetails must be used within a BountyContextProvder"
+    );
   }
   return context;
 }
-function decode(NEXT_PUBLIC_PRIMARY_WALLET_PRIVATE_KEY: string | undefined): Uint8Array<ArrayBufferLike> {
-  throw new Error('Function not implemented.');
-}
-

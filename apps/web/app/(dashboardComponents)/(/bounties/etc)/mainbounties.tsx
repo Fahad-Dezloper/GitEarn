@@ -33,13 +33,12 @@ export default function Mainbounties() {
   const bountiedIssueIds = useMemo(() => {
     return new Set(userBountyIssue.map(bounty => bounty.githubId));
   }, [userBountyIssue]);
-
   const addBountyIssues = useMemo(() => {
-    return allIssues.filter(issue => !bountiedIssueIds.has(String(issue.id)));
+    return allIssues.filter(issue => !bountiedIssueIds.has(issue.id));
   }, [allIssues, bountiedIssueIds]);
 
   const manageBountyIssues = useMemo(() => {
-      return userBountyIssue.map(issue => ({
+    return userBountyIssue.map(issue => ({
           ...issue,
           createdAtDate: new Date(issue.createdAt),
       }));

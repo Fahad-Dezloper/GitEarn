@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
@@ -99,9 +100,8 @@ export function BountiesCreated() {
   const filteredBounties = bountiesCreated.filter((bounty) => {
     const matchesSearch =
       searchQuery === "" ||
-      bounty.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      bounty.htmlUrl.toLowerCase().includes(searchQuery.toLowerCase())
-
+      (bounty.title?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false) ||
+      (bounty.htmlUrl?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
 
     const bountyDate = new Date(bounty.createdAt)
     const matchesDateFrom = !dateRange.from || bountyDate >= dateRange.from
@@ -319,7 +319,7 @@ export function BountiesCreated() {
                         rel="noopener noreferrer"
                         className="text-primary hover:underline"
                       >
-                        {formatIssueTitle(bounty.htmlUrl)}
+                        {formatIssueTitle(bounty.htmlUrl || '')}
                       </a>
                     </TableCell>
                     <TableCell>
@@ -359,9 +359,8 @@ export function BountiesCreated() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {bounty.transactions.map((txn: any, index: number) => (
+                              {bounty.transactions?.map((txn: any, index: number) => (
                                 <TableRow key={index}>
-                                  {/* // {txn.createdAt} */}
                                   <TableCell>{formatter.format(new Date(txn.createdAt))}</TableCell>
                                   <TableCell>{txn.type}</TableCell>
                                   <TableCell>
@@ -396,28 +395,30 @@ export function BountiesCreated() {
                                     }
 
                                     {/* Show Confirm Tip button when bounty status is TIPPING */}
+                                    {/* @ts-ignore */}
                                     {bounty.status === "TIPPING" && txn.type === "PAYOUT" && txn.status === "PENDING" && 
                                       <Button onClick={() => {
                                         setIsTipDialogOpen(true);
                                         setBountyToTip({
                                           txnId: txn.id,
                                           bountyAmountInLamports: bounty.bountyAmountInLamports,
-                                          htmlUrl: bounty.htmlUrl,
-                                          githubId: bounty.githubId,
+                                          htmlUrl: bounty.htmlUrl ?? '',
+                                          githubId: bounty.githubId ?? '',
                                           bountyAmount: bounty.bountyAmount
                                         });
                                       }} className="cursor-pointer">Confirm Tip</Button>
                                     }
 
                                     {/* Show Confirm Payment button when bounty status is NOT TIPPING */}
+                                    {/* @ts-ignore */}
                                     {bounty.status !== "TIPPING" && txn.type === "DEPOSIT" && txn.status === "PENDING" && 
                                       <Button onClick={() => {
                                         setIsConfirmDialogOpen(true);
                                         setBountyToConfirm({
                                           txnId: txn.id,
                                           bountyAmountInLamports: bounty.bountyAmountInLamports,
-                                          htmlUrl: bounty.htmlUrl,
-                                          githubId: bounty.githubId,
+                                          htmlUrl: bounty.htmlUrl ?? '',
+                                          githubId: bounty.githubId ?? '',
                                           bountyAmount: bounty.bountyAmount
                                         });
                                       }} className="cursor-pointer">Confirm Payment</Button>
@@ -429,8 +430,8 @@ export function BountiesCreated() {
                                       setBountyToCancel({
                                         txnId: txn.id,
                                         bountyAmountInLamports: bounty.bountyAmountInLamports,
-                                        htmlUrl: bounty.htmlUrl,
-                                        githubId: bounty.githubId,
+                                        htmlUrl: bounty.htmlUrl ?? '',
+                                        githubId: bounty.githubId ?? '',
                                         bountyAmount: bounty.bountyAmount
                                       });
                                     }} className="cursor-pointer">Transfer Back</Button>
