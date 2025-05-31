@@ -21,6 +21,11 @@ import bs58 from "bs58";
 import { toast } from "sonner";
 
 interface BountyIssue {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  html_url: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  issues: any;
+  name: string;
   id: string;
   userId: string;
   githubId: bigint;
@@ -32,6 +37,10 @@ interface BountyIssue {
   bountyAmountInLamports: number;
   createdAt: Date;
   updatedAt: Date;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  repo?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  tags?: any;
 }
 
 interface BountyTransaction {
@@ -43,6 +52,10 @@ interface BountyTransaction {
   bountyAmount: number;
   bountyAmountInLamports: number;
   createdAt: Date;
+  title?: string;
+  htmlUrl?: string;
+  transactions?: unknown[];
+  githubId?: string;
 }
 
 interface BountyContextType {
