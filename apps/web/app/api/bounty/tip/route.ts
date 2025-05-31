@@ -10,6 +10,22 @@ function extractGitHubIssueInfo(url: string) {
     return { owner, repo, issue_number: Number(issue_number) };
 }
 
+async function getGitHubAccessToken(userEmail: string) {
+    const account = await prisma.user.findFirst({
+      where: {
+        email: userEmail,
+      },
+      include: {
+        accounts: true
+      }
+    });
+  
+    const githubAccount = account?.accounts.find(
+      (acc) => acc.provider === "github"
+    );
+    return githubAccount?.access_token;
+  }
+
 export async function POST(req: NextRequest) {
     try {
         const session = await getServerSession();
@@ -72,6 +88,12 @@ export async function POST(req: NextRequest) {
         const { owner, repo, issue_number } = extractGitHubIssueInfo(bountyIssue.htmlUrl);
         const octokit = await getInstallationOctokit(owner, repo);
 
+
+        const accessToken = await getGitHubAccessToken(session?.user?.email || "");
+    
+        if (!accessToken) {
+        return NextResponse.json({ message: "GitHub access token not found" }, { status: 401 });
+        }
         // Fetch contributor's GitHub username
         let contributorUsername = "Contributor";
         if (contributorId) {
@@ -79,7 +101,7 @@ export async function POST(req: NextRequest) {
                 const response = await fetch(`https://api.github.com/user/${contributorId}`, {
                     headers: {
                         'Accept': 'application/vnd.github.v3+json',
-                        'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`
+                        'Authorization': `Bearer ${accessToken}`
                     }
                 });
                 
