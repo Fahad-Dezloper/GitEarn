@@ -13,6 +13,22 @@ function safeJson(obj: any) {
   );
 }
 
+async function getGitHubAccessToken(userEmail: string) {
+  const account = await prisma.user.findFirst({
+    where: {
+      email: userEmail,
+    },
+    include: {
+      accounts: true
+    }
+  });
+
+  const githubAccount = account?.accounts.find(
+    (acc) => acc.provider === "github"
+  );
+  return githubAccount?.access_token;
+}
+
 async function getUserByGitHubId(githubId: string){
   // console.log("github id", githubId);
   const res = await prisma.account.findUnique({
@@ -39,7 +55,7 @@ async function getUserByGitHubId(githubId: string){
   return res.user.solanaAddress;
 }
 
-async function fetchGitHubIssueData(htmlUrl: string) {
+async function fetchGitHubIssueData(htmlUrl: string, token: string) {
   const match = htmlUrl.match(/github\.com\/([^/]+)\/([^/]+)\/issues\/(\d+)/);
   if (!match) {
     return null;
@@ -49,7 +65,7 @@ async function fetchGitHubIssueData(htmlUrl: string) {
   const [_, owner, repo, issue_number] = match;
   const headers = {
     Accept: "application/vnd.github.v3+json",
-    Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+    Authorization: `Bearer ${token}`,
   };
 
   try {
@@ -186,6 +202,12 @@ export async function GET() {
       }
     })
 
+    const accessToken = await getGitHubAccessToken(session?.user?.email || "");
+    
+    if (!accessToken) {
+    return NextResponse.json({ message: "GitHub access token not found" }, { status: 401 });
+    }
+
     // console.log("raw user issues", JSON.stringify(issues, (key, value) =>
     //   typeof value === 'bigint' ? value.toString() : value, 2));
 
@@ -209,7 +231,7 @@ export async function GET() {
 
     const enrichedIssues = await Promise.all(
       issues.map(async (issue: any) => {
-        const enrichedData = await fetchGitHubIssueData(issue.htmlUrl);
+        const enrichedData = await fetchGitHubIssueData(issue.htmlUrl, accessToken);
         if (!enrichedData) {
           return null;
         }

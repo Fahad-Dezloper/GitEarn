@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import prisma from "@repo/db/client";
 import { getServerSession } from "next-auth";
+import { Session } from "next-auth";
 import { NextResponse } from "next/server";
 
 function safeJson(obj: any) {
@@ -12,14 +13,31 @@ function safeJson(obj: any) {
   );
 }
 
-async function fetchRepoLanguages(owner: string, repo: string) {
+async function getGitHubAccessToken(userEmail: string) {
+  const account = await prisma.user.findFirst({
+    where: {
+      email: userEmail,
+    },
+    include: {
+      accounts: true
+    }
+  });
+
+  const githubAccount = account?.accounts.find(
+    (acc) => acc.provider === "github"
+  );
+
+  return githubAccount?.access_token;
+}
+
+async function fetchRepoLanguages(owner: string, repo: string, accessToken: string) {
   try {
     const res = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/languages`,
       {
         headers: {
           Accept: "application/vnd.github.v3+json",
-          Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
@@ -48,7 +66,7 @@ async function fetchRepoLanguages(owner: string, repo: string) {
   }
 }
 
-async function fetchGitHubIssueData(htmlUrl: string) {
+async function fetchGitHubIssueData(htmlUrl: string, accessToken: string) {
   const match = htmlUrl.match(/github\.com\/([^/]+)\/([^/]+)\/issues\/(\d+)/);
   if (!match) {
     return { title: "Invalid URL", repo: "", tags: [], languages: [] };
@@ -63,11 +81,11 @@ async function fetchGitHubIssueData(htmlUrl: string) {
         {
           headers: {
             Accept: "application/vnd.github.v3+json",
-            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+          Authorization: `Bearer ${accessToken}`,
           },
         }
       ),
-      fetchRepoLanguages(owner, repo),
+      fetchRepoLanguages(owner, repo, accessToken),
     ]);
 
     if (!issueRes.ok) throw new Error("GitHub issue fetch failed");
@@ -86,15 +104,19 @@ async function fetchGitHubIssueData(htmlUrl: string) {
   }
 }
 
-
 export async function GET() {
-  const session = await getServerSession();
-
-  if (!session) {
+  const session = await getServerSession() as Session & { user: { id: string, email: string } };
+  if (!session?.user?.email) {
     return NextResponse.json({ message: "Unauthorized Request" }, { status: 401 });
   }
 
   try {
+    const accessToken = await getGitHubAccessToken(session?.user?.email || "");
+    
+    if (!accessToken) {
+      return NextResponse.json({ message: "GitHub access token not found" }, { status: 401 });
+    }
+
     const issues = await prisma.bountyIssues.findMany({
       where: {
         status : {
@@ -108,7 +130,7 @@ export async function GET() {
 
     const enrichedIssues = await Promise.all(
       issues.map(async (issue: any) => {
-        const meta = await fetchGitHubIssueData(issue.htmlUrl);
+        const meta = await fetchGitHubIssueData(issue.htmlUrl, accessToken);
         return {
           ...issue,
           title: meta.title,
@@ -119,7 +141,6 @@ export async function GET() {
         };
       })
     );
-
 
     return NextResponse.json(
       {
