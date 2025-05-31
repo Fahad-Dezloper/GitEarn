@@ -80,9 +80,35 @@ move to pyth instead of coingeko
 
 bounties can be cancelled only after confirming. its wrong with confirm show cancel button also
 
-tip functionality needs to be added
+tip functionality needs to be added - complete it in bounties created show pending and then confirm
 
 change bounty label color when added to light blue
 
 deploy probot app seperately on railway or someplace else -- done
+
+vulnerablity in bounty context provider solve it
+
+
+
+
+how it works section
+
+{/* {step.bot && (
+                      <Tabs defaultValue="video" className="" onValueChange={(value) => setActiveVideos({...activeVideos, [index]: value as "video" | "bot"})}>
+                        <div className="flex flex-col w-full items-center justify-center">
+                        <TabsList className="">
+                          <TabsTrigger value="video">Video</TabsTrigger>
+                          <TabsTrigger value="bot">Bot</TabsTrigger>
+                        </TabsList>
+
+                        <TabsContent value="video" className="">
+                          <VideoPlayer videoUrl={step.video} />
+                        </TabsContent>
+                        <TabsContent value="bot" className="">
+                          <VideoPlayer videoUrl={step.bot} />
+                        </TabsContent>
+                        </div>
+                      </Tabs>
+                    )}
+                    {!step.bot && <VideoPlayer videoUrl={step.video} />} */}
 

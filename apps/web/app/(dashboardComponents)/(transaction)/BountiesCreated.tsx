@@ -54,10 +54,11 @@ export function BountiesCreated() {
     to: undefined,
   })
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([])
-  const { bountiesCreated, addBounty, removeBounty } = useBountyDetails();
+  const { bountiesCreated, addBounty, removeBounty, tip } = useBountyDetails();
   const [loading, setLoading] = useState(false);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
+  const [isTipDialogOpen, setIsTipDialogOpen] = useState(false);
   const [bountyToConfirm, setBountyToConfirm] = useState<{
     txnId: string;
     bountyAmountInLamports: number;
@@ -65,6 +66,15 @@ export function BountiesCreated() {
     githubId: string;
     bountyAmount: number;
   } | null>(null);
+  
+  const [bountyToTip, setBountyToTip] = useState<{
+    txnId: string;
+    bountyAmountInLamports: number;
+    htmlUrl: string;
+    githubId: string;
+    bountyAmount: number;
+  } | null>(null);
+
   const [bountyToCancel, setBountyToCancel] = useState<{
     txnId: string;
     bountyAmountInLamports: number;
@@ -73,7 +83,6 @@ export function BountiesCreated() {
     bountyAmount: number;
   } | null>(null);
 
-  // console.log("bounties created", bountiesCreated);
 
   const toggleRow = (id: string) => {
     setExpandedRows((prev) => ({
@@ -120,6 +129,24 @@ export function BountiesCreated() {
     try{
       setLoading(true)
       const res = await addBounty(
+        bountyAmount,           
+        githubId,               
+        htmlUrl,                
+        bountyAmountInLamports, 
+        undefined,              
+        txnId                   
+      );
+    } catch (e){
+      console.error("Error while confirming pending bounty", e);
+    } finally{
+      setLoading(false);
+    }
+  }
+
+  async function confirmTip(txnId: string, bountyAmountInLamports: number, htmlUrl: string, githubId: string, bountyAmount: number){
+    try{
+      setLoading(true)
+      const res = await tip(
         bountyAmount,           
         githubId,               
         htmlUrl,                
@@ -192,7 +219,7 @@ export function BountiesCreated() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {["PENDING", "ACTIVE", "CLAIMING", "CLAIMED", "APPROVED"].map((status) => (
+              {["PENDING", "ACTIVE", "CLAIMING", "CLAIMED", "APPROVED", "TIPPING", "TIPPED"].map((status) => (
                 <DropdownMenuCheckboxItem
                   key={status}
                   checked={selectedStatuses.includes(status)}
@@ -368,7 +395,22 @@ export function BountiesCreated() {
                                     </div>
                                     }
 
-                                    {txn.type === "DEPOSIT" && txn.status === "PENDING" && 
+                                    {/* Show Confirm Tip button when bounty status is TIPPING */}
+                                    {bounty.status === "TIPPING" && txn.type === "PAYOUT" && txn.status === "PENDING" && 
+                                      <Button onClick={() => {
+                                        setIsTipDialogOpen(true);
+                                        setBountyToTip({
+                                          txnId: txn.id,
+                                          bountyAmountInLamports: bounty.bountyAmountInLamports,
+                                          htmlUrl: bounty.htmlUrl,
+                                          githubId: bounty.githubId,
+                                          bountyAmount: bounty.bountyAmount
+                                        });
+                                      }} className="cursor-pointer">Confirm Tip</Button>
+                                    }
+
+                                    {/* Show Confirm Payment button when bounty status is NOT TIPPING */}
+                                    {bounty.status !== "TIPPING" && txn.type === "DEPOSIT" && txn.status === "PENDING" && 
                                       <Button onClick={() => {
                                         setIsConfirmDialogOpen(true);
                                         setBountyToConfirm({
@@ -410,6 +452,96 @@ export function BountiesCreated() {
         </Table>
       </div>
 
+
+
+      {/* is tip dialog */}
+      <Dialog open={isTipDialogOpen} onOpenChange={(open) => {
+        setIsTipDialogOpen(open);
+        if (!open) setBountyToTip(null);
+      }}>
+        <DialogContent className="sm:max-w-[425px] dark:bg-[#171717]">
+          <DialogHeader>
+            <DialogTitle>Confirm Tip Payment</DialogTitle>
+            <DialogDescription>
+              Please review the details below before confirming the payment.
+            </DialogDescription>
+          </DialogHeader>
+          {bountyToTip && (
+            <dl className="bg-muted/30 dark:bg-black rounded-md px-4 py-3 space-y-3 border">
+              <div className="flex flex-col gap-1">
+                <dt className="font-semibold text-muted-foreground">Bounty URL</dt>
+                <dd>
+                  <a href={bountyToTip.htmlUrl} target="_blank" rel="noopener noreferrer" className="text-primary underline break-all">
+                    {bountyToTip.htmlUrl}
+                  </a>
+                </dd>
+              </div>
+              <div className="flex flex-col gap-1">
+                <dt className="font-semibold text-muted-foreground">GitHub ID</dt>
+                <dd>{bountyToTip.githubId}</dd>
+              </div>
+              <div className="flex flex-col gap-1">
+                <dt className="font-semibold text-muted-foreground">Bounty Amount</dt>
+                <dd>${bountyToTip.bountyAmount} <span className="text-xs text-muted-foreground"></span></dd>
+              </div>
+
+
+               <div className="flex flex-col gap-1">
+                  <dt className="font-semibold text-muted-foreground">Bounty Amount (SOL)</dt>
+                  <dd className="flex items-center gap-2">
+                    {(bountyToTip.bountyAmountInLamports / 1e9).toLocaleString(undefined, {
+                      minimumFractionDigits: 4,
+                      maximumFractionDigits: 4,
+                    })} SOL
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span
+                          className="text-muted-foreground cursor-pointer hover:underline"
+                          // onClick={copyToClipboard}
+                        >
+                          - {bountyToTip.bountyAmountInLamports.toLocaleString()} LAMPORTS
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>1 SOL = 1,000,000,000 lamports.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </dd>
+                </div>
+
+              <div className="flex flex-col gap-1">
+                <dt className="font-semibold text-muted-foreground">Transaction ID</dt>
+                <dd className="break-all">{bountyToTip.txnId}</dd>
+              </div>
+            </dl>
+          )}
+          <DialogFooter className="flex flex-row gap-3 justify-end mt-4">
+            <Button variant="outline" onClick={() => {
+              setIsTipDialogOpen(false);
+              setBountyToTip(null);
+            }}>Cancel</Button>
+            <Button
+              type="button"
+              disabled={loading}
+              onClick={async () => {
+                if (bountyToTip) {
+                  await confirmTip(
+                    bountyToTip.txnId,
+                    bountyToTip.bountyAmountInLamports,
+                    bountyToTip.htmlUrl,
+                    bountyToTip.githubId,
+                    bountyToTip.bountyAmount
+                  )
+                  setIsTipDialogOpen(false);
+                  setBountyToTip(null);
+                }
+              }}
+            >
+              {loading ? "Confirming..." : "Confirm Tip"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
 
       {/* is confirm dialog */}
@@ -466,7 +598,6 @@ export function BountiesCreated() {
                     </Tooltip>
                   </dd>
                 </div>
-1
 
               <div className="flex flex-col gap-1">
                 <dt className="font-semibold text-muted-foreground">Transaction ID</dt>
@@ -501,7 +632,6 @@ export function BountiesCreated() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
 
 
       {/* is cancel dialog */}

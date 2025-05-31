@@ -32,9 +32,19 @@ export async function GET(){
     const claimedTxn = await prisma.bountyIssues.findMany({
         where: {
             contributorId: user.accounts[0].providerAccountId,
-            status: {
-                in: ["CLAIMED", "APPROVED"]
-            }
+            OR: [
+              { status: 'APPROVED' },
+              { status: 'CLAIMED' },
+              {
+                status: 'TIPPED',
+                transactions: {
+                  some: {
+                    type: 'CLAIM',
+                    status: 'CONFIRMED'
+                  }
+                }
+              }
+            ]
         },
         include: {
             transactions: true

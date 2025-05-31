@@ -60,12 +60,15 @@ enum BountyStatus {
   CANCELLING   
   CANCELED
   FAILED
+  TIPPING
+  TIPPED
 }
 
 enum TransactionType {
   DEPOSIT      
   WITHDRAWAL   
   PAYOUT
+  CLAIM
 }
 
 enum TransactionStatus {

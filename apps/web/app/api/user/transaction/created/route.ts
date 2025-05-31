@@ -28,7 +28,7 @@ export async function GET(){
         where: {
             userId: user.id,
             status: {
-                in: ["ACTIVE", "PENDING", "CLAIMING", "FAILED", "CANCELED", "CANCELLING", "CLAIMED", "APPROVED"]
+                in: ["ACTIVE", "PENDING", "CLAIMING", "FAILED", "CANCELED", "CANCELLING", "CLAIMED", "APPROVED", "TIPPING", "TIPPED"]
             }
         },
         include: {
