@@ -27,7 +27,12 @@ async function getGitHubAccessToken(userEmail: string) {
     (acc) => acc.provider === "github"
   );
 
-  return githubAccount?.access_token;
+  if(githubAccount?.installationToken !== undefined || null){
+    return githubAccount?.installationToken;
+  } else {
+    return githubAccount?.access_token;
+  }
+
 }
 
 async function fetchRepoLanguages(owner: string, repo: string, accessToken: string) {

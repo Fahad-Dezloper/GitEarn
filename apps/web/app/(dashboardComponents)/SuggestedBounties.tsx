@@ -48,7 +48,7 @@ const SkeletonCard = () => (
 
 const SuggestedBounties = () => {
   const { bountyIssues, isLoading } = useBountyDetails()
-  console.log("bounty issues", bountyIssues);
+  // console.log("bounty issues", bountyIssues);
 
   const getTimeAgo = (dateString: Date | string) => {
     const now = new Date();
