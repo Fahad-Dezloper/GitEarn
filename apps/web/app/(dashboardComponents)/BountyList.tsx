@@ -14,6 +14,7 @@ interface Bounty {
   tags: string[];
   posted: string;
   technologies: {name: string, color: string}[];
+  createdAt: string;
 }
 
 const BountyList = ({ bounties }: { bounties: Bounty[] }) => {

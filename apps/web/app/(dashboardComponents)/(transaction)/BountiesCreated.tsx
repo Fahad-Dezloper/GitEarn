@@ -132,8 +132,7 @@ export function BountiesCreated() {
         bountyAmount,           
         githubId,               
         htmlUrl,                
-        bountyAmountInLamports, 
-        undefined,              
+        bountyAmountInLamports,             
         txnId                   
       );
     } catch (e){

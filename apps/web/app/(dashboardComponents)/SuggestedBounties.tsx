@@ -21,7 +21,7 @@ interface BountyIssuess {
   bountyAmount: number;
   bountyAmountInLamports: number;
   createdAt: Date;
-  repo?: string;
+  repoName?: string;
   tags?: Technology[];
 }
 

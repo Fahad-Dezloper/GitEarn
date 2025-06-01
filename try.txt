@@ -119,5 +119,3 @@ how it works section
 ///urgent
 
 // now user bounty issues are not showing with access token
-
-

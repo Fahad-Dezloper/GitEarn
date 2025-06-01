@@ -37,6 +37,7 @@ interface BountyIssue {
   bountyAmountInLamports: number;
   createdAt: Date;
   updatedAt: Date;
+  languages: string[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   repo?: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,7 +68,9 @@ interface BountyContextType {
     issueLink: string,
     lamports: number,
     title?: string,
-    transactionId?: string
+    repository?: string, 
+    transactionId?: string,
+    technologies?: string[]
   ) => Promise<void>;
   approveBounty: (
     issueId: string,
@@ -191,10 +194,10 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     issueId: string,
     issueLink: string,
     lamports: number,
-    title: string, 
-    repository: string, 
-    technologies: string[],
-    transactionId?: string
+    title?: string,
+    repository?: string,
+    transactionId?: string,
+    technologies?: string[]
   ) {
 
     try {

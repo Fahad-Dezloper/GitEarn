@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -111,8 +112,9 @@ const usdToSol = (usdAmount: number) => {
     try {
       setIsLoading(true);
       const lamports = Math.round(Number(usdToSol(bountyAmt)) * LAMPORTS_PER_SOL);
-
-      const res = await addBounty(bountyAmt, issueId, issueLink, lamports, title, repository, languages);
+      const technologies = languages;
+      // @ts-ignore
+      const res = await addBounty(bountyAmt, issueId, issueLink, lamports, title, repository, technologies);
 
     } catch (error) {
       console.error("Transaction failed", error);
