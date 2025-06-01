@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     const installationId = searchParams.get("installation_id");
     const state = searchParams.get("state");
 
-    if (!code || !installationId) {
+    if (!code) {
       return NextResponse.json(
         { error: "Missing required parameters" },
         { status: 400 }
