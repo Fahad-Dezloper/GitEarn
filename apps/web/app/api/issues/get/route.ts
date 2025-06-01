@@ -55,6 +55,7 @@ type Repository = {
   fork: boolean;
   activity: number[];
   issues: IssueExtended[];
+  languages: string[];
 };
 
 export async function GET(_request: Request) {
@@ -90,6 +91,7 @@ export async function GET(_request: Request) {
     const reposWithIssues: Repository[] = await Promise.all(
       repositories.map(async (repo) => {
         let activity: number[] = [];
+        let languages: string[] = [];
         
         if (!repo.fork) {
           try {
@@ -100,8 +102,15 @@ export async function GET(_request: Request) {
             activity = Array.isArray(activityRes.data) 
               ? activityRes.data.map(week => week.total)
               : [];
+
+            // Fetch repository languages and convert to array of names
+            const languagesRes = await octokit.repos.listLanguages({
+              owner: repo.owner.login,
+              repo: repo.name,
+            });
+            languages = Object.keys(languagesRes.data);
           } catch (error) {
-            console.error(`Error fetching activity for ${repo.name}:`, error);
+            console.error(`Error fetching data for ${repo.name}:`, error);
           }
         }
 
@@ -223,9 +232,12 @@ export async function GET(_request: Request) {
           fork: repo.fork,
           activity,
           issues: mappedIssues,
+          languages,
         };
       })
     );
+
+
 
     return NextResponse.json(reposWithIssues, { status: 200 });
   } catch (error) {

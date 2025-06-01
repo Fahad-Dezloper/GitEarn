@@ -17,7 +17,6 @@ interface Bounty {
 }
 
 const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
-  // console.log("bounties here", bounties);
 
   function hexToRgba(hex: string, alpha: number) {
     const r = parseInt(hex.slice(1, 3), 16);
@@ -26,8 +25,15 @@ const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
 
-  function formatDate(dateStr: string) {
-    const [day, month, year] = dateStr.split("/").map(Number);
+  function formatDate(dateStr: string | undefined) {
+    if (!dateStr) return "Unknown date";
+  
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return "Invalid date";
+  
+    const day = date.getDate();
+    const month = date.getMonth(); // 0-indexed
+    const year = date.getFullYear();
   
     const daySuffix = (d: number) => {
       if (d > 3 && d < 21) return "th";
@@ -40,12 +46,14 @@ const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
     };
   
     const monthNames = [
-      "", "January", "February", "March", "April", "May", "June",
+      "January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"
     ];
   
     return `${day}${daySuffix(day)} ${monthNames[month]} ${year}`;
   }
+  
+  
   
     return (
     <div className="w-full grid md:grid-cols-3 grid-cols-1 gap-4">
@@ -98,7 +106,7 @@ const BountyList = ({ bounties }: { bounties: Bounty[] }) => {
         </div>
       
         <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-          <span>{formatDate(bounty.posted)}</span>
+          <span>{formatDate(bounty.createdAt)}</span>
           <div className="flex items-center gap-3">
             <Link
               href={bounty.htmlUrl}

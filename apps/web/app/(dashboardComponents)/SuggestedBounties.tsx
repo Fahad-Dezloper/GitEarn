@@ -120,7 +120,7 @@ const SuggestedBounties = () => {
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex flex-col gap-1">
-                  <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{issue.repo || 'Unknown Repository'}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 font-mono">{issue.repoName || 'Unknown Repository'}</p>
                   <Link href={issue.htmlUrl} target="_blank" className="text-md hover:underline font-semibold text-gray-900 dark:text-white">{issue.title}</Link>
                 </div>
                 <div className="relative group">

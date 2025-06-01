@@ -44,7 +44,7 @@ interface Label {
   color: string;
 }
 
-const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId, bounty, lamports}: {
+const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId, bounty, lamports, languages}: {
   title: string;
   isAddingBounty: boolean;
   labels: Label[];
@@ -59,6 +59,7 @@ const BountyRemovePopup = ({title, isAddingBounty, labels, repository, assignees
   issueId: string;
   bounty: string;
   lamports: any;
+  languages: string[];
 }) => {
   const largeViewport = useClientMediaQuery("(min-width: 800px)");
   const [activityView, setActivityView] = useState<"latest" | "all">("all");

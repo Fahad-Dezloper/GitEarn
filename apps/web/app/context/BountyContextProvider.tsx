@@ -136,6 +136,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
         (repo: { issues: BountyIssue[] }) =>
           repo.issues && repo.issues.length > 0
       );
+      
       setIssuesRepo(reposWithIssues);
     } catch {
       toast.error("Error fetching issues");
@@ -159,6 +160,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
       const res = await axios.get(
         `${window.location.origin}/api/issues/bounty`
       );
+
       setBountyIssues(res.data.BountyIssues);
     } catch {
       toast.error("Error fetching bounty issues");
@@ -189,11 +191,14 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     issueId: string,
     issueLink: string,
     lamports: number,
-    title?: string,
+    title: string, 
+    repository: string, 
+    technologies: string[],
     transactionId?: string
   ) {
+
     try {
-      if (transactionId) {
+      if (transactionId !== undefined || null) {
         if (!publicKey) {
           toast.error("Wallet not connected");
           return;
@@ -261,6 +266,9 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
           issueId,
           issueLink,
           lamports: lamports,
+          title,
+          repository,
+          technologies
         });
 
         const transactionIdd = add.data.transaction.id;

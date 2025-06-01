@@ -19,8 +19,6 @@ export async function GET(){
             }
         });
     
-        // console.log("res to user unique idd", res)
-        // console.log("res to user unique id", res?.accounts[0].providerAccountId);
 
         const userGitId = res?.accounts[0].providerAccountId;
 
@@ -43,7 +41,6 @@ export async function GET(){
             }
           });          
 
-        // console.log("this money i have found", money);
 
         const serializedMoney = money.map((entry: any) => ({
             ...entry,

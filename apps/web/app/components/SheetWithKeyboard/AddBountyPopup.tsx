@@ -24,9 +24,10 @@ interface AddBountyPopupProps {
   status: string;
   latestComment: any;
   issueId: string;
+  languages: string[];
 }
 
-const AddBountyPopup = ({title, isAddingBounty, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId}: AddBountyPopupProps) => {
+const AddBountyPopup = ({title, isAddingBounty, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId, languages}: AddBountyPopupProps) => {
   return (
     <SheetWithKeyboard
       presentTrigger={<Sheet.Trigger className="realtive cursor-pointer w-full h-full">
@@ -35,7 +36,7 @@ const AddBountyPopup = ({title, isAddingBounty, description, labels, repository,
       </Sheet.Trigger>}
       sheetContent={
         <div className="w-full h-full">
-          <BountyPopup isAddingBounty={isAddingBounty} title={title} description={description} labels={labels} repository={repository} assignees={assignees} prRaise={prRaise} issueLink={issueLink} created={created} updated={updated} status={status} latestComment={latestComment} issueId={issueId} />
+          <BountyPopup isAddingBounty={isAddingBounty} title={title} description={description} labels={labels} repository={repository} assignees={assignees} prRaise={prRaise} issueLink={issueLink} created={created} updated={updated} status={status} latestComment={latestComment} issueId={issueId} languages={languages} />
         </div>
       }
     />

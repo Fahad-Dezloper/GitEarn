@@ -7,8 +7,8 @@ export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession();
     const body = await req.json();
-    const { bountyAmt, issueId, issueLink, lamports } = body;
-    // console.log("here dets", bountyAmt, issueId, issueLink, lamports);
+    const { bountyAmt, issueId, issueLink, lamports, title, repository, technologies } = body;
+    console.log("here dets", bountyAmt, issueId, issueLink, lamports, title, repository, technologies);
 
     const user = await prisma.user.findFirst({
       where: {
@@ -28,7 +28,10 @@ export async function POST(req: NextRequest) {
           githubId: issueId,
           htmlUrl: issueLink,
           bountyAmount: bountyAmt,
-          bountyAmountInLamports: lamports
+          bountyAmountInLamports: lamports,
+          title: title,
+          repoName: repository,
+          technologies: technologies
         }
       });
 

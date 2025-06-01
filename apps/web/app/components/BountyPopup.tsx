@@ -53,11 +53,11 @@ interface BountyPopupProps {
   status: string;
   latestComment: any[];
   issueId: string;
+  languages: string[]
 }
 
-const BountyPopup = ({title, isAddingBounty, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId}: BountyPopupProps) => {
+const BountyPopup = ({title, isAddingBounty, description, labels, repository, assignees, prRaise, issueLink, created, updated, status, latestComment, issueId, languages}: BountyPopupProps) => {
   
-// console.log("main", latestComment);
   const largeViewport = useClientMediaQuery("(min-width: 800px)");
   const [bountyAmount, setBountyAmount] = useState<string | number | null>(null);
   const [customAmount, setCustomAmount] = useState("");
@@ -112,7 +112,7 @@ const usdToSol = (usdAmount: number) => {
       setIsLoading(true);
       const lamports = Math.round(Number(usdToSol(bountyAmt)) * LAMPORTS_PER_SOL);
 
-      const res = await addBounty(bountyAmt, issueId, issueLink, lamports, title);
+      const res = await addBounty(bountyAmt, issueId, issueLink, lamports, title, repository, languages);
 
     } catch (error) {
       console.error("Transaction failed", error);
