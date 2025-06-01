@@ -40,7 +40,9 @@ export async function GET(){
                 transactions: {
                   some: {
                     type: 'CLAIM',
-                    status: 'CONFIRMED'
+                    status: {
+                      in: ['CONFIRMED', 'PENDING']
+                    }
                   }
                 }
               }
