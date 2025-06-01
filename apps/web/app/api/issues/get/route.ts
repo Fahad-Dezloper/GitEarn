@@ -68,7 +68,6 @@ export async function GET(_request: Request) {
 
 
     const installationToken = await getValidInstallationToken(session?.user?.email);
-    console.log("installation token new", installationToken);
 
     if (!installationToken) {
       return NextResponse.json({ error: 'GitHub installation token is required' }, { status: 401 });
@@ -79,15 +78,14 @@ export async function GET(_request: Request) {
     });
 
 
-    // ✅ Valid for GitHub App installation token
       const { data: reposResponse } = await octokit.apps.listReposAccessibleToInstallation();
 
       const repositories = reposResponse.repositories;
-      console.log("issues", repositories);
 
       repositories.forEach(repo => {
         console.log(repo.name);
       });
+
 
     const reposWithIssues: Repository[] = await Promise.all(
       repositories.map(async (repo) => {
@@ -228,8 +226,6 @@ export async function GET(_request: Request) {
         };
       })
     );
-
-    console.log("repo with issues", reposWithIssues);
 
     return NextResponse.json(reposWithIssues, { status: 200 });
   } catch (error) {

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { getValidInstallationToken } from "@/lib/github/getValidInstallationToken";
 import prisma from "@repo/db/client";
 import { getServerSession } from "next-auth";
 import { Session } from "next-auth";
@@ -28,7 +29,8 @@ async function getGitHubAccessToken(userEmail: string) {
   );
 
   if(githubAccount?.installationToken !== undefined || null){
-    return githubAccount?.installationToken;
+    const installationToken = await getValidInstallationToken(userEmail);
+    return installationToken;
   } else {
     return githubAccount?.access_token;
   }
