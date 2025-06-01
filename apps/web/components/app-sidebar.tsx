@@ -70,11 +70,11 @@ const data = {
       url: "/earn/claim",
       icon: PiggyBank
     },
-    {
-      title: "Profile",
-      url: "/earn/profile",
-      icon: User
-    }
+    // {
+    //   title: "Profile",
+    //   url: "/earn/profile",
+    //   icon: User
+    // }
   ],
   navSecondary: [
     {

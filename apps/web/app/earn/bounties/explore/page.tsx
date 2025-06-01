@@ -18,7 +18,6 @@ export default function Page() {
 
   return (
     <div>
-      <Topbar />
     <div className="flex flex-col gap-4 sm:gap-6 py-3 sm:py-4">
       <div className="flex flex-col gap-1 sm:gap-2">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-sora font-semibold">GitHub Bounty Board</h1>

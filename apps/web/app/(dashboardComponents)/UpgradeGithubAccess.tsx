@@ -59,7 +59,6 @@ export function UpgradeGithubAccess() {
   if (hasRepoAccess) {
     return (
       <>
-        <Topbar />
         <Mainbounties />
       </>
     );

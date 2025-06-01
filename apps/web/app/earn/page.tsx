@@ -11,7 +11,6 @@ export default function Page() {
   return (
       <SidebarInset>
         <div className="w-full h-full">
-        <Topbar />
           <MainPage />
         </div>
       </SidebarInset> 

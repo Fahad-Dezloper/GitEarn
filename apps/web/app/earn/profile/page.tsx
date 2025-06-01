@@ -1,156 +1,374 @@
 "use client"
 import { useUserDetails } from '@/app/context/UserDetailsProvider'
 import Image from 'next/image';
-import React, { ReactNode } from 'react';
+import React, { useState } from 'react';
 import GitHubCalendar from 'react-github-calendar'
 import languageColors from 'github-language-colors';
 import { Separator } from "@/components/ui/separator"
 import UserBountyDets from '@/app/(dashboardComponents)/UserBountyDets';
 import UserIssuesSolved from '@/app/(dashboardComponents)/UserIssuesSolved';
 import AddWallet from '@/app/(dashboardComponents)/AddWallet';
-import Topbar from '@/app/(dashboardComponents)/Topbar';
 import { usePrivy } from '@privy-io/react-auth';
-
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Loader2, MapPin, Users, BookOpen, GitFork, Star, Calendar, Clock, Code, Settings, Eye, Plus } from "lucide-react"
 
 const Page = () => {
-  const { userDetailss, wakaTimeDetails } = useUserDetails();
-  const {user} = usePrivy();
+  const { userDetailss, wakaTimeDetails, wakaTimeApiKey, setWakaTimeApiKey, isLoading, error, githubStats } = useUserDetails();
+  const { user } = usePrivy();
+  const [tempWakaTimeKey, setTempWakaTimeKey] = useState(wakaTimeApiKey || '');
+  const [isSavingKey, setIsSavingKey] = useState(false);
+  const [showWakaTimeInput, setShowWakaTimeInput] = useState(!wakaTimeApiKey);
   const walletAddress = user?.wallet?.address;
-  if(!walletAddress){
-    console.log("Error fetching wallet address")
+
+  const handleSaveWakaTimeKey = async () => {
+    setIsSavingKey(true);
+    try {
+      setWakaTimeApiKey(tempWakaTimeKey);
+      setShowWakaTimeInput(false);
+    } catch (error) {
+      console.error('Error saving WakaTime API key:', error);
+    } finally {
+      setIsSavingKey(false);
+    }
+  };
+
+  const handleRemoveWakaTimeKey = () => {
+    setWakaTimeApiKey('');
+    setTempWakaTimeKey('');
+    setShowWakaTimeInput(true);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto" />
+          <p className="text-gray-600 dark:text-gray-400">Loading your GitHub profile...</p>
+        </div>
+      </div>
+    );
   }
+
+  if (error) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="pt-6">
+            <div className="text-center space-y-4">
+              <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center mx-auto">
+                <span className="text-red-600 text-xl">!</span>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-gray-100">Something went wrong</h3>
+                <p className="text-sm text-red-600 dark:text-red-400 mt-1">{error}</p>
+              </div>
+              <Button onClick={() => window.location.reload()} variant="outline" size="sm">
+                Try Again
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-full md:px-2 !overflow-hidden">
-    <Topbar />
-    {/* w-full h-full flex md:flex-row flex-col gap-8 py-6 */}
-    <div className='w-full h-full !overflow-hidden py-6'>
+      <div className='w-full h-full !overflow-hidden py-6'>
         {/* Profile Header */}
         <div className='flex md:flex-row flex-col md:items-start gap-4 md:gap-6 md:mb-8'>
           <div className='flex items-start gap-4'>
-          <div className='w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-white overflow-hidden relative'>
-            <Image 
-              src={userDetailss.avatar_url ?? '/default-avatar.png'} 
-              alt="User Avatar" 
-              fill 
-              className="object-cover"
-            />
-          </div>
-          
-          {/* User Info */}
-          <div className='flex flex-col items-start md:items-start gap-2'>
-            <h1 className='text-xl md:text-2xl font-bold text-center md:text-left'>{userDetailss.name || userDetailss.login}</h1>
-            <p className='text-gray-600 dark:text-gray-400'>@{userDetailss.login}</p>
-          </div>
+            <div className='w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-gray-200 dark:border-gray-700 overflow-hidden relative shadow-lg'>
+              <Image 
+                src={userDetailss.avatar_url ?? '/default-avatar.png'} 
+                alt="User Avatar" 
+                fill 
+                className="object-cover"
+              />
+            </div>
+            
+            {/* User Info */}
+            <div className='flex flex-col items-start gap-2 mt-2'>
+              <h1 className='text-2xl md:text-3xl font-bold'>{userDetailss.name || userDetailss.login}</h1>
+              <p className='text-gray-600 dark:text-gray-400 text-lg'>@{userDetailss.login}</p>
+              {userDetailss.bio && (
+                <p className='text-gray-700 dark:text-gray-300 max-w-md leading-relaxed'>{userDetailss.bio}</p>
+              )}
+              <div className='flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mt-2'>
+                {userDetailss.location && (
+                  <div className='flex items-center gap-1'>
+                    <MapPin className='w-4 h-4' />
+                    <span>{userDetailss.location}</span>
+                  </div>
+                )}
+                <div className='flex items-center gap-1'>
+                  <Calendar className='w-4 h-4' />
+                  <span>Joined {new Date(userDetailss.created_at || '').toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="flex md:hidden">
             <UserBountyDets />
-            </div>
+          </div>
+        </div>
 
+        {/* GitHub Stats Cards */}
+        <div className='grid grid-cols-2 md:grid-cols-4 gap-4 mb-6'>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <BookOpen className='w-5 h-5 text-blue-600' />
+                <div>
+                  <p className='text-2xl font-bold'>{userDetailss.public_repos || 0}</p>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>Repositories</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <Users className='w-5 h-5 text-green-600' />
+                <div>
+                  <p className='text-2xl font-bold'>{userDetailss.followers || 0}</p>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>Followers</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <Eye className='w-5 h-5 text-purple-600' />
+                <div>
+                  <p className='text-2xl font-bold'>{userDetailss.following || 0}</p>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>Following</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2">
+                <Star className='w-5 h-5 text-yellow-600' />
+                <div>
+                  <p className='text-2xl font-bold'>{githubStats?.total_stars || 0}</p>
+                  <p className='text-sm text-gray-600 dark:text-gray-400'>Total Stars</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Main Content */}
         <div className='flex flex-col lg:flex-row justify-between gap-6'>
           {/* Left Column */}
           <div className='flex flex-col gap-6 py-4 w-full lg:w-[60%]'>
-            {/* Profile Information */}
-            <div className='px-2 md:px-6 bg-card rounded-lg p-4 shadow-sm'>
-              <h2 className='text-xl font-semibold font-sora mb-4'>Profile Information</h2>
-              <div className='space-y-4'>
-                {userDetailss.bio && (
-                  <div>
-                    <p className='text-gray-600 dark:text-gray-400 font-sora'>Bio</p>
-                    <p className='mt-1'>{userDetailss.bio}</p>
+            
+            {/* GitHub Languages */}
+            {githubStats?.languages && githubStats.languages.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className='flex items-center gap-2'>
+                    <Code className='w-5 h-5' />
+                    Most Used Languages
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {githubStats.languages.slice(0, 5).map((lang, index) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="h-3 w-3 rounded-full"
+                            style={{ backgroundColor: languageColors[lang.name as keyof typeof languageColors] || '#ccc' }}
+                          />
+                          <span className="text-sm font-medium">{lang.name}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-20 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div 
+                              className="h-full rounded-full"
+                              style={{ 
+                                width: `${lang.percentage}%`,
+                                backgroundColor: languageColors[lang.name as keyof typeof languageColors] || '#ccc'
+                              }}
+                            />
+                          </div>
+                          <span className="text-sm text-gray-600 dark:text-gray-400 w-12 text-right">{lang.percentage.toFixed(1)}%</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                )}
-                <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
-                  <div>
-                    <p className='text-gray-600 dark:text-gray-400 font -sora'>Location</p>
-                    <p className='mt-1'>{userDetailss.location || 'Not specified'}</p>
-                  </div>
-                  <div>
-                    <p className='text-gray-600 dark:text-gray-400 font-sora'>Repositories</p>
-                    <p className='mt-1'>{userDetailss.public_repos || 0}</p>
-                  </div>
-                  <div>
-                    <p className='text-gray-600 dark:text-gray-400 font-sora'>Followers</p>
-                    <p className='mt-1'>{userDetailss.followers || 0} followers</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+                </CardContent>
+              </Card>
+            )}
 
-            {/* GitHub Stats */}
-            <div className='px-2 md:px-6 bg-card rounded-lg p-4 shadow-sm'>
-              <h2 className='text-xl font-sora font-semibold mb-4'>GitHub Stats</h2>
-              {wakaTimeDetails?.wakatime_raw && (
-                <div className='space-y-4'>
-                  <div>
-                    <p className='text-gray-600 dark:text-gray-400 font-sora'>Total Coding Time (Last 7 Days)</p>
-                    <p className='text-lg font-medium mt-1'>
-                      {wakaTimeDetails.wakatime_raw.human_readable_total || 'N/A'}
+            {/* WakaTime Stats */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className='flex items-center gap-2'>
+                    <Clock className='w-5 h-5' />
+                    Coding Activity (WakaTime)
+                  </CardTitle>
+                  {wakaTimeApiKey && !showWakaTimeInput && (
+                    <Button variant="ghost" size="sm" onClick={() => setShowWakaTimeInput(true)}>
+                      <Settings className='w-4 h-4' />
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                {showWakaTimeInput || !wakaTimeApiKey ? (
+                  <div className="space-y-4">
+                    <div className="text-center py-6">
+                      <Clock className='w-12 h-12 text-gray-400 mx-auto mb-3' />
+                      <p className="text-gray-600 dark:text-gray-400 mb-4">
+                        Connect your WakaTime account to see detailed coding statistics
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Input
+                        type="password"
+                        placeholder="Enter your WakaTime API key"
+                        value={tempWakaTimeKey}
+                        onChange={(e) => setTempWakaTimeKey(e.target.value)}
+                        className="flex-1"
+                      />
+                      <Button 
+                        onClick={handleSaveWakaTimeKey}
+                        disabled={isSavingKey || !tempWakaTimeKey.trim()}
+                      >
+                        {isSavingKey ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Get your API key from <a href="https://wakatime.com/settings/account" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">WakaTime Settings</a>
                     </p>
                   </div>
+                ) : wakaTimeDetails ? (
+                  <div className='space-y-6'>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <p className='text-2xl font-bold text-blue-600'>{wakaTimeDetails.total_coding_hours}</p>
+                        <p className='text-sm text-gray-600 dark:text-gray-400'>Last 7 Days</p>
+                      </div>
+                      <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <p className='text-2xl font-bold text-green-600'>{wakaTimeDetails.top_languages?.length || 0}</p>
+                        <p className='text-sm text-gray-600 dark:text-gray-400'>Languages Used</p>
+                      </div>
+                    </div>
 
-                  <div className="flex flex-col gap-2">
-                    <p className='text-gray-600 dark:text-gray-400 font-sora'>Top Languages</p>
-                    <ul className='flex flex-wrap items-center gap-3'>
-                      {wakaTimeDetails.wakatime_raw.languages?.slice(0, 3).map((lang: {
-                        text: ReactNode; name: string 
-                        }, index: React.Key | null | undefined) => (
-                        <li
-                          key={index}
-                          className="group relative flex items-center space-x-2 cursor-default"
-                        >
-                          <span
-                            className="h-2 w-10 rounded-full"
-                            style={{ backgroundColor: languageColors[String(lang.name) as keyof typeof languageColors] || '#ccc' }}
-                          ></span>
+                    {wakaTimeDetails.top_languages && wakaTimeDetails.top_languages.length > 0 && (
+                      <div>
+                        <h4 className='font-semibold mb-3'>Top Languages This Week</h4>
+                        <div className="space-y-2">
+                          {wakaTimeDetails.top_languages.slice(0, 5).map((lang, index) => (
+                            <div key={index} className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+                              <div className="flex items-center gap-2">
+                                <span
+                                  className="h-3 w-3 rounded-full"
+                                  style={{ backgroundColor: languageColors[lang.name as keyof typeof languageColors] || '#ccc' }}
+                                />
+                                <span className="text-sm font-medium">{lang.name}</span>
+                              </div>
+                              <Badge variant="secondary" className="text-xs">{lang.hours}</Badge>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
-                          <span className="text-sm text-gray-800 dark:text-gray-200">{lang.name}</span>
-
-                          <div className="absolute left-1/2 -translate-x-1/2 -top-8 scale-95 opacity-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 bg-gray-900 text-white text-xs px-2 py-1 rounded shadow z-10 whitespace-nowrap pointer-events-none dark:bg-gray-800">
-                            {lang.text}
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
+                    {showWakaTimeInput && (
+                      <div className="pt-4 border-t">
+                        <div className="flex gap-2">
+                          <Input
+                            type="password"
+                            placeholder="Update WakaTime API key"
+                            value={tempWakaTimeKey}
+                            onChange={(e) => setTempWakaTimeKey(e.target.value)}
+                            className="flex-1"
+                          />
+                          <Button 
+                            onClick={handleSaveWakaTimeKey}
+                            disabled={isSavingKey}
+                            size="sm"
+                          >
+                            {isSavingKey ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Update'}
+                          </Button>
+                          <Button 
+                            onClick={handleRemoveWakaTimeKey}
+                            variant="destructive"
+                            size="sm"
+                          >
+                            Remove
+                          </Button>
+                          <Button 
+                            onClick={() => setShowWakaTimeInput(false)}
+                            variant="ghost"
+                            size="sm"
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
-              )}
-            </div>
+                ) : (
+                  <div className="text-center py-6">
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
+                    <p className="text-gray-600 dark:text-gray-400">Loading WakaTime stats...</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
             {/* GitHub Calendar */}
-            <div className='px-2 md:px-6 bg-card rounded-lg p-4 shadow-sm'>
-              <h2 className='text-xl font-sora font-semibold mb-4'>Contribution Graph</h2>
-              <div className='w-full overflow-x-auto'>
-                <GitHubCalendar 
-                  username={userDetailss.login?.toString() ?? ''} 
-                  year={2025}
-                  blockSize={12}
-                  blockMargin={4}
-                  fontSize={12}
-                />
-              </div>
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle className='flex items-center gap-2'>
+                  <GitFork className='w-5 h-5' />
+                  Contribution Graph
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className='w-full overflow-x-auto'>
+                  <GitHubCalendar 
+                    username={userDetailss.login?.toString() ?? ''} 
+                    year={2025}
+                    blockSize={12}
+                    blockMargin={4}
+                    fontSize={12}
+                    theme={{
+                      dark: ['#161b22', '#0e4429', '#006d32', '#26a641', '#39d353'],
+                      light: ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39']
+                    }}
+                  />
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Right Column */}
           <div className="w-full lg:w-[35%] flex flex-col gap-4">
-            {/* Add wallet is where user can add their wallet address and change there wallet address */}
-              
             <AddWallet walletAddress={walletAddress ?? ""} />
-
-            {/* User Bounty Dets is where user can see their bounty which they have earned and how many issue they have solved */}
             <div className="md:flex hidden">
-            <UserBountyDets />
+              <UserBountyDets />
             </div>
             <Separator />
-            {/* User Issues Solved is where user can see their issues which they have solved */}
             <UserIssuesSolved />
           </div>
         </div>
-    </div>
+      </div>
     </div>
   )
 }

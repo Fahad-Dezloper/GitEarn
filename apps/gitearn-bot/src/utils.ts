@@ -1,5 +1,33 @@
 import prisma from "@repo/db/client";
+import { createAppAuth } from "@octokit/auth-app";
 import axios from "axios";
+
+export async function getValidInstallationToken(userEmail: string): Promise<string> {
+    // @ts-ignore
+    const user = await prisma.user.findUnique({
+      where: { email: userEmail },
+      include: { accounts: true },
+    });
+  
+    const installationId = user?.accounts[0]?.installation_id;
+  
+    if (!installationId) {
+      throw new Error("GitHub installation ID not found for user");
+    }
+  
+    const auth = createAppAuth({
+      appId: parseInt(process.env.APP_ID!, 10),
+      privateKey: process.env.PRIVATE_KEY!,
+    });
+  
+    const { token } = await auth({
+      type: "installation",
+      installationId: parseInt(installationId, 10),
+    });
+  
+  
+    return token;
+  }
 
 export async function addBounty(maintainerId: number, issueId: number, htmlUrl: string, bountyAmount: number, title: string, repoFullName: string) {
     try {
@@ -42,24 +70,23 @@ export async function addBounty(maintainerId: number, issueId: number, htmlUrl: 
         }
 
         const userId = user.user.id;
+        const token = await getValidInstallationToken(user.user.email);
 
         // Fetch repository languages from GitHub API
         const [owner, repo] = repoFullName.split('/');
         const languagesResponse = await axios.get(`https://api.github.com/repos/${owner}/${repo}/languages`, {
             headers: {
-                'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
+                'Authorization': `Bearer ${token}`,
                 'Accept': 'application/vnd.github.v3+json'
             }
         });
         const technologies = Object.keys(languagesResponse.data).map(lang => lang.toLowerCase());
 
-        // Fetch current SOL price in USD from CoinGecko using axios
+
         const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
         const solPrice = response.data.solana.usd;
-        // Convert USD to SOL, then to lamports
         const solAmount = bountyAmount / solPrice;
         const lamports = Math.round(solAmount * 1e9);
-
         // @ts-ignore
         const { bountyIssue, transaction } = await prisma.$transaction(async (tx: any) => {
             const bountyIssue = await tx.bountyIssues.create({
