@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { getValidInstallationToken } from "@/lib/github/getValidInstallationToken";
 import prisma from "@repo/db/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
@@ -26,7 +27,13 @@ async function getGitHubAccessToken(userEmail: string) {
   const githubAccount = account?.accounts.find(
     (acc) => acc.provider === "github"
   );
-  return githubAccount?.access_token;
+
+  if(githubAccount?.installationToken !== undefined || null){
+    const installationToken = await getValidInstallationToken(userEmail);
+    return installationToken;
+  } else {
+    return githubAccount?.access_token;
+  }
 }
 
 async function getUserByGitHubId(githubId: string){
@@ -207,20 +214,6 @@ export async function GET() {
     if (!accessToken) {
     return NextResponse.json({ message: "GitHub access token not found" }, { status: 401 });
     }
-
-    // console.log("raw user issues", JSON.stringify(issues, (key, value) =>
-    //   typeof value === 'bigint' ? value.toString() : value, 2));
-
-    // const issues = Rawissues.filter(issue => {
-    //   const statuses = issue.transactions.map(tx => tx.status);
-    
-    //   const hasAllowedStatus = statuses.includes('confirmed') || statuses.includes('canceled_pending');
-    //   const hasDisallowedStatus = statuses.includes('pending') || statuses.includes('canceled_confirmed');
-    
-    //   return hasAllowedStatus && !hasDisallowedStatus;
-    // });
-    
-    // console.log("filtered issues", issues);
 
     if (!issues) {
       return NextResponse.json({ 
