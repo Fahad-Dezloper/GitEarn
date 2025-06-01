@@ -24,6 +24,7 @@ export default function Mainbounties() {
       repo.issues.map((issue: { labels: any[]; }) => ({
         ...issue,
         repositoryName: repo.name,
+        languages: repo.languages,
         repositoryFullName: `${repo.html_url.split('/')[3]}/${repo.name}`,
         labelNames: issue.labels.map(label => label.name),
       }))

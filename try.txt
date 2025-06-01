@@ -118,7 +118,4 @@ how it works section
 
 ///urgent
 
-/api/issues/get - failing because token is not updated 
-/api/issues/bounty - failing because reaching limit with access token 
-
-
+// now user bounty issues are not showing with access token

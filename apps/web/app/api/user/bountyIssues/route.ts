@@ -37,7 +37,6 @@ async function getGitHubAccessToken(userEmail: string) {
 }
 
 async function getUserByGitHubId(githubId: string){
-  // console.log("github id", githubId);
   const res = await prisma.account.findUnique({
     where: {
       provider_providerAccountId: {
@@ -83,7 +82,6 @@ async function fetchGitHubIssueData(htmlUrl: string, token: string) {
 
     if (!issueRes.ok) throw new Error("GitHub issue fetch failed");
     const issueData = await issueRes.json();
-    // console.log("issue data final is here", issueData);
 
 
     const commentsRes = await fetch(
@@ -131,7 +129,6 @@ async function fetchGitHubIssueData(htmlUrl: string, token: string) {
       };
     }
 
-    // console.log("issue data", issueData.assignees);
     const enrichedAssignees = await Promise.all(
       (issueData.assignees || []).map(async (assignee: any) => {
         const githubId = assignee.id.toString();
@@ -147,7 +144,6 @@ async function fetchGitHubIssueData(htmlUrl: string, token: string) {
       })
     );
 
-    // console.log("enrichedAssigness",  enrichedAssignees);
 
     return {
       id: issueData.id,

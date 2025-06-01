@@ -18,7 +18,6 @@ interface IssuesListProps {
 
 
 function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | ManageBountyIssue, isAddingBounty: boolean, index: number }) {
-    // console.log("here too", issue)
     const commonTitle = issue.title;
     const commonUrl = isAddBountyIssue(issue) ? issue.html_url : issue.htmlUrl;
     const commonRepo = isAddBountyIssue(issue) ? issue.repositoryFullName : issue.repository;
@@ -55,7 +54,7 @@ function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | M
               description={isAddBountyIssue(issue) ? issue.body : ''} 
               labels={issue.labels} 
               repository={commonRepo} 
-              assignees={issue.assignees} 
+              assignees={issue.assignees}
               prRaise={issue.prRaised} 
               issueLink={commonUrl} 
               created={isAddBountyIssue(issue) ? issue.created_at : issue.createdAt} 
@@ -63,6 +62,7 @@ function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | M
               status={issue.state} 
               latestComment={issue.activityLog} 
               issueId={isAddBountyIssue(issue) ? issue.id : issue.githubId} 
+              languages={issue.languages}
             />
            : <RemoveBountyPopup 
               bounty={!isAddBountyIssue(issue) ? issue.bounty : 0} 
@@ -70,7 +70,7 @@ function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | M
               title={commonTitle} 
               lamports={issue.bountyAmountInLamports}
               labels={issue.labels} 
-              repository={commonRepo} 
+              repository={commonRepo}
               assignees={issue.assignees} 
               prRaise={issue.prRaised} 
               issueLink={commonUrl} 
@@ -80,6 +80,7 @@ function IssueItem({ issue, isAddingBounty, index }: { issue: AddBountyIssue | M
               latestComment={issue.activityLog} 
               // @ts-expect-error
               issueId={isAddBountyIssue(issue) ? issue.id : issue.githubId} 
+              languages={issue.languages} 
             />}
              </div>
         </div>

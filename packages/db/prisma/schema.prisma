@@ -22,11 +22,15 @@ model User {
   solanaAddress String?  @unique
 }
 
+
 model BountyIssues {
   id           String          @id @default(cuid())
   userId       String
   githubId     BigInt          
-  htmlUrl      String          
+  htmlUrl      String   
+  title        String
+  repoName         String
+  technologies String[]
   status       BountyStatus    @default(PENDING)
   contributorId   String?
   contributorClaimedAdd   String?

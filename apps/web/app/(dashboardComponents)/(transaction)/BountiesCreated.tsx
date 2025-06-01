@@ -132,8 +132,7 @@ export function BountiesCreated() {
         bountyAmount,           
         githubId,               
         htmlUrl,                
-        bountyAmountInLamports, 
-        undefined,              
+        bountyAmountInLamports,             
         txnId                   
       );
     } catch (e){
@@ -143,6 +142,10 @@ export function BountiesCreated() {
     }
   }
 
+  // title,
+//     repo,
+//     technologies
+
   async function confirmTip(txnId: string, bountyAmountInLamports: number, htmlUrl: string, githubId: string, bountyAmount: number){
     try{
       setLoading(true)
@@ -150,8 +153,7 @@ export function BountiesCreated() {
         bountyAmount,           
         githubId,               
         htmlUrl,                
-        bountyAmountInLamports, 
-        undefined,              
+        bountyAmountInLamports,          
         txnId                   
       );
     } catch (e){
@@ -531,7 +533,7 @@ export function BountiesCreated() {
                     bountyToTip.bountyAmountInLamports,
                     bountyToTip.htmlUrl,
                     bountyToTip.githubId,
-                    bountyToTip.bountyAmount
+                    bountyToTip.bountyAmount,
                   )
                   setIsTipDialogOpen(false);
                   setBountyToTip(null);
