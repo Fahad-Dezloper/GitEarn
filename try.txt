@@ -90,9 +90,6 @@ vulnerablity in bounty context provider solve it
 
 
 
-
-
-
 ///thinkkkkk
 how it works section
 
@@ -114,4 +111,14 @@ how it works section
                       </Tabs>
                     )}
                     {!step.bot && <VideoPlayer videoUrl={step.video} />} */}
+
+
+
+
+
+///urgent
+
+/api/issues/get - failing because token is not updated 
+/api/issues/bounty - failing because reaching limit with access token 
+
 
