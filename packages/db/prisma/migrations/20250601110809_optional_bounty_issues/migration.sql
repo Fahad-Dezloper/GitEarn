@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "BountyIssues" ALTER COLUMN "repoName" DROP NOT NULL,
+ALTER COLUMN "title" DROP NOT NULL;

@@ -92,7 +92,9 @@ export default (app: Probot) => {
           context.payload.comment.user.id,
           context.payload.issue.id,
           context.payload.issue.html_url,
-          amount
+          amount,
+          context.payload.issue.title,
+          context.payload.repository.full_name
         );
 
         if (!databaseCall.success) {

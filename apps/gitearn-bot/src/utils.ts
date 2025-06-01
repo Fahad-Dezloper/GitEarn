@@ -1,7 +1,7 @@
 import prisma from "@repo/db/client";
 import axios from "axios";
 
-export async function addBounty(maintainerId: number, issueId: number, htmlUrl: string, bountyAmount: number) {
+export async function addBounty(maintainerId: number, issueId: number, htmlUrl: string, bountyAmount: number, title: string, repoFullName: string) {
     try {
         // @ts-ignore
         const user = await prisma.account.findUnique({
@@ -43,6 +43,16 @@ export async function addBounty(maintainerId: number, issueId: number, htmlUrl: 
 
         const userId = user.user.id;
 
+        // Fetch repository languages from GitHub API
+        const [owner, repo] = repoFullName.split('/');
+        const languagesResponse = await axios.get(`https://api.github.com/repos/${owner}/${repo}/languages`, {
+            headers: {
+                'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        const technologies = Object.keys(languagesResponse.data).map(lang => lang.toLowerCase());
+
         // Fetch current SOL price in USD from CoinGecko using axios
         const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
         const solPrice = response.data.solana.usd;
@@ -58,7 +68,10 @@ export async function addBounty(maintainerId: number, issueId: number, htmlUrl: 
                     githubId: issueId,
                     htmlUrl: htmlUrl,
                     bountyAmount: bountyAmount,
-                    bountyAmountInLamports: lamports
+                    bountyAmountInLamports: lamports,
+                    repoName: repoFullName,
+                    technologies: technologies,
+                    title: title
                 }
             });
 
