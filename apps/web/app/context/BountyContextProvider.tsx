@@ -196,10 +196,9 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
     lamports: number,
     title?: string,
     repository?: string,
-    transactionId?: string,
-    technologies?: string[]
+    technologies?: string[],
+    transactionId?: string
   ) {
-
     try {
       if (transactionId !== undefined || null) {
         if (!publicKey) {
