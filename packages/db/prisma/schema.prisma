@@ -28,8 +28,8 @@ model BountyIssues {
   userId       String
   githubId     BigInt          
   htmlUrl      String   
-  title        String
-  repoName         String
+  title        String?
+  repoName     String?
   technologies String[]
   status       BountyStatus    @default(PENDING)
   contributorId   String?
