@@ -4,7 +4,6 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Mainbounties from "./(/bounties/etc)/mainbounties";
-import Topbar from "./Topbar";
 import { AlertCircle, Loader2 } from "lucide-react";
 
 export function UpgradeGithubAccess() {

@@ -15,7 +15,6 @@ import { Label } from "@/components/ui/label";
 import { Calendar, ExternalLink } from "lucide-react";
 import { SetStateAction, useEffect, useState } from "react";
 import { format } from "date-fns"
-import Topbar from '@/app/(dashboardComponents)/Topbar';
 
 export default function Page(){
     const {  walletAdd } = useUserDetails();

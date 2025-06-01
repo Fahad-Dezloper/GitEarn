@@ -5,7 +5,6 @@ import BountyList from "@/app/(dashboardComponents)/BountyList"
 import BountyFilter from "@/app/(dashboardComponents)/BountyFIlter"
 import { useEffect, useState } from "react"
 import { useBountyDetails } from "@/app/context/BountyContextProvider";
-import Topbar from "@/app/(dashboardComponents)/Topbar";
 
 export default function Page() {
   
