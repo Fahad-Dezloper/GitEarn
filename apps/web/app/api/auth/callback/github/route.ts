@@ -1,3 +1,4 @@
+// @typescript-eslint/no-unused-var
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import prisma from "@repo/db/client";
@@ -23,7 +24,6 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get the user's GitHub account
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
       include: { accounts: true },
@@ -36,27 +36,22 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Create Octokit instance with app credentials
     const auth = createAppAuth({
       appId: process.env.GITHUB_APP_ID!,
       privateKey: process.env.GITHUB_APP_PRIVATE_KEY!.replace(/\\n/g, '\n'),
       clientId: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
     });
-w
-    // Get app authentication
+
     const appAuth = await auth({ type: "app" });
     const octokit = new Octokit({ auth: appAuth.token });
 
-    // Get installation access token
     const { data: installationToken } = await octokit.apps.createInstallationAccessToken({
       installation_id: parseInt(installationId),
     });
 
-    // Calculate expiration time (1 hour from now)
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
 
-    // Update the account with the installation token, ID, and expiration
     await prisma.account.update({
       where: {
         provider_providerAccountId: {
@@ -67,12 +62,11 @@ w
       data: {
         installationToken: installationToken.token,
         refresh_token: installationToken.token,
-        expires_at: Math.floor(expiresAt.getTime() / 1000), // Convert to Unix timestamp
-        installation_id: installationId, // Save the installation ID
+        expires_at: Math.floor(expiresAt.getTime() / 1000), 
+        installation_id: installationId, 
       },
     });
 
-    // Redirect back to the original state URL or a default page
     const redirectUrl = state || "/earn/bounties/add";
     return NextResponse.redirect(new URL(redirectUrl, request.url));
   } catch (error) {

@@ -76,9 +76,6 @@ importers:
       '@noble/ed25519':
         specifier: ^2.2.3
         version: 2.2.3
-      '@octokit/app':
-        specifier: ^16.0.1
-        version: 16.0.1
       '@octokit/auth-app':
         specifier: ^8.0.1
         version: 8.0.1

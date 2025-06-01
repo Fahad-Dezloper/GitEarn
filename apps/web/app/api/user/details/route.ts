@@ -18,6 +18,7 @@ export async function GET() {
   });
 
   const token = user?.accounts[0]?.access_token;
+  
   if (!token) {
     return NextResponse.json({ error: "GitHub token is required" }, { status: 401 });
   }
