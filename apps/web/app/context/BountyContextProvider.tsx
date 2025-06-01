@@ -69,8 +69,8 @@ interface BountyContextType {
     lamports: number,
     title?: string,
     repository?: string, 
-    transactionId?: string,
-    technologies?: string[]
+    technologies?: string[],
+    transactionId?: string
   ) => Promise<void>;
   approveBounty: (
     issueId: string,
