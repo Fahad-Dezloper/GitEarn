@@ -105,11 +105,7 @@ interface BountyContextType {
   isLoading: boolean;
   claimBounties: BountyIssue[];
   tip: (
-    bountyAmt: number,
-    issueId: string,
-    issueLink: string,
     lamports: number,
-    title?: string,
     transactionId?: string
   ) => Promise<void>;
 }
@@ -332,11 +328,7 @@ export function BountyContextProvder({ children }: { children: ReactNode }) {
   }
 
   async function tip(
-    bountyAmt: number,
-    issueId: string,
-    issueLink: string,
     lamports: number,
-    title?: string,
     transactionId?: string
   ) {
     try {

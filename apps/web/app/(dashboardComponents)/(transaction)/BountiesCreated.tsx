@@ -149,10 +149,7 @@ export function BountiesCreated() {
   async function confirmTip(txnId: string, bountyAmountInLamports: number, htmlUrl: string, githubId: string, bountyAmount: number){
     try{
       setLoading(true)
-      const res = await tip(
-        bountyAmount,           
-        githubId,               
-        htmlUrl,                
+      const res = await tip(                
         bountyAmountInLamports,          
         txnId                   
       );
