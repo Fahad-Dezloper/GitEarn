@@ -10,27 +10,27 @@ export const reviews = [
     type: "bounty"
   },
   {
-    username: "@emmaw",
-    amount: 150,
-    date: "2024-03-11",
-    bountyTitle: "Add error handling",
-    repo: "error-tracker",
+    username: "@Anshgrover23",
+    amount: 25,
+    date: "2025-06-07",
+    bountyTitle: "Share Button Feedback",
+    repo: "Crowdify",
     type: "payout"
   },
   {
-    name: "Alex Kumar",
-    username: "@alexdev",
-    body: "Finally, a platform that makes open source contribution rewarding! The UI is beautiful and the experience is seamless. 💯",
-    link: "https://x.com/alexdev",
-    img: "https://pbs.twimg.com/profile_images/1754176181497155584/_8KGb5fz_400x400.jpg",
+    name: "Parag Nandy Roy",
+    username: "@parag_nandy",
+    body: "Exciting to see GitEarn leveraging Solana's capabilities to reward opensource contributions! The integration of Web3 principles here not only incentivizes developers but also aligns with the growing trend of transparent, community-driven innovation.Excited to watch this evolve!",
+    link: "https://x.com/parag_nandy/status/1929431650431119511",
+    img: "https://pbs.twimg.com/profile_images/1775483961583550464/V3wHcRks_400x400.jpg",
     type: "testimonial"
   },
   {
-    username: "@oliviat",
-    amount: 300,
-    date: "2024-03-07",
-    bountyTitle: "Add unit tests",
-    repo: "test-framework",
+    username: "@Anshgrover23",
+    amount: 25,
+    date: "2025-06-07",
+    bountyTitle: "Share Button Feedback",
+    repo: "Crowdify",
     type: "payout"
   },
   {
@@ -44,11 +44,11 @@ export const reviews = [
     type: "bounty"
   },
   {
-    name: "Sophie Martin",
-    username: "@sophiem",
-    body: "I've discovered so many interesting projects through GitEarn. The platform makes open source contribution accessible to everyone! 🌈",
-    link: "https://x.com/sophiem",
-    img: "https://pbs.twimg.com/profile_images/1754176181497155584/_8KGb5fz_400x400.jpg",
+    name: "Rahul Gujjar",
+    username: "@rahul_meX",
+    body: "Yeah, would definitely contribute.",
+    link: "https://x.com/rahul_meX/status/1929227128567931072",
+    img: "https://pbs.twimg.com/profile_images/1929810584012574724/Ri_bW3Yp_400x400.jpg",
     type: "testimonial"
   },
   {
@@ -62,19 +62,19 @@ export const reviews = [
     type: "bounty"
   },
   {
-    username: "@alexdev",
-    amount: 180,
-    date: "2024-03-14",
-    bountyTitle: "Fix authentication flow",
-    repo: "auth-library",
+    username: "@Anshgrover23",
+    amount: 25,
+    date: "2025-06-07",
+    bountyTitle: "Share Button Feedback",
+    repo: "Crowdify",
     type: "payout"
   },
   {
-    name: "David Park",
-    username: "@davidpark",
-    body: "The best platform for open source contributors. I've found amazing projects and earned while doing what I love! 🎉",
-    link: "https://x.com/davidpark",
-    img: "https://pbs.twimg.com/profile_images/1754176181497155584/_8KGb5fz_400x400.jpg",
+    name: "Ayush Sharma",
+    username: "@CyberBoyAyush",
+    body: "Good work buddy",
+    link: "https://x.com/CyberBoyAyush/status/1929222882288128010",
+    img: "https://pbs.twimg.com/profile_images/1751659284063285248/stz4VnNq_400x400.jpg",
     type: "testimonial"
   },
   {
@@ -88,19 +88,19 @@ export const reviews = [
     type: "bounty"
   },
   {
-    name: "Emma Wilson",
-    username: "@emmaw",
-    body: "As a junior developer, GitEarn helped me build my portfolio while earning. The community is incredibly supportive! 💪",
-    link: "https://x.com/emmaw",
-    img: "https://pbs.twimg.com/profile_images/1754176181497155584/_8KGb5fz_400x400.jpg",
+    name: "Tanmay Jain",
+    username: "@TanmayJain5114",
+    body: "Great !!",
+    link: "https://x.com/TanmayJain5114/status/1929222253289304215",
+    img: "https://pbs.twimg.com/profile_images/1890777470925733888/UmGv5eEs_400x400.jpg",
     type: "testimonial"
   },
   {
-    username: "@sophiem",
-    amount: 380,
-    date: "2024-03-09",
-    bountyTitle: "Create API documentation",
-    repo: "api-docs",
+    username: "@Anshgrover23",
+    amount: 25,
+    date: "2025-06-07",
+    bountyTitle: "Share Button Feedback",
+    repo: "Crowdify",
     type: "payout"
   },
   {
@@ -114,35 +114,35 @@ export const reviews = [
     type: "bounty"
   },
   {
-    name: "Noah Anderson",
-    username: "@noaha",
-    body: "The platform is so well-designed. It's clear that developers built this for developers. Amazing experience! 🎨",
-    link: "https://x.com/noaha",
-    img: "https://pbs.twimg.com/profile_images/1754176181497155584/_8KGb5fz_400x400.jpg",
+    name: "Priyanshu.sol",
+    username: "@priyanshudotsol",
+    body: "Let's go, sir. I truly believe this will be the next big thing.",
+    link: "https://x.com/priyanshudotsol/status/1929218451962220636",
+    img: "https://pbs.twimg.com/profile_images/1903172797263908867/nnm1MD_j_400x400.jpg",
     type: "testimonial"
   },
   {
-    username: "@mariacodes",
-    amount: 320,
-    date: "2024-03-13",
-    bountyTitle: "Add responsive design",
-    repo: "web-components",
+    username: "@Anshgrover23",
+    amount: 25,
+    date: "2025-06-07",
+    bountyTitle: "Share Button Feedback",
+    repo: "Crowdify",
     type: "payout"
   },
   {
-    name: "Sarah Chen",
-    username: "@sarahchen",
-    body: "GitEarn has completely transformed how I contribute to open source. The platform is intuitive and the rewards are fantastic! 🚀",
-    link: "https://x.com/sarahchen",
-    img: "https://pbs.twimg.com/profile_images/1754176181497155584/_8KGb5fz_400x400.jpg",
+    name: "Parag Nandy Roy",
+    username: "@parag_nandy",
+    body: "Exciting to see GitEarn leveraging Solana's capabilities to reward opensource contributions! The integration of Web3 principles here not only incentivizes developers but also aligns with the growing trend of transparent, community-driven innovation.Excited to watch this evolve!",
+    link: "https://x.com/parag_nandy/status/1929431650431119511",
+    img: "https://pbs.twimg.com/profile_images/1775483961583550464/V3wHcRks_400x400.jpg",
     type: "testimonial"
   },
   {
-    username: "@jameslee",
-    amount: 280,
-    date: "2024-03-10",
-    bountyTitle: "Implement caching system",
-    repo: "cache-manager",
+    username: "@Anshgrover23",
+    amount: 25,
+    date: "2025-06-07",
+    bountyTitle: "Share Button Feedback",
+    repo: "Crowdify",
     type: "payout"
   },
   {
@@ -172,11 +172,11 @@ export const reviews = [
     type: "payout"
   },
   {
-    name: "Maria Garcia",
-    username: "@mariacodes",
-    body: "I've earned over $500 contributing to projects I love. GitEarn makes open source sustainable for developers like me! 🌟",
-    link: "https://x.com/mariacodes",
-    img: "https://pbs.twimg.com/profile_images/1754176181497155584/_8KGb5fz_400x400.jpg",
+    name: "Rahul Gujjar",
+    username: "@rahul_meX",
+    body: "Yeah, would definitely contribute.",
+    link: "https://x.com/rahul_meX/status/1929227128567931072",
+    img: "https://pbs.twimg.com/profile_images/1929810584012574724/Ri_bW3Yp_400x400.jpg",
     type: "testimonial"
   },
   {
@@ -190,11 +190,11 @@ export const reviews = [
     type: "bounty"
   },
   {
-    name: "Lucas Brown",
-    username: "@lucasb",
-    body: "The best part about GitEarn is the community. Everyone is so helpful and the rewards are just the cherry on top! 🍒",
-    link: "https://x.com/lucasb",
-    img: "https://pbs.twimg.com/profile_images/1754176181497155584/_8KGb5fz_400x400.jpg",
+    name: "Ayush Sharma",
+    username: "@CyberBoyAyush",
+    body: "Good work buddy",
+    link: "https://x.com/CyberBoyAyush/status/1929222882288128010",
+    img: "https://pbs.twimg.com/profile_images/1751659284063285248/stz4VnNq_400x400.jpg",
     type: "testimonial"
   },
   {
@@ -226,11 +226,11 @@ export const reviews = [
     type: "bounty"
   },
   {
-    name: "Olivia Taylor",
-    username: "@oliviat",
-    body: "I've been contributing to open source for years, but GitEarn has made it so much more rewarding. Love it! ❤️",
-    link: "https://x.com/oliviat",
-    img: "https://pbs.twimg.com/profile_images/1754176181497155584/_8KGb5fz_400x400.jpg",
+    name: "Tanmay Jain",
+    username: "@TanmayJain5114",
+    body: "Great !!",
+    link: "https://x.com/TanmayJain5114/status/1929222253289304215",
+    img: "https://pbs.twimg.com/profile_images/1890777470925733888/UmGv5eEs_400x400.jpg",
     type: "testimonial"
   },
   {
