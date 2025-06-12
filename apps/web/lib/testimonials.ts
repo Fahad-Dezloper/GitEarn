@@ -48,4 +48,11 @@ export const reviews = [
         link: "https://x.com/notnicksol/status/1929271466224210028",
         img: "https://pbs.twimg.com/profile_images/1922994621849731072/eNQMYvKt_400x400.jpg",
       },
+      {
+        name: "Anurag Kochar",
+        username: "@@anurag__kochar",
+        body: "W bhai",
+        link: "https://x.com/anurag__kochar/status/1929220270218203228",
+        img: "https://pbs.twimg.com/profile_images/1768753668017266688/aPodKd2q_400x400.jpg",
+      },
 ]
